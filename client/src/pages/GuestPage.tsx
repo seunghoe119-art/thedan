@@ -124,6 +124,11 @@ export default function GuestPage() {
     setContent((prev) => (prev ? prev + " " : "") + dateText);
   };
 
+  const handlePhoneClick = () => {
+    const phoneText = "010-6467-8743 전화번호";
+    setContent((prev) => (prev ? prev + " " : "") + phoneText);
+  };
+
   return (
     <div className="min-h-screen bg-gray-50 pt-24 pb-12">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -301,10 +306,13 @@ export default function GuestPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0"
-                  data-testid="button-code"
+                  className="h-8 px-2"
+                  data-testid="button-phone"
+                  title="전화번호 입력"
+                  onClick={handlePhoneClick}
                 >
-                  <Code className="h-4 w-4" />
+                  <Code className="h-4 w-4 mr-1" />
+                  <span className="text-xs">전화번호</span>
                 </Button>
                 <div className="ml-auto flex items-center gap-2">
                   <Button
