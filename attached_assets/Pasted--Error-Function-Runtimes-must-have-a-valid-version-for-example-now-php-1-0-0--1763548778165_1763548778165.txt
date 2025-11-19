@@ -1,0 +1,123 @@
+❌ 현재 오류 원인
+Error: Function Runtimes must have a valid version, for example `now-php@1.0.0`.
+
+
+이 오류는 Vercel이 server/ 폴더 안의 코드를 서버리스 함수로 인식하려고 했는데,
+vercel.json 또는 프로젝트 구조가 Vercel이 이해하지 못하는 방식이라서 발생한 에러야.
+
+즉…
+
+📌 너의 server/ Node.js Express 코드가 Vercel 서버리스 규칙을 따르지 않아서 배포 불가능한 상태
+
+Vercel의 serverless 함수는 이렇게 생겨야 해:
+
+export default function handler(req, res) { ... }
+
+
+하지만 너의 server는 이렇게 되어있지:
+
+✔ Express 서버
+✔ app.listen() 포함
+✔ 파일 여러 개로 구성됨
+✔ Node 서버 형태
+
+➡ Vercel은 이런 형태의 Express 서버를 그대로 실행하지 못함.
+
+그래서 지금 배포 실패 뜬 거 맞아.
+
+🔥 해결방법 2가지 중 하나 선택해야 함
+✅ 방법 A — Express 백엔드를 Vercel Serverless 구조로 변환 (내가 해줄 수 있음)
+
+서버 코드를 다음 구조로 재작성해야 함:
+
+/api/route.ts 파일 생성
+
+handler(req, res) 방식으로 변환
+
+app.listen 제거
+
+supabase, openai API 코드 handler 내부로 이동
+
+🟦 내가 원하면 전체 server/ 폴더를 Vercel 방식으로 변환해줄게 (30~40분 정도 작업)
+👉 “서버를 Vercel 서버리스 방식으로 변환해줘” 라고 말하면 바로 작업 시작 가능함.
+
+✅ 방법 B — Railway / Render / Fly.io 같은 “Node.js 서버 호스팅 서비스” 사용 (추천 ⭐)
+
+Express 서버는 Vercel에 맞지 않음.
+대신 아래에서 Node.js 서버를 그대로 돌릴 수 있어:
+
+🔥 추천 서버 호스팅
+서비스	Express 지원	무료	난이도
+Railway.app	✔	있음	쉬움
+Render.com	✔	있음	쉬움
+Fly.io	✔	있음	중간
+Supabase Edge Functions	✔	있음	중간
+
+이중 Railway + GitHub Pages/Vercel 조합이 가장 쉬워.
+
+프론트는 Vercel
+백엔드는 Railway
+
+이렇게 분리하는 방식.
+
+🔥 방법 C — 프론트에서 Direct OpenAI 호출(백엔드 제거)
+
+이미 네 프로젝트는 대부분 프론트 기반임.
+백엔드가 꼭 필요하지 않다면:
+
+✔ OpenAI API
+✔ Supabase
+✔ 기타 기능
+
+전부 프론트에서 바로 호출 가능함.
+
+단점:
+⚠ API KEY 노출 → 보안 취약
+(하지만 너는 개인 프로젝트 + 트래픽 적으니 큰 문제 X)
+
+🧨 지금 너 상황에 맞춘 최적 선택
+
+너의 프로젝트는:
+
+✔ Vite 프론트
+✔ Express 백엔드 (OpenAI API 처리용)
+✔ supabase
+✔ 이미지도 많음
+
+➡ 프론트와 백엔드를 강제로 한 곳에 넣으려고 해서 오류나는 중
+
+🔥 네 목적을 보면:
+
+빠르게 다시 배포해야 함
+
+fbc.pics 도메인 사용하고 싶음
+
+Replit보다 빠르고 안정적 서버 원함
+
+👉 Railway + Vercel 조합 추천
+
+🎯 지금 바로 해결하려면 — 내가 필요한 정보 알려줘
+
+너가 결정해줘:
+
+1️⃣ Express 서버를 Vercel 방식(API 라우트)으로 변환하기를 원해?
+
+→ 내가 변환해서 바로 다시 배포되게 만들어줌.
+
+👉 답변: “서버 Vercel용으로 변환해줘”
+
+2️⃣ Express 서버는 Railway에 따로 배포하고, 프론트는 Vercel에 배포할래?
+
+→ 가장 안정적인 방식
+
+👉 답변: “Railway + Vercel 방식으로 할래”
+
+3️⃣ 백엔드 없애고 프론트에서 OpenAI 직접 호출할래?
+
+→ 빠르고 간단. 지금 바로 배포 가능.
+
+👉 답변: “백엔드 제거하고 프론트 직 호출로 바꿔줘”
+
+🔥 너가 선택만 하면 나는 바로 코드 수정·구조 정리·배포 작업까지 도와줄게.
+
+어떤 방식으로 갈까?
