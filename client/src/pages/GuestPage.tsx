@@ -124,7 +124,7 @@ export default function GuestPage() {
 
   const handleCopyImage = async (imageSrc: string, imageName: string) => {
     try {
-      const response = await fetch(imageSrc);
+      const response = await fetch(imageSrc, { mode: 'cors' });
       const blob = await response.blob();
       await navigator.clipboard.write([
         new ClipboardItem({
@@ -360,7 +360,7 @@ export default function GuestPage() {
                 <div className="grid grid-cols-2 gap-4 mt-4">
                   <div className="space-y-2">
                     <img 
-                      src="/guest1.jpg" 
+                      src="https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg" 
                       alt="게스트 모집 이미지 1" 
                       className="w-full h-48 object-cover rounded-lg shadow-md"
                     />
@@ -368,7 +368,7 @@ export default function GuestPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => handleCopyImage("/guest1.jpg", "이미지 1")}
+                      onClick={() => handleCopyImage("https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg", "이미지 1")}
                       className="w-full"
                       data-testid="button-copy-image-1"
                     >
@@ -378,7 +378,7 @@ export default function GuestPage() {
                   </div>
                   <div className="space-y-2">
                     <img 
-                      src="/guest2.jpg" 
+                      src="https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg" 
                       alt="게스트 모집 이미지 2" 
                       className="w-full h-48 object-cover rounded-lg shadow-md"
                     />
@@ -386,7 +386,7 @@ export default function GuestPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => handleCopyImage("/guest2.jpg", "이미지 2")}
+                      onClick={() => handleCopyImage("https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg", "이미지 2")}
                       className="w-full"
                       data-testid="button-copy-image-2"
                     >
@@ -396,7 +396,7 @@ export default function GuestPage() {
                   </div>
                   <div className="space-y-2">
                     <img 
-                      src="/guest3.jpg" 
+                      src="https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg" 
                       alt="게스트 모집 이미지 3" 
                       className="w-full h-48 object-cover rounded-lg shadow-md"
                     />
@@ -404,7 +404,7 @@ export default function GuestPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => handleCopyImage("/guest3.jpg", "이미지 3")}
+                      onClick={() => handleCopyImage("https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg", "이미지 3")}
                       className="w-full"
                       data-testid="button-copy-image-3"
                     >
@@ -414,7 +414,7 @@ export default function GuestPage() {
                   </div>
                   <div className="space-y-2">
                     <img 
-                      src="/guest4.jpg" 
+                      src="https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg" 
                       alt="게스트 모집 이미지 4" 
                       className="w-full h-48 object-cover rounded-lg shadow-md"
                     />
@@ -422,7 +422,7 @@ export default function GuestPage() {
                       type="button"
                       variant="outline"
                       size="sm"
-                      onClick={() => handleCopyImage("/guest4.jpg", "이미지 4")}
+                      onClick={() => handleCopyImage("https://img.shareit.kr/tempspaceauth/img/2025-03-17/c5b7c2d1-7188-44df-be4d-b0b5aabd8c76.jpg", "이미지 4")}
                       className="w-full"
                       data-testid="button-copy-image-4"
                     >
