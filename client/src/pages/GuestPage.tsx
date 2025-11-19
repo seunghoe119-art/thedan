@@ -39,15 +39,6 @@ export default function GuestPage() {
   const { toast } = useToast();
 
   const handleAIAssist = async () => {
-    if (!title && !content) {
-      toast({
-        title: "입력 필요",
-        description: "제목이나 내용을 입력해주세요.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     setIsGenerating(true);
     try {
       const response = await fetch("/api/ai-assist", {
@@ -69,11 +60,12 @@ export default function GuestPage() {
 
       const data = await response.json();
       
-      if (data.suggestion) {
-        setContent((prev) => prev + "\n\n" + data.suggestion);
+      if (data.title && data.content) {
+        setTitle(data.title);
+        setContent(data.content);
         toast({
           title: "AI 제안 완료",
-          description: "내용이 추가되었습니다.",
+          description: "제목과 내용이 자동으로 생성되었습니다.",
         });
       }
     } catch (error) {
