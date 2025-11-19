@@ -15,6 +15,7 @@ import AboutPage from "@/pages/AboutPage";
 import RulesPage from "@/pages/RulesPage";
 import FinancePage from "@/pages/FinancePage";
 import ContactPage from "@/pages/ContactPage";
+import GuestPage from "@/pages/GuestPage";
 import BoardPage from "@/pages/BoardPage";
 import LoginPage from "@/pages/LoginPage";
 import AdminNewPostPage from "@/pages/AdminNewPostPage";
@@ -57,6 +58,11 @@ function AppRouter() {
                 <Route path="/contact" component={() => (
                   <PageTransition key="/contact">
                     <ContactPage />
+                  </PageTransition>
+                )} />
+                <Route path="/guest" component={() => (
+                  <PageTransition key="/guest">
+                    <GuestPage />
                   </PageTransition>
                 )} />
                 <Route path="/board" component={() => (

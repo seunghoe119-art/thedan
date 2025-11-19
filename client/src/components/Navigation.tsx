@@ -119,6 +119,13 @@ export default function Navigation() {
                 Join Us
               </span>
             </Link>
+            <Link href="/guest" onClick={() => handleNavigation("/guest")}>
+              <span className={`font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
+                location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
+              }`}>
+                Guest
+              </span>
+            </Link>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -177,6 +184,13 @@ export default function Navigation() {
                   location === "/contact" ? "text-[#e60000] font-bold" : "text-gray-600"
                 }`}>
                   Join Us
+                </span>
+              </Link>
+              <Link href="/guest" onClick={() => handleNavigation("/guest")}>
+                <span className={`block w-full text-left px-3 py-2 font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
+                  location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
+                }`}>
+                  Guest
                 </span>
               </Link>
               <div className="px-3 py-2 border-t border-gray-100 mt-2">
