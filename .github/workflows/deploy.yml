@@ -37,21 +37,8 @@ jobs:
       env:
         VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
         VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+        OPENAI_API_KEY: ${{ secrets.OPENAI_API_KEY }}
         NODE_ENV: production
-        
-    - name: Fix asset paths for GitHub Pages
-      run: |
-        # Fix assets and image paths for GitHub Pages
-        find ./dist/public -name "*.html" -exec sed -i 's|="/assets/|="/ICNFBC-app/assets/|g' {} +
-        find ./dist/public -name "*.js" -exec sed -i 's|"/assets/|"/ICNFBC-app/assets/|g' {} +
-        find ./dist/public -name "*.css" -exec sed -i 's|url(/assets/|url(/ICNFBC-app/assets/|g' {} +
-        # Fix image paths (JPEG files in public folder)
-        find ./dist/public -name "*.js" -exec sed -i 's|"/123\.jpeg"|"/ICNFBC-app/123.jpeg"|g' {} +
-        find ./dist/public -name "*.js" -exec sed -i 's|"/basketball court\.jpeg"|"/ICNFBC-app/basketball court.jpeg"|g' {} +
-        find ./dist/public -name "*.js" -exec sed -i 's|"/group image\.jpeg"|"/ICNFBC-app/group image.jpeg"|g' {} +
-        find ./dist/public -name "*.js" -exec sed -i 's|"/gym1\.jpeg"|"/ICNFBC-app/gym1.jpeg"|g' {} +
-        find ./dist/public -name "*.js" -exec sed -i 's|"/gym2\.jpeg"|"/ICNFBC-app/gym2.jpeg"|g' {} +
-        echo "✅ Asset and image paths updated for GitHub Pages"
         
     - name: Setup Pages
       uses: actions/configure-pages@v4

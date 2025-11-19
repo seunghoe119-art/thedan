@@ -52,11 +52,26 @@ git push
 
 **중요**: 환경 변수는 GitHub에 푸시되지 않습니다 (`.gitignore`에 `.env` 파일이 포함되어 있습니다).
 
+### GitHub Actions에서 환경 변수 설정 (필수)
+
+GitHub Pages에 자동 배포하려면 GitHub Secrets에 환경 변수를 추가해야 합니다:
+
+1. GitHub 저장소로 이동
+2. Settings > Secrets and variables > Actions 클릭
+3. "New repository secret" 버튼 클릭
+4. 다음 환경 변수들을 하나씩 추가:
+   - `VITE_SUPABASE_URL` - Supabase 프로젝트 URL
+   - `VITE_SUPABASE_ANON_KEY` - Supabase anon key
+   - `OPENAI_API_KEY` - OpenAI API 키 (Guest 페이지 AI 기능용)
+
+### 로컬에서 실행할 때
+
 프로젝트를 다른 곳에서 실행할 때는 `.env.example` 파일을 참고하여 새로운 `.env` 파일을 만들고 다음 환경 변수를 설정해야 합니다:
 
 ```bash
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+OPENAI_API_KEY=your_openai_api_key
 ```
 
 ## GitHub Pages에 배포하기
@@ -89,6 +104,17 @@ GitHub Pages를 사용하는 경우:
 3. 빌드 명령어: `npm run build`
 4. 출력 디렉토리: `dist/public` (중요: `dist`가 아닙니다!)
 5. 환경 변수에 `NODE_ENV=production` 추가
+
+### 커스텀 도메인 사용 시 빈 화면(White Screen) 문제
+
+커스텀 도메인을 사용할 때 빈 화면이 나온다면:
+
+**원인**: GitHub Actions 워크플로우가 경로를 `/ICNFBC-app/assets/...`로 변경하고 있지만, 커스텀 도메인에서는 `/assets/...`로 접근해야 합니다.
+
+**해결 방법**:
+1. `.github/workflows/deploy.yml` 파일에서 "Fix asset paths for GitHub Pages" 단계를 제거했습니다
+2. 이제 커스텀 도메인과 GitHub Pages 모두에서 정상 작동합니다
+3. 변경사항을 GitHub에 푸시하면 자동으로 다시 배포됩니다
 
 ### 이미지가 로드되지 않는 문제
 
