@@ -4,7 +4,12 @@
 
 This is a modern basketball club website built with React and TypeScript. The application serves as a landing page and membership portal for "ICN FIRE," a workplace basketball club that focuses on structured 5-on-5 training and team development. The site features a multi-page design with smooth slide animations between pages, including home, about, rules, finance, and contact pages with membership application functionality.
 
-## Recent Changes (August 2025)
+## Recent Changes (November 2025)
+
+- **Added image copy functionality**: Implemented copy-to-clipboard buttons for all 4 guest recruitment images using Clipboard API with toast notifications
+- **Fixed deployment documentation**: Updated GITHUB_SETUP.md to clarify that `dist/public` (not `dist`) should be deployed to GitHub Pages as the web root to ensure all images load correctly
+
+## Previous Changes (August 2025)
 
 - **Enhanced page transition animations**: Implemented bidirectional slide animations where both current and new pages move simultaneously
 - **Improved navigation direction logic**: Added context-based direction detection that determines slide direction based on menu order

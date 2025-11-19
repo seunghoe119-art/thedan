@@ -59,6 +59,24 @@ VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 ```
 
+## GitHub Pages에 배포하기
+
+GitHub Pages를 사용하는 경우:
+
+1. 프로젝트를 빌드합니다:
+   ```bash
+   npm run build
+   ```
+
+2. 빌드 결과물은 `dist/public` 디렉토리에 생성됩니다
+
+3. GitHub Pages 설정에서:
+   - Settings > Pages로 이동
+   - Source를 "GitHub Actions"로 선택하거나
+   - 수동으로 `dist/public` 폴더의 내용을 `gh-pages` 브랜치의 루트에 푸시
+
+**중요**: `dist/public` 폴더의 **내용**을 배포 루트로 설정해야 합니다. `dist` 폴더가 아니라 `dist/public` 입니다!
+
 ## Vercel, Netlify 등에 배포하기
 
 프로젝트를 배포 플랫폼에 올릴 때:
@@ -67,8 +85,28 @@ VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
 2. 환경 변수를 플랫폼의 설정에서 추가합니다:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
+   - `OPENAI_API_KEY`
 3. 빌드 명령어: `npm run build`
-4. 출력 디렉토리: `dist`
+4. 출력 디렉토리: `dist/public` (중요: `dist`가 아닙니다!)
+5. 환경 변수에 `NODE_ENV=production` 추가
+
+### 이미지가 로드되지 않는 문제
+
+만약 GitHub Pages에서 이미지가 로드되지 않는다면:
+
+1. 출력 디렉토리가 올바른지 확인:
+   - `dist/public`의 **내용**이 배포되어야 합니다
+   - `dist` 폴더 자체가 아닙니다!
+
+2. 빌드 후 확인:
+   ```bash
+   npm run build
+   ls dist/public/
+   # guest1.jpg, guest2.jpg, guest3.jpg, guest4.jpg가 있어야 합니다
+   ```
+
+3. GitHub Pages가 올바른 폴더를 서빙하는지 확인:
+   - `https://your-username.github.io/your-repo/guest1.jpg`에 직접 접속해서 이미지가 보이는지 확인
 
 ## 문제 해결
 
