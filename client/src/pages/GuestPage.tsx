@@ -16,7 +16,7 @@ import {
   Link as LinkIcon,
   Image as ImageIcon,
   Video,
-  Smile,
+  Calendar,
   Quote,
   AlignLeft,
   AlignCenter,
@@ -35,6 +35,7 @@ export default function GuestPage() {
   const [content, setContent] = useState("");
   const [hashtags, setHashtags] = useState("");
   const [isGenerating, setIsGenerating] = useState(false);
+  const [selectedPrice, setSelectedPrice] = useState<number | null>(null);
   const { toast } = useToast();
 
   const handleAIAssist = async () => {
@@ -97,6 +98,30 @@ export default function GuestPage() {
     setHashtags("");
     setCategory("");
     setTopic("");
+    setSelectedPrice(null);
+  };
+
+  const handlePriceClick = (price: number) => {
+    if (selectedPrice === price) {
+      setSelectedPrice(null);
+      setContent((prev) => prev.replace(`게스트비 ${price / 1000}천원`, "").trim());
+    } else {
+      if (selectedPrice) {
+        setContent((prev) => prev.replace(`게스트비 ${selectedPrice / 1000}천원`, `게스트비 ${price / 1000}천원`));
+      } else {
+        setContent((prev) => (prev ? prev + " " : "") + `게스트비 ${price / 1000}천원`);
+      }
+      setSelectedPrice(price);
+    }
+  };
+
+  const handleDateClick = () => {
+    const today = new Date();
+    const year = today.getFullYear();
+    const month = String(today.getMonth() + 1).padStart(2, '0');
+    const day = String(today.getDate()).padStart(2, '0');
+    const dateText = `오늘 날짜 ${year}년 ${month}월 ${day}일`;
+    setContent((prev) => (prev ? prev + " " : "") + dateText);
   };
 
   return (
@@ -229,45 +254,48 @@ export default function GuestPage() {
                 <div className="w-px h-6 bg-gray-300 mx-1" />
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant={selectedPrice === 5000 ? "default" : "ghost"}
                   size="sm"
-                  className="h-8 px-2"
-                  data-testid="button-image"
+                  className={`h-8 px-2 ${selectedPrice === 5000 ? 'bg-[#e60000] text-white hover:bg-[#cc0000]' : ''}`}
+                  data-testid="button-price-5000"
                   title="게스트비 5천원"
+                  onClick={() => handlePriceClick(5000)}
                 >
-                  <ImageIcon className="h-4 w-4 mr-1" />
                   <span className="text-xs">5천원</span>
                 </Button>
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant={selectedPrice === 6000 ? "default" : "ghost"}
                   size="sm"
-                  className="h-8 px-2"
-                  data-testid="button-video"
+                  className={`h-8 px-2 ${selectedPrice === 6000 ? 'bg-[#e60000] text-white hover:bg-[#cc0000]' : ''}`}
+                  data-testid="button-price-6000"
                   title="게스트비 6천원"
+                  onClick={() => handlePriceClick(6000)}
                 >
-                  <Video className="h-4 w-4 mr-1" />
                   <span className="text-xs">6천원</span>
                 </Button>
                 <Button
                   type="button"
-                  variant="ghost"
+                  variant={selectedPrice === 7000 ? "default" : "ghost"}
                   size="sm"
-                  className="h-8 px-2"
-                  data-testid="button-link"
+                  className={`h-8 px-2 ${selectedPrice === 7000 ? 'bg-[#e60000] text-white hover:bg-[#cc0000]' : ''}`}
+                  data-testid="button-price-7000"
                   title="게스트비 7천원"
+                  onClick={() => handlePriceClick(7000)}
                 >
-                  <LinkIcon className="h-4 w-4 mr-1" />
                   <span className="text-xs">7천원</span>
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0"
-                  data-testid="button-smile"
+                  className="h-8 px-2"
+                  data-testid="button-current-date"
+                  title="현재날짜"
+                  onClick={handleDateClick}
                 >
-                  <Smile className="h-4 w-4" />
+                  <Calendar className="h-4 w-4 mr-1" />
+                  <span className="text-xs">현재날짜</span>
                 </Button>
                 <Button
                   type="button"
