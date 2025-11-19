@@ -231,28 +231,34 @@ export default function GuestPage() {
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0"
+                  className="h-8 px-2"
                   data-testid="button-image"
+                  title="게스트비 5천원"
                 >
-                  <ImageIcon className="h-4 w-4" />
+                  <ImageIcon className="h-4 w-4 mr-1" />
+                  <span className="text-xs">5천원</span>
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0"
+                  className="h-8 px-2"
                   data-testid="button-video"
+                  title="게스트비 6천원"
                 >
-                  <Video className="h-4 w-4" />
+                  <Video className="h-4 w-4 mr-1" />
+                  <span className="text-xs">6천원</span>
                 </Button>
                 <Button
                   type="button"
                   variant="ghost"
                   size="sm"
-                  className="h-8 w-8 p-0"
+                  className="h-8 px-2"
                   data-testid="button-link"
+                  title="게스트비 7천원"
                 >
-                  <LinkIcon className="h-4 w-4" />
+                  <LinkIcon className="h-4 w-4 mr-1" />
+                  <span className="text-xs">7천원</span>
                 </Button>
                 <Button
                   type="button"
