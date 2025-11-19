@@ -42,37 +42,81 @@ export default function GuestPage() {
   const handleAIAssist = async () => {
     setIsGenerating(true);
     try {
-      const response = await fetch("/api/ai-assist", {
+      const apiKey = import.meta.env.VITE_OPENAI_API_KEY;
+      
+      if (!apiKey) {
+        throw new Error("OpenAI API 키가 설정되지 않았습니다.");
+      }
+
+      const systemPrompt = `당신은 농구 클럽 "ICN FIRE"의 게스트 모집 공지를 작성하는 전문 작가입니다.
+사용자의 요청에 따라 게스트 모집 제목과 내용을 작성해주세요.
+
+응답은 반드시 다음 JSON 형식으로만 작성하세요:
+{
+  "title": "여기에 제목",
+  "content": "여기에 본문 내용"
+}
+
+제목은 간결하고 명확하게, 내용은 친근하면서도 전문적인 톤으로 작성해주세요.
+날짜, 시간, 장소, 게스트비, 연락처 등의 정보를 포함하되, 사용자가 제공한 정보를 우선적으로 사용하세요.`;
+
+      const userPrompt = content || "다음 주 금요일 저녁 7시 게스트 모집 공지를 작성해주세요.";
+
+      const response = await fetch("https://api.openai.com/v1/chat/completions", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
+          "Authorization": `Bearer ${apiKey}`,
         },
         body: JSON.stringify({
-          title,
-          content,
-          category,
-          topic,
+          model: "gpt-4o",
+          messages: [
+            {
+              role: "system",
+              content: systemPrompt,
+            },
+            {
+              role: "user",
+              content: userPrompt,
+            },
+          ],
+          max_tokens: 2000,
+          temperature: 0.7,
         }),
       });
 
       if (!response.ok) {
-        throw new Error("AI 도움 요청 실패");
+        const errorData = await response.json().catch(() => ({}));
+        throw new Error(errorData.error?.message || "AI 요청 실패");
       }
 
       const data = await response.json();
+      const assistantMessage = data.choices[0]?.message?.content;
+
+      if (!assistantMessage) {
+        throw new Error("AI 응답이 비어있습니다.");
+      }
+
+      const jsonMatch = assistantMessage.match(/\{[\s\S]*\}/);
+      if (!jsonMatch) {
+        throw new Error("AI 응답 형식이 올바르지 않습니다.");
+      }
+
+      const parsed = JSON.parse(jsonMatch[0]);
       
-      if (data.title && data.content) {
-        setTitle(data.title);
-        setContent(data.content);
+      if (parsed.title && parsed.content) {
+        setTitle(parsed.title);
+        setContent(parsed.content);
         toast({
           title: "AI 제안 완료",
           description: "제목과 내용이 자동으로 생성되었습니다.",
         });
       }
-    } catch (error) {
+    } catch (error: any) {
+      console.error("AI 생성 오류:", error);
       toast({
         title: "오류",
-        description: "AI 도움을 받는 중 문제가 발생했습니다.",
+        description: error.message || "AI 도움을 받는 중 문제가 발생했습니다.",
         variant: "destructive",
       });
     } finally {
