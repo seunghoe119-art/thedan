@@ -53,9 +53,11 @@ export const insertContactMessageSchema = createInsertSchema(contactMessages).om
   createdAt: true,
 });
 
-export const insertYoutubePostSchema = createInsertSchema(youtubePosts).omit({
-  id: true,
-  created_at: true,
+export const insertYoutubePostSchema = createInsertSchema(youtubePosts).pick({
+  title: true,
+  description: true,
+  youtube_id: true,
+  youtube_url: true,
 });
 
 export type InsertUser = z.infer<typeof insertUserSchema>;

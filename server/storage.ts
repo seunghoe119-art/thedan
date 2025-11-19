@@ -78,9 +78,9 @@ export class MemStorage implements IStorage {
   async createYoutubePost(insertPost: InsertYoutubePost): Promise<YoutubePost> {
     const id = Math.max(0, ...Array.from(this.youtubePosts.keys())) + 1;
     const post: YoutubePost = {
-      id,
       ...insertPost,
-      description: insertPost.description || null,
+      id,
+      description: insertPost.description ?? null,
       created_at: new Date(),
     };
     this.youtubePosts.set(id, post);
