@@ -25,6 +25,7 @@ import {
   Table,
   Code,
   Sparkles,
+  Copy,
 } from "lucide-react";
 import { useToast } from "@/hooks/use-toast";
 
@@ -119,6 +120,28 @@ export default function GuestPage() {
   const handlePhoneClick = () => {
     const phoneText = "010-6467-8743 전화번호";
     setContent((prev) => (prev ? prev + " " : "") + phoneText);
+  };
+
+  const handleCopyImage = async (imageSrc: string, imageName: string) => {
+    try {
+      const response = await fetch(imageSrc);
+      const blob = await response.blob();
+      await navigator.clipboard.write([
+        new ClipboardItem({
+          [blob.type]: blob
+        })
+      ]);
+      toast({
+        title: "이미지 복사 완료",
+        description: `${imageName}이(가) 클립보드에 복사되었습니다.`,
+      });
+    } catch (error) {
+      toast({
+        title: "복사 실패",
+        description: "이미지 복사 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -335,26 +358,78 @@ export default function GuestPage() {
                 />
                 
                 <div className="grid grid-cols-2 gap-4 mt-4">
-                  <img 
-                    src="/guest1.jpg" 
-                    alt="게스트 모집 이미지 1" 
-                    className="w-full h-48 object-cover rounded-lg shadow-md"
-                  />
-                  <img 
-                    src="/guest2.jpg" 
-                    alt="게스트 모집 이미지 2" 
-                    className="w-full h-48 object-cover rounded-lg shadow-md"
-                  />
-                  <img 
-                    src="/guest3.jpg" 
-                    alt="게스트 모집 이미지 3" 
-                    className="w-full h-48 object-cover rounded-lg shadow-md"
-                  />
-                  <img 
-                    src="/guest4.jpg" 
-                    alt="게스트 모집 이미지 4" 
-                    className="w-full h-48 object-cover rounded-lg shadow-md"
-                  />
+                  <div className="space-y-2">
+                    <img 
+                      src="/guest1.jpg" 
+                      alt="게스트 모집 이미지 1" 
+                      className="w-full h-48 object-cover rounded-lg shadow-md"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCopyImage("/guest1.jpg", "이미지 1")}
+                      className="w-full"
+                      data-testid="button-copy-image-1"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      이미지 복사
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    <img 
+                      src="/guest2.jpg" 
+                      alt="게스트 모집 이미지 2" 
+                      className="w-full h-48 object-cover rounded-lg shadow-md"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCopyImage("/guest2.jpg", "이미지 2")}
+                      className="w-full"
+                      data-testid="button-copy-image-2"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      이미지 복사
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    <img 
+                      src="/guest3.jpg" 
+                      alt="게스트 모집 이미지 3" 
+                      className="w-full h-48 object-cover rounded-lg shadow-md"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCopyImage("/guest3.jpg", "이미지 3")}
+                      className="w-full"
+                      data-testid="button-copy-image-3"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      이미지 복사
+                    </Button>
+                  </div>
+                  <div className="space-y-2">
+                    <img 
+                      src="/guest4.jpg" 
+                      alt="게스트 모집 이미지 4" 
+                      className="w-full h-48 object-cover rounded-lg shadow-md"
+                    />
+                    <Button
+                      type="button"
+                      variant="outline"
+                      size="sm"
+                      onClick={() => handleCopyImage("/guest4.jpg", "이미지 4")}
+                      className="w-full"
+                      data-testid="button-copy-image-4"
+                    >
+                      <Copy className="h-4 w-4 mr-2" />
+                      이미지 복사
+                    </Button>
+                  </div>
                 </div>
               </div>
             </div>
