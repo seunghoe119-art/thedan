@@ -283,7 +283,7 @@ export default function GuestPage() {
                     data-testid="button-ai-assist"
                   >
                     <Sparkles className="h-4 w-4 mr-1" />
-                    {isGenerating ? "생성 중..." : "AI 도움받기"}
+                    {isGenerating ? "생성 중..." : "AI 게스트 모집글 작성하기"}
                   </Button>
                 </div>
               </div>
