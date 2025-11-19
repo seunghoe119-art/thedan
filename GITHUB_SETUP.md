@@ -62,7 +62,7 @@ GitHub Pages에 자동 배포하려면 GitHub Secrets에 환경 변수를 추가
 4. 다음 환경 변수들을 하나씩 추가:
    - `VITE_SUPABASE_URL` - Supabase 프로젝트 URL
    - `VITE_SUPABASE_ANON_KEY` - Supabase anon key
-   - `OPENAI_API_KEY` - OpenAI API 키 (Guest 페이지 AI 기능용)
+   - `VITE_OPENAI_API_KEY` - OpenAI API 키 (Guest 페이지 AI 기능용)
 
 ### 로컬에서 실행할 때
 
@@ -71,7 +71,7 @@ GitHub Pages에 자동 배포하려면 GitHub Secrets에 환경 변수를 추가
 ```bash
 VITE_SUPABASE_URL=your_supabase_url
 VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
-OPENAI_API_KEY=your_openai_api_key
+VITE_OPENAI_API_KEY=your_openai_api_key
 ```
 
 ## GitHub Pages에 배포하기
@@ -100,7 +100,7 @@ GitHub Pages를 사용하는 경우:
 2. 환경 변수를 플랫폼의 설정에서 추가합니다:
    - `VITE_SUPABASE_URL`
    - `VITE_SUPABASE_ANON_KEY`
-   - `OPENAI_API_KEY`
+   - `VITE_OPENAI_API_KEY`
 3. 빌드 명령어: `npm run build`
 4. 출력 디렉토리: `dist/public` (중요: `dist`가 아닙니다!)
 5. 환경 변수에 `NODE_ENV=production` 추가
