@@ -6,6 +6,10 @@ This is a modern basketball club website built with React and TypeScript. The ap
 
 ## Recent Changes (November 2025)
 
+- **Removed backend dependency for AI features**: Modified GuestPage to call OpenAI API directly from the frontend, enabling AI functionality on GitHub Pages static hosting
+- **Updated environment variables**: Changed from `OPENAI_API_KEY` to `VITE_OPENAI_API_KEY` for frontend use
+- **Optimized for static deployment**: Application now fully works on GitHub Pages without requiring a backend server
+- **Added CNAME file**: Created `client/public/CNAME` for custom domain (fbc.pics) support
 - **Added image copy functionality**: Implemented copy-to-clipboard buttons for all 4 guest recruitment images using Clipboard API with toast notifications
 - **Fixed deployment documentation**: Updated GITHUB_SETUP.md to clarify that `dist/public` (not `dist`) should be deployed to GitHub Pages as the web root to ensure all images load correctly
 
