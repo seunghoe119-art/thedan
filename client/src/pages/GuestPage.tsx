@@ -279,7 +279,7 @@ export default function GuestPage() {
                     size="sm"
                     onClick={handleAIAssist}
                     disabled={isGenerating}
-                    className="h-8"
+                    className="h-8 bg-[#e60000] text-white hover:bg-[#cc0000] border-[#e60000]"
                     data-testid="button-ai-assist"
                   >
                     <Sparkles className="h-4 w-4 mr-1" />
