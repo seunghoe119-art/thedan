@@ -290,7 +290,10 @@ export default function GuestPage() {
 
               <Textarea
                 data-testid="textarea-content"
-                placeholder="내용을 입력하세요."
+                placeholder="'오늘 8월 19일이야. 이번주 금요일 기준으로 모집글 작성해줘 연락처는 0100000000'
+'오늘 8월 23일 토요일이야. 다음주 금요일로 만들어줘 연락처는 0100000000'
+'2025년 9월 2일 기준으로 글 써줘연락처는 0100000000'
+'오늘은 9월 1일, 2파전으로 작성해줘 연락처는 0100000000, 게스트비는 7천원'"
                 value={content}
                 onChange={(e) => setContent(e.target.value)}
                 className="min-h-[400px] border-0 rounded-none resize-none focus-visible:ring-0"
