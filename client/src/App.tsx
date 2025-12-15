@@ -23,8 +23,8 @@ import AdminEditPostPage from "@/pages/AdminEditPostPage";
 import NotFound from "@/pages/not-found";
 
 function AppRouter() {
-  // GitHub Pages base path 설정
-  const basePath = import.meta.env.PROD ? '/ICNFBC-app' : '';
+  // Base path 설정: 환경 변수로 제어, 기본값은 빈 문자열 (커스텀 도메인/Vercel용)
+  const basePath = import.meta.env.VITE_BASE_PATH || '';
   
   return (
     <AuthProvider>
