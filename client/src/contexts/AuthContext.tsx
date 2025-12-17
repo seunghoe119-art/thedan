@@ -38,6 +38,11 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const isAdmin = profile?.role === 'admin' && profile?.status === 'approved';
 
   useEffect(() => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
+
     // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
@@ -66,6 +71,10 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   }, []);
 
   const fetchProfile = async (userId: string) => {
+    if (!supabase) {
+      setLoading(false);
+      return;
+    }
     try {
       const { data, error } = await supabase
         .from('profiles')
@@ -88,6 +97,12 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   };
 
   const signOut = async () => {
+    if (!supabase) {
+      setUser(null);
+      setProfile(null);
+      setLoading(false);
+      return;
+    }
     try {
       // First, call Supabase signOut with global scope
       await supabase.auth.signOut({ scope: 'global' });
