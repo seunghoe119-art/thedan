@@ -5,7 +5,7 @@ export default function Rules() {
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black text-black mb-6">Club Guidelines</h2>
           <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-            동호회를 더욱 강화하고 집중하여 유지하기 위한 운영 회칙 요약 카드입니다.
+            현재 수정중입니다. 25.12.17
           </p>
         </div>
 
