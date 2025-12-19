@@ -5,7 +5,7 @@ export default function Rules() {
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black text-black mb-6">Club Guidelines</h2>
           <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-            현재 수정중입니다. 25.12.17
+            기준 25.12.17
           </p>
         </div>
 
@@ -69,7 +69,7 @@ export default function Rules() {
               매주 팀의 밸런스는 키/나이/포지션 을 참고로 큰틀에서 AI가 매칭후, 친구 or 미세조정 합니다
             </p>
             <div className="space-y-2 text-sm text-gray-600">
-              <p>• 블랙팀. 초기 멤버 ICN F 기반</p>
+              <p>• 블랙팀. 창단 멤버 + 정규멤버</p>
               <p>• 화이트팀 정규멤버</p>
               <p>• 레드팀 정규멤버 + 게스트위주</p>
             </div>
