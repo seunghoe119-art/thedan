@@ -22,11 +22,9 @@ export default function JoinUs() {
   // Helper functions for text generation and copying
   const getPositionText = (position: string) => {
     const positionMap: { [key: string]: string } = {
-      guard: "포인트 가드",
-      shooting: "슈팅 가드",
-      forward: "스몰 포워드",
-      power: "파워 포워드",
-      center: "센터"
+      leading: "리딩 가드 1,2번",
+      small: "스몰포워드 2,3번",
+      baseline: "밑선라인 4,5번"
     };
     return positionMap[position] || position;
   };
@@ -180,11 +178,9 @@ export default function JoinUs() {
                     data-testid="select-position"
                   >
                     <option value="">포지션 선택</option>
-                    <option value="guard">포인트 가드</option>
-                    <option value="shooting">슈팅 가드</option>
-                    <option value="forward">스몰 포워드</option>
-                    <option value="power">파워 포워드</option>
-                    <option value="center">센터</option>
+                    <option value="leading">리딩 가드 1,2번</option>
+                    <option value="small">스몰포워드 2,3번</option>
+                    <option value="baseline">밑선라인 4,5번</option>
                   </select>
                 </div>
                 <div>
