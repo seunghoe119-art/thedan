@@ -15,8 +15,8 @@ export default function Rules() {
             <div className="space-y-4">
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-bold">정규 회원 - 가입비 없음</h4>
-                <p className="text-gray-600">₩5,000~6,000 / 회</p>
-                <p className="text-xs text-gray-500 mt-1">*대관비 불충족 시 ₩6,000</p>
+                <p className="text-gray-600">₩5,000 / 회</p>
+                <p className="text-xs text-gray-500 mt-1">*게스트 없는 대관비 불충족 시 ₩6,000, 천원 다음달 청구</p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-bold">매월 회 선택가능</h4>
@@ -24,7 +24,7 @@ export default function Rules() {
               </div>
               <div className="border-l-4 border-accent pl-4">
                 <h4 className="font-bold">회 초과시 게스트비로 전환</h4>
-                <p className="text-gray-600">매월 초기화 후 재모집</p>
+                <p className="text-gray-600">게스트비는 정규회원5천원 참가 인원에 따라 8천원~1만원 변동</p>
               </div>
             </div>
           </div>
