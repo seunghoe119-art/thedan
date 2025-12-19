@@ -1,12 +1,7 @@
 import { useState } from "react";
 import { ChevronLeft, ChevronRight } from "lucide-react";
-import slide1 from "@assets/a2-1_1766125739742.jpg";
-import slide2 from "@assets/a2-2_1766125739742.jpg";
-import slide3 from "@assets/a2-3_1766125739743.jpg";
-import slide4 from "@assets/a2-4_1766125739743.jpg";
-import slide5 from "@assets/a2-5_1766125739743.jpg";
 
-const slides = [slide1, slide2, slide3, slide4, slide5];
+const slides = ["/v1.png", "/v2.png", "/v3.png", "/v4.png", "/v5.png"];
 
 export default function About() {
   const [currentIndex, setCurrentIndex] = useState(0);
