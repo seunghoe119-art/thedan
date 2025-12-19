@@ -5,7 +5,7 @@ export default function Tournaments() {
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black text-black mb-6">우측 상단에서 코트 그외 정보확인</h2>
           <p className="text-xl text-gray-600 font-light max-w-4xl mx-auto">
-            코트 위치 확인<br /> 최상급 코트 시설확인<br />(팀룰 및 참여인원등은 변동)
+            모바일 환경에 최적화되어있습니다.
           </p>
         </div>
 
