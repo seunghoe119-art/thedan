@@ -36,7 +36,7 @@ export default function About() {
 
   return (
     <section className="bg-white relative z-10">
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto pb-0">
         <div className="relative w-full overflow-hidden">
           <div
             className="flex transition-transform duration-500 ease-in-out"
