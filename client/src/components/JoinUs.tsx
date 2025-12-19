@@ -132,6 +132,12 @@ export default function JoinUs() {
                   <p className="text-gray-400 mb-3">개인 검정 흰색 유니폼 사용</p>
                   <p className="text-2xl font-bold text-green-500">무료</p>
                 </div>
+
+                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
+                  <h4 className="font-bold text-lg mb-2">정규 팀 유니폼 없음</h4>
+                  <p className="text-gray-400 mb-3">개인 검정 흰색 유니폼 사용</p>
+                  <p className="text-2xl font-bold text-green-500">무료</p>
+                </div>
               </div>
             </div>
           </div>
