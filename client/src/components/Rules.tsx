@@ -64,14 +64,14 @@ export default function Rules() {
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="font-bold text-2xl mb-6">작성중2</h3>
+            <h3 className="font-bold text-2xl mb-6">3파전 진행</h3>
             <p className="text-gray-700 mb-4">
               .
             </p>
             <div className="space-y-2 text-sm text-gray-600">
-              <p>• 1일차</p>
-              <p>• 2일차</p>
-              <p>• 3일차</p>
+              <p>• 블랙팀. 초기 멤버 ICN F 기반</p>
+              <p>• 화이트팀 정규멤버</p>
+              <p>• 레드팀 정규멤버 + 게스트위주</p>
             </div>
           </div>
 
