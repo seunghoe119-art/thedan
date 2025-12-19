@@ -192,7 +192,7 @@ export default function BoardPage() {
         <div className="text-center mb-16">
           <h1 className="text-5xl md:text-6xl font-black text-black mb-6">Video Board</h1>
           <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-            모든 영상을 한눈에
+            25년을 개편으로, 개인 동영상에 전체 동영상으로 변경
           </p>
           
           {/* Search */}
