@@ -22,7 +22,17 @@ export default function Hero() {
           <span className="text-accent">THE COURT</span>
         </h1>
         <p className="text-xl md:text-2xl text-white/90 font-light mb-12 max-w-2xl mx-auto">
-          INCHEON, Basketball Team, F.B.C
+          Basketball Team, <span 
+            className="font-black text-3xl md:text-4xl"
+            style={{ 
+              background: 'linear-gradient(135deg, #ff0000, #cc0000, #990000)', 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
+            THE DAN
+          </span>
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
