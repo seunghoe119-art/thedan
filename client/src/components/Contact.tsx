@@ -18,7 +18,7 @@ const contactMethods = [
   },
   {
     name: "온나라 메일",
-    description: "인천농구 총무 kk7079@mail.go.kr",
+    description: "이메일 문의",
     icon: Mail,
     color: "blue-500",
     hoverColor: "blue-500",
