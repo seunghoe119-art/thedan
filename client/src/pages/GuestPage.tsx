@@ -426,6 +426,39 @@ https://open.kakao.com/o/gpnEzTJh
                 </Button>
                 <Button
                   type="button"
+                  variant={selectedPrice === 8000 ? "default" : "ghost"}
+                  size="sm"
+                  className={`h-8 px-2 ${selectedPrice === 8000 ? 'bg-[#e60000] text-white hover:bg-[#cc0000]' : ''}`}
+                  data-testid="button-price-8000"
+                  title="게스트비 8천원"
+                  onClick={() => handlePriceClick(8000)}
+                >
+                  <span className="text-xs">8천원</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={selectedPrice === 9000 ? "default" : "ghost"}
+                  size="sm"
+                  className={`h-8 px-2 ${selectedPrice === 9000 ? 'bg-[#e60000] text-white hover:bg-[#cc0000]' : ''}`}
+                  data-testid="button-price-9000"
+                  title="게스트비 9천원"
+                  onClick={() => handlePriceClick(9000)}
+                >
+                  <span className="text-xs">9천원</span>
+                </Button>
+                <Button
+                  type="button"
+                  variant={selectedPrice === 10000 ? "default" : "ghost"}
+                  size="sm"
+                  className={`h-8 px-2 ${selectedPrice === 10000 ? 'bg-[#e60000] text-white hover:bg-[#cc0000]' : ''}`}
+                  data-testid="button-price-10000"
+                  title="게스트비 1만원"
+                  onClick={() => handlePriceClick(10000)}
+                >
+                  <span className="text-xs">1만원</span>
+                </Button>
+                <Button
+                  type="button"
                   variant="ghost"
                   size="sm"
                   className="h-8 px-2"
