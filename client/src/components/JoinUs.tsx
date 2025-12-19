@@ -31,11 +31,11 @@ export default function JoinUs() {
 
   const getSizeText = (size: string) => {
     const sizeMap: { [key: string]: string } = {
-      s: "소형 (S)",
-      m: "중형 (M)",
-      l: "대형 (L)",
-      xl: "특대 (XL)",
-      xxl: "특특대 (XXL)"
+      s: "상의사이즈 S 95",
+      m: "상의사이즈 M 100",
+      l: "상의사이즈 L 105",
+      xl: "상의사이즈 XL 110",
+      xxl: "상의사이즈 XXL 115"
     };
     return sizeMap[size] || size;
   };
@@ -193,11 +193,11 @@ export default function JoinUs() {
                     data-testid="select-jersey-size"
                   >
                     <option value="">사이즈 선택</option>
-                    <option value="s">소형 (S)</option>
-                    <option value="m">중형 (M)</option>
-                    <option value="l">대형 (L)</option>
-                    <option value="xl">특대 (XL)</option>
-                    <option value="xxl">특특대 (XXL)</option>
+                    <option value="s">상의사이즈 S 95</option>
+                    <option value="m">상의사이즈 M 100</option>
+                    <option value="l">상의사이즈 L 105</option>
+                    <option value="xl">상의사이즈 XL 110</option>
+                    <option value="xxl">상의사이즈 XXL 115</option>
                   </select>
                 </div>
               </div>
