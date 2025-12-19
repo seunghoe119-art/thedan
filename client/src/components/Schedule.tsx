@@ -5,12 +5,12 @@ const scheduleItems = [
     location: "정규 대관 체육관",
   },
   {
-    title: "초청팀 초청",
-    time: "지인 초청 가능",
-    location: "홈 or 원정 - 친선 경기",
+    title: "정수기, 연습용 농구공들, (회원)유니폼색 지정",
+    time: "",
+    location: "농구화 옷만 가방에 넣어서 오는 미니멀 간편함",
   },
   {
-    title: "정기 교류전 팀 구인중",
+    title: "냉난방기*3 카페형 휴게실 샤워실 넉넉한 주차장",
     time: " ",
     location: "",
   },

@@ -3,17 +3,17 @@ import { useLocation } from "wouter";
 
 const newsItems = [
   {
-    date: "2024년 3월 10일",
-    title: "챔피언십 우승",
-    excerpt: "뛰어난 팀 퍼포먼스로 지역 챔피언십을 차지했습니다.",
-  },
-  {
-    date: "2025년 7월 20일",
+    date: "2025년 3월 10일",
     title: "새로운 훈련 시설",
     excerpt: "모든 팀원과 커뮤니티를 위한 새로운 홈 체육관으로 선정하였습니다.",
   },
   {
-    date: "2026년 0월",
+    date: "2026년 1월 1일",
+    title: "THE DAN팀 창단",
+    excerpt: "THE DAN 팀으로 정규회원 모집을 시작합니다.",
+  },
+  {
+    date: "2027년 0월",
     title: "추가 소식 업데이트 대기중",
     excerpt: "마커스 존슨이 팀 주장이 되기까지의 여정을 소개합니다.",
   },
