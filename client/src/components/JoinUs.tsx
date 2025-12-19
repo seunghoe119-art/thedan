@@ -31,20 +31,20 @@ export default function JoinUs() {
 
   const getSizeText = (size: string) => {
     const sizeMap: { [key: string]: string } = {
-      s: "상의사이즈 S 95",
-      m: "상의사이즈 M 100",
-      l: "상의사이즈 L 105",
-      xl: "상의사이즈 XL 110",
-      xxl: "상의사이즈 XXL 115"
+      s: "사이즈 S 95",
+      m: "사이즈 M 100",
+      l: "사이즈 L 105",
+      xl: "사이즈 XL 110",
+      xxl: "사이즈 XXL 115"
     };
     return sizeMap[size] || size;
   };
 
   const getMembershipText = (type: string) => {
     const membershipMap: { [key: string]: string } = {
-      regular: "정규 회원",
-      dormant: "휴면 회원",
-      firefighter: "학교 재학생 혹은 합격자"
+      regular: "정규 회원 월2회",
+      dormant: "정규 회원 월4회",
+      firefighter: "입단전 게스트 신청"
     };
     return membershipMap[type] || type;
   };
@@ -54,7 +54,7 @@ export default function JoinUs() {
       return "모든 필드를 입력해주세요.";
     }
     
-    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 포지션 ${getPositionText(formData.position)}, 유니폼사이즈 ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
+    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 포지션 ${getPositionText(formData.position)}, (상의) ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
   };
 
   const copyToClipboard = async () => {
@@ -96,7 +96,7 @@ export default function JoinUs() {
     }
 
     // Redirect to KakaoTalk open chat
-    window.open("https://open.kakao.com/o/s5gBNvNh", "_blank");
+    window.open("https://open.kakao.com/o/skS1in7h", "_blank");
   };
 
   return (
@@ -122,21 +122,21 @@ export default function JoinUs() {
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">휴면 회원</h4>
-                  <p className="text-gray-400 mb-3">3개월 단위로 신청가능; 참석 시 게스트 요금 적용</p>
-                  <p className="text-2xl font-bold text-accent">₩5,000/월</p>
+                  <h4 className="font-bold text-lg mb-2">게스트 비용 - 회수 초과시 게스트비</h4>
+                  <p className="text-gray-400 mb-3">매주 참가인원을 보고 게스트비 선정</p>
+                  <p className="text-2xl font-bold text-accent">₩8,000~10,000/회</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">정규 팀 유니폼 없음</h4>
+                  <h4 className="font-bold text-lg mb-2">팀 유니폼 없음</h4>
                   <p className="text-gray-400 mb-3">개인 검정 흰색 유니폼 사용</p>
                   <p className="text-2xl font-bold text-green-500">무료</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">정규 팀 유니폼 없음</h4>
-                  <p className="text-gray-400 mb-3">개인 검정 흰색 유니폼 사용</p>
-                  <p className="text-2xl font-bold text-green-500">무료</p>
+                  <h4 className="font-bold text-lg mb-2">(필수) 레드 스포츠 저지</h4>
+                  <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 다이소 조끼 착용</p>
+                  <p className="text-2xl font-bold text-accent">₩6,000</p>
                 </div>
               </div>
             </div>
@@ -221,7 +221,7 @@ export default function JoinUs() {
                       required
                       data-testid="radio-membership-regular"
                     />
-                    <span className="ml-3">정규 회원 (₩19,000/월)</span>
+                    <span className="ml-3">정규 회원 (₩10,000/월2회)</span>
                   </label>
                   <label className="flex items-center">
                     <input 
@@ -233,7 +233,7 @@ export default function JoinUs() {
                       required
                       data-testid="radio-membership-dormant"
                     />
-                    <span className="ml-3">휴면 회원 (₩5,000/월)</span>
+                    <span className="ml-3">정규 회원 (₩20,000/월4회)</span>
                   </label>
                   <label className="flex items-center">
                     <input 
@@ -245,7 +245,7 @@ export default function JoinUs() {
                       required
                       data-testid="radio-membership-firefighter"
                     />
-                    <span className="ml-3">학교 재학생 혹은 합격자 (무료)</span>
+                    <span className="ml-3">입단전 게스트 (게스트비 적용)</span>
                   </label>
                 </div>
               </div>
