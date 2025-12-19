@@ -35,7 +35,7 @@ export default function News() {
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black mb-6">Latest News</h2>
           <p className="text-xl text-gray-400 font-light">
-            ICN FIRE 소식을 확인하세요.
+            THE DAN 소식을 확인하세요.
           </p>
         </div>
 
