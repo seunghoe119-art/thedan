@@ -23,7 +23,7 @@ export default function About() {
     <section className="bg-white relative z-10">
       <div className="max-w-7xl mx-auto">
         <div className="relative w-full overflow-hidden">
-          <div 
+          <div
             className="flex transition-transform duration-500 ease-in-out"
             style={{ transform: `translateX(-${currentIndex * 100}%)` }}
           >
@@ -71,23 +71,23 @@ export default function About() {
 
         <div className="grid lg:grid-cols-2 gap-16 items-center py-16 md:py-32 px-4 lg:px-8">
           <div>
-            <img 
-              src="/basketball court.jpeg" 
-              alt="Basketball team1" 
+            <img
+              src="/basketball court.jpeg"
+              alt="Basketball team1"
               className="rounded-2xl shadow-2xl"
             />
           </div>
 
           <div className="space-y-8 animate-slide-up">
             <h2 className="text-5xl md:text-6xl font-black text-black mb-8">
-              Play Hard.<br/>
+              Play Hard.
+              <br />
               <span className="text-gray-400">Grow Together.</span>
             </h2>
-            <p className="text-xl text-gray-600 font-light leading-relaxed mb-8">
-              정규코트 5대5 농구를 통해 포지션별<br /> 역할, 공간 활용, 팀 전술을 익혀<br /> 모두가 함께 성장합니다.
-            </p>
+            <p className="text-xl text-gray-600 font-light leading-relaxed mb-8"></p>
             <p className="text-xl text-gray-700 leading-relaxed">
-              꾸준한 참여로 전술 이해도와 팀워크가<br /> 향상되어 팀농구를 배울 수 있습니다.
+              스트레스 없는 ‘클린 농구’ 환경
+              <br /> 게스트 아닌 팀원으로 플레이합니다.
             </p>
 
             <div className="space-y-6">
@@ -96,8 +96,13 @@ export default function About() {
                   <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">체계적인 5대5 훈련</h3>
-                  <p className="text-gray-600">포지션별 역할, 공간 활용, 전술 세트를 통해 팀 조직력을 향상시킵니다.</p>
+                  <h3 className="font-bold text-lg mb-2">
+                    ① 매주 ‘뽑기’ 없는 확정 농구
+                  </h3>
+                  <p className="text-gray-600">
+                    매주 신청 경쟁, 대기, 탈락 스트레스
+                    <br />내 자리는 신청하고플때 확보
+                  </p>
                 </div>
               </div>
 
@@ -106,8 +111,14 @@ export default function About() {
                   <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">팀별 친선경기 & 전국체전</h3>
-                  <p className="text-gray-600">교류전에서 팀전술을 도전하고<br /> 발전할 기회를 제공합니다.</p>
+                  <h3 className="font-bold text-lg mb-2">
+                    ② 농구 퀄리티가 매주 유지됩니다
+                  </h3>
+                  <p className="text-gray-600">
+                    멤버가 고정되니
+                    <br /> 패스, 수비 로테이션이 맞아갑니다.
+                    <br />운 좋은 날만 재밌는 농구가 아닙니다.
+                  </p>
                 </div>
               </div>
 
@@ -116,8 +127,15 @@ export default function About() {
                   <div className="w-2 h-2 bg-white rounded-full"></div>
                 </div>
                 <div>
-                  <h3 className="font-bold text-lg mb-2">누구나 즐기는 농구</h3>
-                  <p className="text-gray-600">5:5 농구 경험이 없어도 환영!<br /> 기초부터 차근차근 배워가는 <br />환경을 제공합니다.</p>
+                  <h3 className="font-bold text-lg mb-2">
+                    ③ 돈은 덜 쓰고, 만족도는 더 큽니다
+                  </h3>
+                  <p className="text-gray-600">
+                    게스트 농구 대비 참여 비용 절감
+                    <br /> 매주 참여 기준 → 체감 비용 확실히 낮음
+                    <br />
+                    “돈 냈는데 재미없다” 확률 최소화
+                  </p>
                 </div>
               </div>
             </div>
