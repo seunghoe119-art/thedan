@@ -20,8 +20,8 @@ export default function About() {
   };
 
   return (
-    <section className="py-16 md:py-32 bg-white relative z-10">
-      <div className="max-w-7xl mx-auto px-0 md:px-4 lg:px-8">
+    <section className="bg-white relative z-10">
+      <div className="max-w-7xl mx-auto">
         <div className="relative w-full overflow-hidden">
           <div 
             className="flex transition-transform duration-500 ease-in-out"
@@ -32,7 +32,7 @@ export default function About() {
                 <img
                   src={slide}
                   alt={`Slide ${index + 1}`}
-                  className="w-full h-auto object-contain md:rounded-2xl"
+                  className="w-full h-auto object-cover"
                   data-testid={`slide-image-${index}`}
                 />
               </div>
@@ -69,7 +69,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-center mt-16 px-4 md:px-0">
+        <div className="grid lg:grid-cols-2 gap-16 items-center py-16 md:py-32 px-4 lg:px-8">
           <div>
             <img 
               src="/basketball court.jpeg" 
