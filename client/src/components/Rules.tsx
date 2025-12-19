@@ -66,7 +66,7 @@ export default function Rules() {
           <div className="bg-white rounded-2xl p-8 shadow-lg">
             <h3 className="font-bold text-2xl mb-6">3파전 진행</h3>
             <p className="text-gray-700 mb-4">
-              .
+              매주 팀의 밸런스는 키/나이/포지션 을 참고로 큰틀에서 AI가 매칭후, 친구 or 미세조정 합니다
             </p>
             <div className="space-y-2 text-sm text-gray-600">
               <p>• 블랙팀. 초기 멤버 ICN F 기반</p>
