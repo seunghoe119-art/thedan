@@ -104,7 +104,7 @@ export default function Highlights() {
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black text-black mb-6">Last Week on the Court</h2>
           <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
-            지난 주 코트 위 순간들
+            내 플레이를 직접 확인할 수 있습니다.<br />매주 쌓이는 나만의 농구 기록
           </p>
         </div>
 
