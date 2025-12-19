@@ -57,29 +57,7 @@ export default function Navigation() {
         <div className="flex justify-between items-center h-16">
           <div className="flex items-center space-x-3">
             <span className="font-extrabold text-3xl">
-              <span style={{ color: '#0099ff' }}>ICN</span>
-              {location === "/board" ? (
-                <span 
-                  className="mx-2 cursor-pointer" 
-                  style={{ 
-                    background: 'linear-gradient(90deg, #ff4500, #ff7b00)', 
-                    WebkitBackgroundClip: 'text', 
-                    WebkitTextFillColor: 'transparent',
-                    backgroundClip: 'text'
-                  }}
-                  onClick={() => handleNavigation("/admin/new")}
-                >
-                  FIRE
-                </span>
-              ) : (
-                <span className="mx-2" style={{ 
-                  background: 'linear-gradient(90deg, #ff4500, #ff7b00)', 
-                  WebkitBackgroundClip: 'text', 
-                  WebkitTextFillColor: 'transparent',
-                  backgroundClip: 'text'
-                }}>FIRE</span>
-              )}
-              <span className="text-white">, F.B.C Team</span>
+              <span style={{ color: '#e60000' }}>THE DAN</span>
             </span>
           </div>
           
