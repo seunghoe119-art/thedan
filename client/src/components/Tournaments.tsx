@@ -12,23 +12,23 @@ export default function Tournaments() {
         <div className="max-w-3xl mx-auto">
           <div className="space-y-8">
             <div className="bg-gray-50 rounded-2xl p-8">
-              <h3 className="font-bold text-2xl mb-4">토너먼트 혜택</h3>
+              <h3 className="font-bold text-2xl mb-4">오른쪽 메뉴 상단 안내</h3>
               <ul className="space-y-3 text-gray-700">
                 <li className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span>공식 출장 인정</span>
+                  <span>홈코트 확인 / 시설 </span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span>교통비 지원</span>
+                  <span>5천원/회 정규회원 및 운영안내</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span>식비 및 숙박 일당</span>
+                  <span>회원 모집 접수 안내</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-accent rounded-full"></div>
-                  <span>3일간 토너먼트 형식</span>
+                  <span>THE DAN 동호회 SNS, 갤러리 신설예정</span>
                 </li>
               </ul>
             </div>
