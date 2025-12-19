@@ -9,20 +9,7 @@ export default function Tournaments() {
           </p>
         </div>
 
-        <div className="grid md:grid-cols-2 gap-12">
-          <div className="relative">
-            <img 
-              src="/group image.jpeg" 
-              alt="Team celebration after tournament victory" 
-              className="rounded-2xl shadow-xl w-full"
-            />
-            <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent rounded-2xl"></div>
-            <div className="absolute bottom-6 left-6 text-white">
-              <h3 className="font-bold text-xl mb-2">전국체전대회</h3>
-              <p className="text-white/80">챔피언십 토너먼트</p>
-            </div>
-          </div>
-
+        <div className="max-w-3xl mx-auto">
           <div className="space-y-8">
             <div className="bg-gray-50 rounded-2xl p-8">
               <h3 className="font-bold text-2xl mb-4">토너먼트 혜택</h3>
