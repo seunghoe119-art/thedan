@@ -84,7 +84,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="py-16 md:py-32 px-4 lg:px-8">
+        <div className="px-4 lg:px-8">
           <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl">
             <div
               className="flex transition-transform duration-500 ease-in-out"
