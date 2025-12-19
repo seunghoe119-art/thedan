@@ -54,7 +54,7 @@ export default function JoinUs() {
       return "모든 필드를 입력해주세요.";
     }
     
-    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 포지션 ${getPositionText(formData.position)}, 유니폼사이즈 ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 인천소방농구에 가입 문의입니다.`;
+    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 포지션 ${getPositionText(formData.position)}, 유니폼사이즈 ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
   };
 
   const copyToClipboard = async () => {
@@ -117,8 +117,8 @@ export default function JoinUs() {
               <div className="space-y-6">
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">정규 회원</h4>
-                  <p className="text-gray-400 mb-3">월 2회 이상 참석 시 최적</p>
-                  <p className="text-2xl font-bold text-accent">₩19,000/월</p>
+                  <p className="text-gray-400 mb-3">월 2회 / 월 4회 선택가능</p>
+                  <p className="text-2xl font-bold text-accent">₩5,000/회</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
@@ -128,8 +128,8 @@ export default function JoinUs() {
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">학교 재학생 혹은 합격자</h4>
-                  <p className="text-gray-400 mb-3">증빙자료와 함께 담당자에게 개인 연락</p>
+                  <h4 className="font-bold text-lg mb-2">정규 팀 유니폼 없음</h4>
+                  <p className="text-gray-400 mb-3">개인 검정 흰색 유니폼 사용</p>
                   <p className="text-2xl font-bold text-green-500">무료</p>
                 </div>
               </div>
