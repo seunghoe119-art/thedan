@@ -3,9 +3,9 @@ export default function Tournaments() {
     <section className="py-32 bg-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-black text-black mb-6">Nationwide & Friendlies</h2>
+          <h2 className="text-5xl md:text-6xl font-black text-black mb-6">우측 상단에서 코트 그외 정보확인</h2>
           <p className="text-xl text-gray-600 font-light max-w-4xl mx-auto">
-            매년 전국체전에 참가하고 도시간<br /> 대회 본선 경기를 진행합니다.<br />(서울 인천 경기북부,남부 강원 충북 충남 전북 전남 경북 경남 부산 대구 울산 세종 제주도)
+            코트 위치 확인<br /> 최상급 코트 시설확인<br />(팀룰 및 참여인원등은 변동)
           </p>
         </div>
 
@@ -47,19 +47,19 @@ export default function Tournaments() {
             </div>
 
             <div className="border-2 border-gray-200 rounded-2xl p-8">
-              <h3 className="font-bold text-xl mb-4">토너먼트 진행</h3>
+              <h3 className="font-bold text-xl mb-4">매주 투표 진행</h3>
               <div className="space-y-3">
                 <div className="flex items-center space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm">1</div>
-                  <span className="text-gray-700">1일차: 예선</span>
+                  <span className="text-gray-700">1일전까지 정규참가자파악</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm">2</div>
-                  <span className="text-gray-700">2일차: 본선</span>
+                  <span className="text-gray-700">당일날 게스트로 전환</span>
                 </div>
                 <div className="flex items-center space-x-4">
                   <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center font-bold text-sm">3</div>
-                  <span className="text-gray-500">3일차: 8강 및 결승 (진출 시)</span>
+                  <span className="text-gray-500">경기진행 보조시 월회비 면제 (사전연락)</span>
                 </div>
               </div>
             </div>

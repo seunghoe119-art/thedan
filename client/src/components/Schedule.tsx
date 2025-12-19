@@ -10,9 +10,9 @@ const scheduleItems = [
     location: "농구화 옷만 가방에 넣어서 오는 미니멀 간편함",
   },
   {
-    title: "냉난방기*3 카페형 휴게실 샤워실 넉넉한 주차장",
+    title: "냉난방기*3, 유리 대기실, 샤워실, 넉넉한 주차장",
     time: " ",
-    location: "",
+    location: "최상의 코트시설, 동영상촬영도 진행",
   },
 ];
 
@@ -61,8 +61,8 @@ export default function Schedule() {
             ))}
 
             <div className="bg-accent/10 border border-accent rounded-xl p-6 mt-8">
-              <h4 className="font-bold text-lg mb-2">다음 주요 이벤트</h4>
-              <p className="text-gray-300">전국체전 - 2026년 6월 초</p>
+              <h4 className="font-bold text-lg mb-2">최상급 코트 시설과 부대시설</h4>
+              <p className="text-gray-300">악취 벌레많은 창고형 아닌 최신식 건물 실내 건물</p>
             </div>
           </div>
         </div>
