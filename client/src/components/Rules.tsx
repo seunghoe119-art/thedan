@@ -15,7 +15,8 @@ export default function Rules() {
             <div className="space-y-4">
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-bold">정규 회원 - 가입비 없음</h4>
-                <p className="text-gray-600">₩5,000 / 회</p>
+                <p className="text-gray-600">₩5,000~6,000 / 회</p>
+                <p className="text-xs text-gray-500 mt-1">*대관비 불충족 시 ₩6,000</p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-bold">매월 회 선택가능</h4>
