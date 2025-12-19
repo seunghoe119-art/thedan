@@ -14,12 +14,12 @@ interface YoutubePost {
 
 export default function Highlights() {
   const { data: posts, isLoading, error } = useQuery({
-    queryKey: ['/api/youtube-posts'],
+    queryKey: ['/api/youtube-posts-highlights'],
     queryFn: async () => {
       const { data, error } = await supabase
         .from('youtube_posts')
         .select('id, title, description, youtube_id, youtube_url, created_at')
-        .order('created_at', { ascending: false, nullsFirst: false })
+        .order('created_at', { ascending: false })
         .limit(4);
       
       if (error) {
@@ -35,7 +35,9 @@ export default function Highlights() {
       }
       
       return data as YoutubePost[];
-    }
+    },
+    staleTime: 30000, // 30 seconds
+    refetchOnWindowFocus: true,
   });
 
   const renderVideoCard = (post: YoutubePost) => (
