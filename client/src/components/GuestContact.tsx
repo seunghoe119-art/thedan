@@ -12,6 +12,7 @@ export default function GuestContact() {
   const [formData, setFormData] = useState({
     name: "",
     contact: "",
+    age: "",
     position: "",
     jerseySize: "",
     membershipType: "",
@@ -49,11 +50,11 @@ export default function GuestContact() {
   };
 
   const generateMessage = () => {
-    if (!formData.name || !formData.contact || !formData.position || !formData.jerseySize || !formData.membershipType) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
       return "모든 필드를 입력해주세요.";
     }
     
-    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 포지션 ${getPositionText(formData.position)}, (상의) ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
+    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 나이 ${formData.age}, 포지션 ${getPositionText(formData.position)}, (상의) ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
   };
 
   const copyToClipboard = async () => {
@@ -85,7 +86,7 @@ export default function GuestContact() {
       return;
     }
 
-    if (!formData.name || !formData.contact || !formData.position || !formData.jerseySize || !formData.membershipType) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
       toast({
         title: "입력사항 확인",
         description: "모든 필드를 입력해주세요.",
@@ -172,6 +173,23 @@ export default function GuestContact() {
                     data-testid="guest-input-contact"
                   />
                 </div>
+              </div>
+
+              <div>
+                <Label className="text-white">나이</Label>
+                <select 
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
+                  value={formData.age}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                  required
+                  data-testid="guest-select-age"
+                >
+                  <option value="">나이 선택</option>
+                  <option value="20대">20대</option>
+                  <option value="30대">30대</option>
+                  <option value="40대">40대</option>
+                  <option value="47세이상">47세이상</option>
+                </select>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
