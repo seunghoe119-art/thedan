@@ -102,43 +102,44 @@ export default function GuestContact() {
           </p>
         </div>
 
-        <div className="grid lg:grid-cols-2 gap-16 items-start">
-          <div className="space-y-8">
-            <div className="bg-gray-900 rounded-2xl p-8">
-              <h3 className="font-bold text-2xl mb-4">회비 안내</h3>
-              
-              <div className="space-y-6">
-                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">정규 회원</h4>
-                  <p className="text-gray-400 mb-3">월 2회 / 월 4회 선택가능</p>
-                  <p className="text-2xl font-bold text-accent">₩5,000/회</p>
-                </div>
-
-                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">게스트 비용 - 회수 초과시 게스트비</h4>
-                  <p className="text-gray-400 mb-3">매주 참가인원을 보고 게스트비 선정</p>
-                  <p className="text-2xl font-bold text-accent">₩8,000~10,000/회</p>
-                </div>
-
-                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">팀 유니폼 없음</h4>
-                  <p className="text-gray-400 mb-3">개인 검정 흰색 유니폼 사용</p>
-                  <p className="text-2xl font-bold text-green-500">무료</p>
-                </div>
-
-                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">(필수) 레드 스포츠 저지</h4>
-                  <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 다이소 조끼 착용</p>
-                  <p className="text-2xl font-bold text-accent">₩6,000</p>
-                </div>
-              </div>
-            </div>
-          </div>
-
+        <div className="max-w-2xl mx-auto">
           <div className="bg-gray-900 rounded-2xl p-8">
-            <h3 className="font-bold text-2xl mb-6">신청서</h3>
+            <h3 className="font-bold text-2xl mb-6">게스트 신청서</h3>
             
             <form onSubmit={handleSubmit} className="space-y-6">
+              <div>
+                <Label className="text-white">나이</Label>
+                <select 
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
+                  value={formData.age}
+                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
+                  required
+                  data-testid="guest-select-age"
+                >
+                  <option value="">나이 선택</option>
+                  <option value="20대">20대</option>
+                  <option value="30대">30대</option>
+                  <option value="40대">40대</option>
+                  <option value="47세이상">47세이상</option>
+                </select>
+              </div>
+
+              <div>
+                <Label className="text-white">포지션</Label>
+                <select 
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
+                  value={formData.position}
+                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                  required
+                  data-testid="guest-select-position"
+                >
+                  <option value="">포지션 선택</option>
+                  <option value="leading">리딩 가드 1,2번</option>
+                  <option value="small">스몰포워드 2,3번</option>
+                  <option value="baseline">밑선라인 4,5번</option>
+                </select>
+              </div>
+
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <Label className="text-white">이름</Label>
@@ -199,39 +200,6 @@ export default function GuestContact() {
                     />
                   </div>
                 </div>
-              </div>
-
-              <div>
-                <Label className="text-white">나이</Label>
-                <select 
-                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
-                  value={formData.age}
-                  onChange={(e) => setFormData({ ...formData, age: e.target.value })}
-                  required
-                  data-testid="guest-select-age"
-                >
-                  <option value="">나이 선택</option>
-                  <option value="20대">20대</option>
-                  <option value="30대">30대</option>
-                  <option value="40대">40대</option>
-                  <option value="47세이상">47세이상</option>
-                </select>
-              </div>
-
-              <div>
-                <Label className="text-white">포지션</Label>
-                <select 
-                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
-                  value={formData.position}
-                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                  required
-                  data-testid="guest-select-position"
-                >
-                  <option value="">포지션 선택</option>
-                  <option value="leading">리딩 가드 1,2번</option>
-                  <option value="small">스몰포워드 2,3번</option>
-                  <option value="baseline">밑선라인 4,5번</option>
-                </select>
               </div>
 
               <div className="bg-black border border-gray-700 rounded-lg p-4">
