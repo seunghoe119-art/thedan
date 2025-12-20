@@ -164,11 +164,14 @@ export default function GuestContact() {
                 <div>
                   <Label className="text-white">연락처</Label>
                   <Input 
-                    type="text" 
-                    placeholder="전화번호/이메일"
+                    type="tel" 
+                    placeholder="전화번호"
                     className="bg-black border-gray-700 text-white mt-2"
                     value={formData.contact}
-                    onChange={(e) => setFormData({ ...formData, contact: e.target.value })}
+                    onChange={(e) => {
+                      const value = e.target.value.replace(/[^0-9]/g, '');
+                      setFormData({ ...formData, contact: value });
+                    }}
                     required
                     data-testid="guest-input-contact"
                   />
