@@ -105,7 +105,7 @@ export default function GuestContact() {
     <section className="py-32 bg-black text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-black mb-6">Contact Us (게스트)</h2>
+          <h2 className="text-5xl md:text-6xl font-black mb-6">APPLY(게스트신청)</h2>
           <p className="text-xl text-gray-400 font-light max-w-3xl mx-auto">
             게스트 신청
           </p>
