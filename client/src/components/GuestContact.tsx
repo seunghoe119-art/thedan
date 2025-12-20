@@ -165,12 +165,32 @@ export default function GuestContact() {
                   <Label className="text-white">연락처</Label>
                   <Input 
                     type="tel" 
-                    placeholder="전화번호"
+                    placeholder="010-0000-0000"
                     className="bg-black border-gray-700 text-white mt-2"
                     value={formData.contact}
                     onChange={(e) => {
-                      const value = e.target.value.replace(/[^0-9]/g, '');
-                      setFormData({ ...formData, contact: value });
+                      let value = e.target.value.replace(/[^0-9]/g, '');
+                      
+                      // 010으로 시작하지 않으면 자동으로 010 추가
+                      if (value.length > 0 && !value.startsWith('010')) {
+                        value = '010' + value;
+                      }
+                      
+                      // 최대 11자리까지만
+                      if (value.length > 11) {
+                        value = value.slice(0, 11);
+                      }
+                      
+                      // 포맷팅: 010-0000-0000
+                      let formatted = value;
+                      if (value.length > 3) {
+                        formatted = value.slice(0, 3) + '-' + value.slice(3);
+                      }
+                      if (value.length > 7) {
+                        formatted = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+                      }
+                      
+                      setFormData({ ...formData, contact: formatted });
                     }}
                     required
                     data-testid="guest-input-contact"
