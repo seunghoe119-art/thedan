@@ -166,7 +166,7 @@ export default function GuestContact() {
                       onChange={(e) => {
                         let value = e.target.value.replace(/[^0-9]/g, '');
                         
-                        // 010으로 시작하지 않으면 자동으로 010 추가
+                        // 이미 010으로 시작하면 그대로 사용, 아니면 010 추가
                         if (value.length > 0 && !value.startsWith('010')) {
                           value = '010' + value;
                         }
@@ -177,11 +177,12 @@ export default function GuestContact() {
                         }
                         
                         // 포맷팅: 010-0000-0000
-                        let formatted = value;
-                        if (value.length > 3) {
+                        let formatted = '';
+                        if (value.length <= 3) {
+                          formatted = value;
+                        } else if (value.length <= 7) {
                           formatted = value.slice(0, 3) + '-' + value.slice(3);
-                        }
-                        if (value.length > 7) {
+                        } else {
                           formatted = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
                         }
                         

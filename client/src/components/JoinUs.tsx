@@ -8,7 +8,7 @@ import { Copy, Send } from "lucide-react";
 
 export default function JoinUs() {
   const { toast } = useToast();
-  
+
   const [formData, setFormData] = useState({
     name: "",
     contact: "",
@@ -54,7 +54,7 @@ export default function JoinUs() {
     if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
       return "모든 필드를 입력해주세요.";
     }
-    
+
     return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 나이 ${formData.age}, 포지션 ${getPositionText(formData.position)}, (상의) ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
   };
 
@@ -77,7 +77,7 @@ export default function JoinUs() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!formData.agreeRules || !formData.dataConsent) {
       toast({
         title: "동의사항 확인",
@@ -114,7 +114,7 @@ export default function JoinUs() {
           <div className="space-y-8">
             <div className="bg-gray-900 rounded-2xl p-8">
               <h3 className="font-bold text-2xl mb-4">회비 안내</h3>
-              
+
               <div className="space-y-6">
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">정규 회원</h4>
@@ -145,7 +145,7 @@ export default function JoinUs() {
 
           <div className="bg-gray-900 rounded-2xl p-8">
             <h3 className="font-bold text-2xl mb-6">신청서</h3>
-            
+
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid md:grid-cols-2 gap-4">
                 <div>
@@ -162,38 +162,44 @@ export default function JoinUs() {
                 </div>
                 <div>
                   <Label className="text-white">연락처</Label>
-                  <Input 
-                    type="tel" 
-                    placeholder="010-0000-0000"
-                    className="bg-black border-gray-700 text-white mt-2"
-                    value={formData.contact}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/[^0-9]/g, '');
-                      
-                      // 010으로 시작하지 않으면 자동으로 010 추가
-                      if (value.length > 0 && !value.startsWith('010')) {
-                        value = '010' + value;
-                      }
-                      
-                      // 최대 11자리까지만
-                      if (value.length > 11) {
-                        value = value.slice(0, 11);
-                      }
-                      
-                      // 포맷팅: 010-0000-0000
-                      let formatted = value;
-                      if (value.length > 3) {
-                        formatted = value.slice(0, 3) + '-' + value.slice(3);
-                      }
-                      if (value.length > 7) {
-                        formatted = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
-                      }
-                      
-                      setFormData({ ...formData, contact: formatted });
-                    }}
-                    required
-                    data-testid="input-contact"
-                  />
+                  <div className="relative mt-2">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white pointer-events-none">
+                      010-
+                    </span>
+                    <Input 
+                      type="tel" 
+                      placeholder="0000-0000"
+                      className="bg-black border-gray-700 text-white pl-14"
+                      value={formData.contact}
+                      onChange={(e) => {
+                        let value = e.target.value.replace(/[^0-9]/g, '');
+
+                        // 이미 010으로 시작하면 그대로 사용, 아니면 010 추가
+                        if (value.length > 0 && !value.startsWith('010')) {
+                          value = '010' + value;
+                        }
+
+                        // 최대 11자리까지만
+                        if (value.length > 11) {
+                          value = value.slice(0, 11);
+                        }
+
+                        // 포맷팅: 010-0000-0000
+                        let formatted = '';
+                        if (value.length <= 3) {
+                          formatted = value;
+                        } else if (value.length <= 7) {
+                          formatted = value.slice(0, 3) + '-' + value.slice(3);
+                        } else {
+                          formatted = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+                        }
+
+                        setFormData({ ...formData, contact: formatted });
+                      }}
+                      required
+                      data-testid="input-contact"
+                    />
+                  </div>
                 </div>
               </div>
 
@@ -333,7 +339,7 @@ export default function JoinUs() {
                   <Copy className="w-5 h-5 mr-2" />
                   복사
                 </Button>
-                
+
                 <Button 
                   type="submit" 
                   className="bg-accent text-white hover:bg-red-600 py-4 rounded-lg font-bold text-lg"
