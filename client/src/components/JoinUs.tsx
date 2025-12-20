@@ -174,9 +174,15 @@ export default function JoinUs() {
                       onChange={(e) => {
                         let value = e.target.value.replace(/[^0-9]/g, '');
 
-                        // 이미 010으로 시작하면 그대로 사용, 아니면 010 추가
+                        // 010으로 시작하지 않고 입력이 있으면 010 추가
                         if (value.length > 0 && !value.startsWith('010')) {
                           value = '010' + value;
+                        }
+
+                        // 010만 입력된 경우 그대로 유지
+                        if (value === '010') {
+                          setFormData({ ...formData, contact: '010' });
+                          return;
                         }
 
                         // 최대 11자리까지만
