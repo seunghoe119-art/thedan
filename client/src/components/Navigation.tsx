@@ -123,7 +123,7 @@ export default function Navigation() {
           <Button
             variant="ghost"
             size="icon"
-            className="md:hidden"
+            className="md:hidden bg-[#e60000] hover:bg-[#cc0000] text-white"
             onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
           >
             {isMobileMenuOpen ? <X className="h-6 w-6" /> : <Menu className="h-6 w-6" />}
