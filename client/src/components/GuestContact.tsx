@@ -14,10 +14,10 @@ export default function GuestContact() {
     contact: "",
     age: "",
     position: "",
-    jerseySize: "",
-    membershipType: "",
-    agreeRules: false,
-    dataConsent: false,
+    jerseySize: "m",
+    membershipType: "firefighter",
+    agreeRules: true,
+    dataConsent: true,
   });
 
   const getPositionText = (position: string) => {
@@ -50,7 +50,7 @@ export default function GuestContact() {
   };
 
   const generateMessage = () => {
-    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position) {
       return "모든 필드를 입력해주세요.";
     }
     
@@ -76,17 +76,8 @@ export default function GuestContact() {
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    
-    if (!formData.agreeRules || !formData.dataConsent) {
-      toast({
-        title: "동의사항 확인",
-        description: "모든 동의사항에 체크해주세요.",
-        variant: "destructive",
-      });
-      return;
-    }
 
-    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position) {
       toast({
         title: "입력사항 확인",
         description: "모든 필드를 입력해주세요.",
@@ -105,9 +96,9 @@ export default function GuestContact() {
     <section className="py-32 bg-black text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-black mb-6">APPLY(게스트신청)</h2>
+          <h2 className="text-5xl md:text-6xl font-black mb-6">게스트 신청</h2>
           <p className="text-xl text-gray-400 font-light max-w-3xl mx-auto">
-            게스트 신청
+            APPLY(게스트신청)
           </p>
         </div>
 
@@ -215,104 +206,20 @@ export default function GuestContact() {
                 </select>
               </div>
 
-              <div className="grid md:grid-cols-2 gap-4">
-                <div>
-                  <Label className="text-white">포지션</Label>
-                  <select 
-                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
-                    value={formData.position}
-                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                    required
-                    data-testid="guest-select-position"
-                  >
-                    <option value="">포지션 선택</option>
-                    <option value="leading">리딩 가드 1,2번</option>
-                    <option value="small">스몰포워드 2,3번</option>
-                    <option value="baseline">밑선라인 4,5번</option>
-                  </select>
-                </div>
-                <div>
-                  <Label className="text-white">유니폼 사이즈</Label>
-                  <select 
-                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
-                    value={formData.jerseySize}
-                    onChange={(e) => setFormData({ ...formData, jerseySize: e.target.value })}
-                    required
-                    data-testid="guest-select-jersey-size"
-                  >
-                    <option value="">사이즈 선택</option>
-                    <option value="s">상의사이즈 S 95</option>
-                    <option value="m">상의사이즈 M 100</option>
-                    <option value="l">상의사이즈 L 105</option>
-                    <option value="xl">상의사이즈 XL 110</option>
-                    <option value="xxl">상의사이즈 XXL 115</option>
-                  </select>
-                </div>
-              </div>
-
               <div>
-                <Label className="text-white">회원 유형</Label>
-                <div className="space-y-3 mt-2">
-                  <label className="flex items-center">
-                    <input 
-                      type="radio" 
-                      name="guest-membership" 
-                      value="regular" 
-                      className="text-accent focus:ring-accent"
-                      onChange={(e) => setFormData({ ...formData, membershipType: e.target.value })}
-                      required
-                      data-testid="guest-radio-membership-regular"
-                    />
-                    <span className="ml-3">정규 회원 (₩10,000/월2회)</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input 
-                      type="radio" 
-                      name="guest-membership" 
-                      value="dormant" 
-                      className="text-accent focus:ring-accent"
-                      onChange={(e) => setFormData({ ...formData, membershipType: e.target.value })}
-                      required
-                      data-testid="guest-radio-membership-dormant"
-                    />
-                    <span className="ml-3">정규 회원 (₩20,000/월4회)</span>
-                  </label>
-                  <label className="flex items-center">
-                    <input 
-                      type="radio" 
-                      name="guest-membership" 
-                      value="firefighter" 
-                      className="text-accent focus:ring-accent"
-                      onChange={(e) => setFormData({ ...formData, membershipType: e.target.value })}
-                      required
-                      data-testid="guest-radio-membership-firefighter"
-                    />
-                    <span className="ml-3">입단전 게스트 (게스트비 적용)</span>
-                  </label>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="guest-rules"
-                    checked={formData.agreeRules}
-                    onCheckedChange={(checked) => setFormData({ ...formData, agreeRules: !!checked })}
-                    className="border-gray-700"
-                    data-testid="guest-checkbox-rules"
-                  />
-                  <Label htmlFor="guest-rules" className="text-white">클럽 규칙에 동의</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="guest-consent"
-                    checked={formData.dataConsent}
-                    onCheckedChange={(checked) => setFormData({ ...formData, dataConsent: !!checked })}
-                    className="border-gray-700"
-                    data-testid="guest-checkbox-consent"
-                  />
-                  <Label htmlFor="guest-consent" className="text-white">개인정보 수집 동의</Label>
-                </div>
+                <Label className="text-white">포지션</Label>
+                <select 
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
+                  value={formData.position}
+                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                  required
+                  data-testid="guest-select-position"
+                >
+                  <option value="">포지션 선택</option>
+                  <option value="leading">리딩 가드 1,2번</option>
+                  <option value="small">스몰포워드 2,3번</option>
+                  <option value="baseline">밑선라인 4,5번</option>
+                </select>
               </div>
 
               <div className="bg-black border border-gray-700 rounded-lg p-4">
