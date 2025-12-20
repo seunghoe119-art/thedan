@@ -95,11 +95,6 @@ export default function Navigation() {
                 Rules
               </span>
             </Link>
-            <span className={`font-medium transition-all duration-200 ease-out ${
-                location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
-              }`}>
-                Finance(운영자확인)
-              </span>
             <Link href="/guest2" onClick={() => handleNavigation("/guest2")}>
               <span className={`font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
                 location === "/guest2" ? "text-[#e60000] font-bold" : "text-gray-600"
@@ -118,9 +113,14 @@ export default function Navigation() {
               <span className={`font-medium cursor-pointer ${
                 location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
               }`}>
-                ASSISTANT
+                Assistant(운영자전용)
               </span>
             </a>
+            <span className={`font-medium transition-all duration-200 ease-out ${
+                location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
+              }`}>
+                Finance(운영자전용)
+              </span>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -167,11 +167,6 @@ export default function Navigation() {
                   Rules
                 </span>
               </Link>
-              <span className={`block w-full text-left px-3 py-2 font-medium ${
-                  location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
-                }`}>
-                  Finance(운영자확인)
-                </span>
               <Link href="/guest2" onClick={() => handleNavigation("/guest2")}>
                 <span className={`block w-full text-left px-3 py-2 font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
                   location === "/guest2" ? "text-[#e60000] font-bold" : "text-gray-600"
@@ -190,9 +185,14 @@ export default function Navigation() {
                 <span className={`block w-full text-left px-3 py-2 font-medium cursor-pointer ${
                   location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
                 }`}>
-                  ASSISTANT
+                  Assistant(운영자전용)
                 </span>
               </a>
+              <span className={`block w-full text-left px-3 py-2 font-medium ${
+                  location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
+                }`}>
+                  Finance(운영자전용)
+                </span>
               <div className="px-3 py-2 border-t border-gray-100 mt-2">
                 <Link href="/board" onClick={() => handleNavigation("/board")}>
                   <Button className="w-full bg-black text-white hover:bg-gray-800">
