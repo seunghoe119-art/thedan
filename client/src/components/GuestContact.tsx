@@ -51,10 +51,10 @@ export default function GuestContact() {
 
   const generateMessage = () => {
     if (!formData.name || !formData.contact || !formData.age || !formData.position) {
-      return "모든 필드를 입력해주세요.";
+      return "이름, 연락처, 나이, 포지션을 입력해주세요.";
     }
     
-    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 나이 ${formData.age}, 포지션 ${getPositionText(formData.position)}, (상의) ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
+    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 나이 ${formData.age}, 포지션 ${getPositionText(formData.position)}`;
   };
 
   const copyToClipboard = async () => {
@@ -80,7 +80,7 @@ export default function GuestContact() {
     if (!formData.name || !formData.contact || !formData.age || !formData.position) {
       toast({
         title: "입력사항 확인",
-        description: "모든 필드를 입력해주세요.",
+        description: "이름, 연락처, 나이, 포지션을 입력해주세요.",
         variant: "destructive",
       });
       return;
@@ -154,38 +154,43 @@ export default function GuestContact() {
                 </div>
                 <div>
                   <Label className="text-white">연락처</Label>
-                  <Input 
-                    type="tel" 
-                    placeholder="010-0000-0000"
-                    className="bg-black border-gray-700 text-white mt-2"
-                    value={formData.contact}
-                    onChange={(e) => {
-                      let value = e.target.value.replace(/[^0-9]/g, '');
-                      
-                      // 010으로 시작하지 않으면 자동으로 010 추가
-                      if (value.length > 0 && !value.startsWith('010')) {
-                        value = '010' + value;
-                      }
-                      
-                      // 최대 11자리까지만
-                      if (value.length > 11) {
-                        value = value.slice(0, 11);
-                      }
-                      
-                      // 포맷팅: 010-0000-0000
-                      let formatted = value;
-                      if (value.length > 3) {
-                        formatted = value.slice(0, 3) + '-' + value.slice(3);
-                      }
-                      if (value.length > 7) {
-                        formatted = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
-                      }
-                      
-                      setFormData({ ...formData, contact: formatted });
-                    }}
-                    required
-                    data-testid="guest-input-contact"
-                  />
+                  <div className="relative mt-2">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white pointer-events-none">
+                      010-
+                    </span>
+                    <Input 
+                      type="tel" 
+                      placeholder="0000-0000"
+                      className="bg-black border-gray-700 text-white pl-14"
+                      value={formData.contact}
+                      onChange={(e) => {
+                        let value = e.target.value.replace(/[^0-9]/g, '');
+                        
+                        // 010으로 시작하지 않으면 자동으로 010 추가
+                        if (value.length > 0 && !value.startsWith('010')) {
+                          value = '010' + value;
+                        }
+                        
+                        // 최대 11자리까지만
+                        if (value.length > 11) {
+                          value = value.slice(0, 11);
+                        }
+                        
+                        // 포맷팅: 010-0000-0000
+                        let formatted = value;
+                        if (value.length > 3) {
+                          formatted = value.slice(0, 3) + '-' + value.slice(3);
+                        }
+                        if (value.length > 7) {
+                          formatted = value.slice(0, 3) + '-' + value.slice(3, 7) + '-' + value.slice(7);
+                        }
+                        
+                        setFormData({ ...formData, contact: formatted });
+                      }}
+                      required
+                      data-testid="guest-input-contact"
+                    />
+                  </div>
                 </div>
               </div>
 
