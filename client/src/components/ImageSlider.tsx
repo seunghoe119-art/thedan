@@ -69,6 +69,10 @@ export default function ImageSlider() {
           ))}
         </div>
       </div>
+      
+      <div className="text-center py-4 bg-black">
+        <p className="text-xs text-gray-400">AI 제작 이미지로, 일부 맞춤법·오타는 양해 바랍니다.</p>
+      </div>
     </section>
   );
 }
