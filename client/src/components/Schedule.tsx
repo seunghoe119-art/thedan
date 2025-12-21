@@ -51,11 +51,11 @@ export default function Schedule() {
   };
 
   const goToNext = () => {
-    setCurrentIndex((prev) => (prev === slides.length - 1 ? 0 : prev + 1));
+    setCurrentIndex((prev) => (prev === prev === slides.length - 1 ? 0 : prev + 1));
   };
 
   return (
-    <section className="py-32 bg-black text-white relative z-10">
+    <section className="pt-32 pb-8 bg-black text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Team Banner - Centered */}
         <div className="flex justify-center mb-16">

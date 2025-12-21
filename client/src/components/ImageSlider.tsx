@@ -21,7 +21,7 @@ export default function ImageSlider() {
   };
 
   return (
-    <section className="relative w-full bg-black">
+    <section className="relative w-full bg-black pt-8">
       {/* Full width container with no padding on mobile */}
       <div className="relative w-full overflow-hidden">
         <div
