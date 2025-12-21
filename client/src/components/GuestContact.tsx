@@ -82,7 +82,7 @@ export default function GuestContact() {
 
   const generateMessage = () => {
     if (!formData.name || !formData.contact || !formData.age || !formData.position) {
-      return "위 내용을 선택하시고 채우면 자동으로 입력됩니다.";
+      return "위 항목을 선택하면 자동으로 메시지가 구성됩니다.";
     }
     
     let message = `안녕하세요. 김포 삼성썬더스 게스트 신청합니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
