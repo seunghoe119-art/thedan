@@ -294,7 +294,7 @@ export default function GuestContact() {
                 <button
                   type="button"
                   onClick={addGuestField}
-                  className="group relative bg-gradient-to-r from-accent to-red-600 text-white rounded-full p-3 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-accent/50 animate-pulse hover:animate-none"
+                  className="group relative bg-gradient-to-r from-accent to-red-600 text-white rounded-full p-3 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-accent/50"
                 >
                   <Plus className="w-6 h-6" />
                   <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
