@@ -5,7 +5,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Send, Plus, X } from "lucide-react";
+import { Copy, Send, Plus, X, MapPin } from "lucide-react";
+import { Link } from "wouter";
 
 interface AdditionalGuest {
   id: string;
@@ -335,6 +336,18 @@ export default function GuestContact() {
                   <Send className="w-5 h-5 mr-2" />
                   신청서 제출
                 </Button>
+              </div>
+
+              <div className="mt-6">
+                <Link href="/about">
+                  <Button 
+                    type="button"
+                    className="w-full bg-gradient-to-r from-red-500 via-red-600 to-rose-700 text-white hover:from-red-600 hover:via-red-700 hover:to-rose-800 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-red-500/50 transition-all duration-300"
+                  >
+                    <MapPin className="w-5 h-5 mr-2" />
+                    코트 위치 & 시설안내
+                  </Button>
+                </Link>
               </div>
             </form>
           </div>
