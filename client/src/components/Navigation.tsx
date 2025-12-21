@@ -116,11 +116,6 @@ export default function Navigation() {
                 Assistant(운영자전용)
               </span>
             </a>
-            <span className={`font-medium transition-all duration-200 ease-out ${
-                location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
-              }`}>
-                Finance(운영자전용)
-              </span>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
@@ -181,11 +176,6 @@ export default function Navigation() {
                   Join Us
                 </span>
               </Link>
-              <span className={`block w-full text-left px-3 py-2 font-medium ${
-                  location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
-                }`}>
-                  Finance(운영자전용)
-                </span>
               <div className="px-3 py-2 border-t border-gray-100 mt-2">
                 <Link href="/board" onClick={() => handleNavigation("/board")}>
                   <Button className="w-full bg-black text-white hover:bg-gray-800">

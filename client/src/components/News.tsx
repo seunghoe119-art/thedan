@@ -25,12 +25,17 @@ export default function News() {
   const [clickCount, setClickCount] = React.useState(0);
   
   const handleSecretAccess = (index: number) => {
-    // Any "더 보기" button: 7 clicks to access guest page
+    // Index 1 (second button): 7 clicks to access finance page
+    // Other buttons: 7 clicks to access guest page
     const newCount = clickCount + 1;
     setClickCount(newCount);
     
     if (newCount >= 7) {
-      setLocation('/guest');
+      if (index === 1) {
+        setLocation('/finance');
+      } else {
+        setLocation('/guest');
+      }
       setClickCount(0); // Reset counter
     }
   };
@@ -56,7 +61,7 @@ export default function News() {
                   onClick={() => handleSecretAccess(index)}
                   className="text-accent hover:text-red-400 transition-colors font-medium inline-flex items-center"
                 >
-                  더 보기
+                  업데이트중
                   <ArrowRight className="w-4 h-4 ml-2" />
                 </button>
               </div>
