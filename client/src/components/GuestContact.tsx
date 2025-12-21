@@ -128,9 +128,12 @@ export default function GuestContact() {
       return;
     }
 
+    // Open KakaoTalk chat link
+    window.open("https://open.kakao.com/o/gnHeHo7h", "_blank");
+
     toast({
       title: "신청 완료",
-      description: "신청서가 작성되었습니다. 메시지를 복사하여 담당자에게 전달해주세요.",
+      description: "카카오톡 오픈채팅방으로 이동합니다.",
     });
   };
 
