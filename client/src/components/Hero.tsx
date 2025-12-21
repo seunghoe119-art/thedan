@@ -40,12 +40,15 @@ export default function Hero() {
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Button 
-            size="lg"
-            className="bg-white text-black hover:bg-gray-100 rounded-full px-8 py-4 font-semibold text-lg transform hover:scale-105 transition-all"
-          >
-            Join Us
-          </Button>
+          <Link href="/contact">
+            <Button 
+              variant="outline"
+              size="lg"
+              className="border-2 border-black text-black bg-white hover:bg-gray-100 rounded-full px-8 py-4 font-semibold text-lg transform hover:scale-105 transition-all"
+            >
+              Join Us
+            </Button>
+          </Link>
           <Link href="/about">
             <Button 
               variant="outline"
