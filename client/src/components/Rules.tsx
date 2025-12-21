@@ -16,15 +16,15 @@ export default function Rules() {
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-bold">정규 회원 - 가입비 없음</h4>
                 <p className="text-gray-600">₩5,000 / 회</p>
-                <p className="text-xs text-gray-500 mt-1">*게스트 없는 대관비 불충족 시 ₩6,000, 천원 다음달 청구</p>
+                <p className="text-xs text-gray-500 mt-1">*정규회원이 많아 대관비 불충족 시 ₩6,000, 천원은 다음달 회비 입금시 청구</p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-bold">매월 회 선택가능</h4>
                 <p className="text-gray-600">₩10,000 / 2회, 월 <br />₩20,000 / 4회, 월</p>
               </div>
               <div className="border-l-4 border-accent pl-4">
-                <h4 className="font-bold">회 초과시 게스트비로 전환</h4>
-                <p className="text-gray-600">게스트비는 정규회원5천원 참가 인원에 따라 8천원~1만원 변동</p>
+                <h4 className="font-bold">선택횟수보다 더 많이 참여한 경우, 게스트비로 청구</h4>
+                <p className="text-gray-600">게스트비는 정규회원 참가 인원에 따라 변동 (₩8,000~10,000)</p>
               </div>
             </div>
           </div>
@@ -46,13 +46,13 @@ export default function Rules() {
               </li>
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
-                <span>게스트 분들에게 불언행, 텃세 주의</span>
+                <span>게스트 분들에게 불건전한 언행, 텃세 주의</span>
               </li>
             </ul>
             
             <div className="mt-6">
               <p className="text-xs text-amber-600 italic font-medium bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
-                *게스트분들도 얼마든지 항상 정규팀원이 될 수 있습니다.
+                *게스트분들도 언제든지 정규팀원이 될 수 있습니다.
               </p>
             </div>
           </div>
