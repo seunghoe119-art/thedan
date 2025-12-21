@@ -21,7 +21,7 @@ export default function Hero() {
           BEYOND<br/>
           <span className="text-accent">THE COURT</span>
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 font-light mb-12 max-w-2xl mx-auto">
+        <p className="text-xl md:text-2xl text-white/90 font-light mb-4 max-w-2xl mx-auto">
           Basketball Team, <span 
             className="font-black text-3xl md:text-4xl"
             style={{ 
@@ -35,15 +35,18 @@ export default function Hero() {
           </span>
         </p>
         
+        <p className="text-lg md:text-xl text-white/80 font-light mb-12">
+          5천원 정도로 매주 선택형 출석 가능합니다
+        </p>
+        
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
-          <Link href="/contact">
-            <Button 
-              size="lg"
-              className="bg-white text-black hover:bg-gray-100 rounded-full px-8 py-4 font-semibold text-lg transform hover:scale-105 transition-all"
-            >
-              Join Us
-            </Button>
-          </Link>
+          <Button 
+            size="lg"
+            className="bg-white text-black hover:bg-gray-100 rounded-full px-8 py-4 font-semibold text-lg transform hover:scale-105 transition-all"
+            onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          >
+            Home
+          </Button>
           <Link href="/about">
             <Button 
               variant="outline"
