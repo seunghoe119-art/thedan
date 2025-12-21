@@ -56,7 +56,12 @@ export default function JoinUs() {
       return "모든 필드를 입력해주세요.";
     }
 
-    return `안녕하세요 이름 ${formData.name}, 연락처 ${formData.contact}, 나이 ${formData.age}, 포지션 ${getPositionText(formData.position)}, (상의) ${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}으로 THE DAN 농구 정규 회원제 신청 문의입니다.`;
+    let message = `안녕하세요. THE DAN 농구 정규 회원제 신청 문의입니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
+    message += `\n[${getMembershipType(formData.membershipType)}]`;
+    message += `\n연락처: ${formData.contact}`;
+    message += `\n유니폼 사이즈: ${getSizeText(formData.jerseySize)}`;
+    
+    return message;
   };
 
   const copyToClipboard = async () => {
