@@ -84,7 +84,10 @@ export default function GuestContact() {
       return "이름, 연락처, 나이, 포지션을 입력해주세요.";
     }
     
-    let message = `안녕하세요. 게스트신청합니다. 이름 ${formData.name}, 연락처 ${formData.contact}, 나이 ${formData.age}, 포지션 ${getPositionText(formData.position)}`;
+    let message = `안녕하세요. 게스트 신청합니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
+    
+    // Add contact info
+    message += `\n연락처: ${formData.contact}`;
     
     // Add additional guests to the message
     additionalGuests.forEach((guest) => {
