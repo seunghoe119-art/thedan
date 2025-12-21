@@ -35,7 +35,7 @@ export default function About() {
   };
 
   return (
-    <section className="bg-white relative z-10 pt-8">
+    <section className="bg-white relative z-10">
       <div className="max-w-7xl mx-auto pb-0">
         <div className="relative w-full overflow-hidden">
           <div
@@ -84,7 +84,7 @@ export default function About() {
           </div>
         </div>
 
-        <div className="px-4 lg:px-8">
+        <div className="px-4 lg:px-8 pt-8">
           <div className="relative w-full overflow-hidden rounded-2xl shadow-2xl">
             <div
               className="flex transition-transform duration-500 ease-in-out"
