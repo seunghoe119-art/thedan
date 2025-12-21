@@ -19,19 +19,19 @@ const slides = [slide1, slide2, slide3, slide4, slide5];
 
 const scheduleItems = [
   {
-    title: "매주 3시간 금요일 대관",
-    time: "21:00 ~ 24:00PM",
-    location: "정규 대관 체육관",
+    title: "매주 금요일 21:00~24:00",
+    time: "",
+    location: "정규 대관 시간",
   },
   {
-    title: "정수기, 연습용 농구공들, (회원)유니폼색 지정",
+    title: "연습용 공·정수기 모두 제공됩니다.",
     time: "",
-    location: "농구화 옷만 가방에 넣어서 오는 미니멀 간편함",
+    location: "가볍게 농구화와 유니폼만 준비해 주세요.",
   },
   {
     title: "냉난방기*3, 유리 대기실, 샤워실, 넉넉한 주차장",
     time: " ",
-    location: "최상의 코트시설, 동영상촬영도 진행",
+    location: "동영상촬영도 진행",
   },
 ];
 
