@@ -78,15 +78,6 @@ export default function JoinUs() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.agreeRules || !formData.dataConsent) {
-      toast({
-        title: "동의사항 확인",
-        description: "모든 동의사항에 체크해주세요.",
-        variant: "destructive",
-      });
-      return;
-    }
-
     if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
       toast({
         title: "입력사항 확인",
@@ -306,29 +297,6 @@ export default function JoinUs() {
                     />
                     <span className="ml-3">입단전 게스트 (게스트비 적용)</span>
                   </label>
-                </div>
-              </div>
-
-              <div className="space-y-3">
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="rules"
-                    checked={formData.agreeRules}
-                    onCheckedChange={(checked) => setFormData({ ...formData, agreeRules: !!checked })}
-                    className="border-gray-700"
-                    data-testid="checkbox-rules"
-                  />
-                  <Label htmlFor="rules" className="text-white">클럽 규칙에 동의</Label>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <Checkbox 
-                    id="consent"
-                    checked={formData.dataConsent}
-                    onCheckedChange={(checked) => setFormData({ ...formData, dataConsent: !!checked })}
-                    className="border-gray-700"
-                    data-testid="checkbox-consent"
-                  />
-                  <Label htmlFor="consent" className="text-white">개인정보 수집 동의</Label>
                 </div>
               </div>
 
