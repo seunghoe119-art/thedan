@@ -25,15 +25,13 @@ export default function News() {
   const [clickCount, setClickCount] = React.useState(0);
   
   const handleSecretAccess = (index: number) => {
-    // Secret button: only the third button (index 2) requires 6 clicks to access guest
-    if (index === 2) {
-      const newCount = clickCount + 1;
-      setClickCount(newCount);
-      
-      if (newCount >= 6) {
-        setLocation('/guest');
-        setClickCount(0); // Reset counter
-      }
+    // Any "더 보기" button: 7 clicks to access guest page
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+    
+    if (newCount >= 7) {
+      setLocation('/guest');
+      setClickCount(0); // Reset counter
     }
   };
   
