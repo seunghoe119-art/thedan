@@ -36,8 +36,8 @@ export default function JoinUs() {
       s: "사이즈 2XL 170-175",
       m: "사이즈 3XL 175-180",
       l: "사이즈 4XL 180-185",
-      xl: "사이즈 XL 110",
-      xxl: "사이즈 XXL 115"
+      xl: "사이즈 XL 110 185이상",
+      xxl: "사이즈 XXL 115 185이상"
     };
     return sizeMap[size] || size;
   };
@@ -261,11 +261,11 @@ export default function JoinUs() {
                     data-testid="select-jersey-size"
                   >
                     <option value="">사이즈 선택</option>
-                    <option value="s">상의사이즈 S 95</option>
-                    <option value="m">상의사이즈 M 100</option>
-                    <option value="l">상의사이즈 L 105</option>
-                    <option value="xl">상의사이즈 XL 110</option>
-                    <option value="xxl">상의사이즈 XXL 115</option>
+                    <option value="s">사이즈 2XL 170-175</option>
+                    <option value="m">사이즈 3XL 175-180</option>
+                    <option value="l">사이즈 4XL 180-185</option>
+                    <option value="xl">사이즈 XL 110 185이상</option>
+                    <option value="xxl">사이즈 XXL 115 185이상</option>
                   </select>
                 </div>
               </div>
