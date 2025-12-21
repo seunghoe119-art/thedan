@@ -6,8 +6,8 @@ import slide3 from "@assets/v3_1766127165052.png";
 import slide4 from "@assets/v4_1766127165052.png";
 import slide5 from "@assets/v5_1766127182488.png";
 import mainFee from "@assets/main_fee_1766154957407.png";
-import ppt1 from "@assets/ppt1_1766155030059.jpg";
-import ppt2 from "@assets/ppt2_1766155030060.jpg";
+import ppt1 from "/ppt1.png";
+import ppt2 from "/ppt2.png";
 import ppt3 from "@assets/ppt3_1766155030060.jpg";
 import ppt4 from "@assets/ppt4_1766155030060.jpg";
 
