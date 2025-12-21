@@ -1,7 +1,8 @@
-import { Users, MapPin, Clock } from "lucide-react";
+import { Users, MapPin, Clock, Copy } from "lucide-react";
 import { Link } from "wouter";
 import { useState } from "react";
 import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import { useToast } from "@/hooks/use-toast";
 import mainFee from "@assets/main_fee_1766154957407.png";
 import ppt1 from "/ppt1.png";
 import ppt2 from "/ppt2.png";
@@ -37,6 +38,23 @@ const scheduleItems = [
 export default function Schedule() {
   const [pptIndex, setPptIndex] = useState(0);
   const [currentIndex, setCurrentIndex] = useState(0);
+  const { toast } = useToast();
+
+  const copyToClipboard = async (text: string) => {
+    try {
+      await navigator.clipboard.writeText(text);
+      toast({
+        title: "복사 완료!",
+        description: "주소가 클립보드에 복사되었습니다.",
+      });
+    } catch (err) {
+      toast({
+        title: "복사 실패",
+        description: "클립보드 복사 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const goToPreviousSlide = () => {
     setPptIndex((prevIndex) => (prevIndex === 0 ? pptSlides.length - 1 : prevIndex - 1));
@@ -91,9 +109,28 @@ export default function Schedule() {
               GAME &<br/>
               <span className="text-accent">HOME GYM</span>
             </h2>
-            <p className="text-xl text-gray-400 font-light mb-12">
-              삼성리틀썬더스농구교실김포점<br/>경기 김포시 감정로 86 2층<br/>경기 김포시 감정동 626-10
-            </p>
+            <div className="space-y-3 mb-12">
+              <div className="flex items-center gap-3">
+                <p className="text-xl text-gray-400 font-light">경기 김포시 감정로 86 2층</p>
+                <button
+                  onClick={() => copyToClipboard("경기 김포시 감정로 86 2층")}
+                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white text-sm font-medium transition-all duration-300 flex items-center gap-1.5 shadow-lg hover:shadow-xl"
+                >
+                  <Copy size={14} />
+                  복사
+                </button>
+              </div>
+              <div className="flex items-center gap-3">
+                <p className="text-xl text-gray-400 font-light">경기 김포시 감정동 626-10</p>
+                <button
+                  onClick={() => copyToClipboard("경기 김포시 감정동 626-10")}
+                  className="px-3 py-1.5 rounded-lg bg-gradient-to-r from-red-600 to-red-800 hover:from-red-500 hover:to-red-700 text-white text-sm font-medium transition-all duration-300 flex items-center gap-1.5 shadow-lg hover:shadow-xl"
+                >
+                  <Copy size={14} />
+                  복사
+                </button>
+              </div>
+            </div>
 
             {/* Court Images */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
