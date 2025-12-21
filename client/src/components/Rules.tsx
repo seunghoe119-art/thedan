@@ -69,6 +69,20 @@ export default function Rules() {
             <p className="text-gray-700 mb-4">
               매주 팀의 밸런스는 키/나이/포지션 을 참고로 큰틀에서 AI가 매칭후, 친구 or 미세조정 합니다
             </p>
+            <div className="grid grid-cols-3 gap-4 mb-4">
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-20 bg-black rounded-lg mb-2 shadow-md"></div>
+                <span className="text-xs font-semibold text-gray-700">블랙팀</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-20 bg-white border-2 border-gray-300 rounded-lg mb-2 shadow-md"></div>
+                <span className="text-xs font-semibold text-gray-700">화이트팀</span>
+              </div>
+              <div className="flex flex-col items-center">
+                <div className="w-16 h-20 bg-red-600 rounded-lg mb-2 shadow-md"></div>
+                <span className="text-xs font-semibold text-gray-700">레드팀</span>
+              </div>
+            </div>
             <div className="space-y-2 text-sm text-gray-600">
               <p>• 블랙팀. 창단 멤버 + 정규멤버</p>
               <p>• 화이트팀 정규멤버</p>
