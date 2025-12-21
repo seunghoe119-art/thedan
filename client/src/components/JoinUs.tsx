@@ -123,7 +123,7 @@ export default function JoinUs() {
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">게스트 비용  횟수 초과시 게스트로 전환</h4>
+                  <h4 className="font-bold text-lg mb-2">게스트 비용<br />횟수 초과시 게스트로 전환</h4>
                   <p className="text-gray-400 mb-3">매주 참가인원을 보고 게스트비 선정</p>
                   <p className="text-2xl font-bold text-accent">₩8,000~10,000/회</p>
                 </div>
@@ -137,7 +137,7 @@ export default function JoinUs() {
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">(2회부터) 레드 스포츠 저지</h4>
                   <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 다이소 조끼 착용</p>
-                  <p className="text-2xl font-bold text-accent">₩9,000 (커스텀₩11,000)</p>
+                  <p className="text-2xl font-bold text-accent">₩9,000 (공구보유)<br />₩11,000 (커스텀가능)</p>
                 </div>
               </div>
             </div>
