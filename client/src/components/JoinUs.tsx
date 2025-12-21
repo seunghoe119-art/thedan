@@ -53,7 +53,7 @@ export default function JoinUs() {
 
   const generateMessage = () => {
     if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
-      return "모든 필드를 입력해주세요.";
+      return "위 내용을 선택하시고 채우면 자동으로 입력됩니다.";
     }
 
     let message = `안녕하세요. THE DAN 농구 정규 회원제 신청 문의입니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
