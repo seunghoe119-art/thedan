@@ -33,9 +33,9 @@ export default function JoinUs() {
 
   const getSizeText = (size: string) => {
     const sizeMap: { [key: string]: string } = {
-      s: "사이즈 S 95",
-      m: "사이즈 M 100",
-      l: "사이즈 L 105",
+      s: "사이즈 2XL 170-175",
+      m: "사이즈 3XL 175-180",
+      l: "사이즈 4XL 180-185",
       xl: "사이즈 XL 110",
       xxl: "사이즈 XXL 115"
     };

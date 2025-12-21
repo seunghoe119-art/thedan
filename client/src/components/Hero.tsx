@@ -36,7 +36,7 @@ export default function Hero() {
         </p>
         
         <p className="text-lg md:text-xl text-white/80 font-light mb-12">
-          5천원 정도로 매주 선택형 출석 가능합니다
+          
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
