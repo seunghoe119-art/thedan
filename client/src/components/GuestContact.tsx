@@ -325,7 +325,7 @@ export default function GuestContact() {
                   data-testid="guest-button-copy"
                 >
                   <Copy className="w-5 h-5 mr-2" />
-                  복사
+                  ① 복사
                 </Button>
                 
                 <Button 
@@ -334,7 +334,7 @@ export default function GuestContact() {
                   data-testid="guest-button-submit"
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  ① 신청서 제출
+                  ② 신청서 제출
                 </Button>
               </div>
 
@@ -345,7 +345,7 @@ export default function GuestContact() {
                     className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-700 text-white hover:from-blue-600 hover:via-blue-700 hover:to-cyan-800 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
                   >
                     <MapPin className="w-5 h-5 mr-2" />
-                    ② 코트 위치 & 시설안내
+                    ③ 코트 위치 & 시설안내
                   </Button>
                 </Link>
               </div>
