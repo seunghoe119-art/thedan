@@ -1,5 +1,14 @@
 import { Users, MapPin, Clock } from "lucide-react";
 import { Link } from "wouter";
+import { useState } from "react";
+import { Calendar, ChevronLeft, ChevronRight } from "lucide-react";
+import mainFee from "@assets/main_fee_1766154957407.png";
+import ppt1 from "/ppt1.png";
+import ppt2 from "/ppt2.png";
+import ppt3 from "@assets/ppt3_1766155030060.jpg";
+import ppt4 from "@assets/ppt4_1766155030060.jpg";
+
+const pptSlides = [mainFee, ppt1, ppt2, ppt3, ppt4];
 
 const scheduleItems = [
   {
@@ -20,6 +29,16 @@ const scheduleItems = [
 ];
 
 export default function Schedule() {
+  const [pptIndex, setPptIndex] = useState(0);
+
+  const goToPreviousSlide = () => {
+    setPptIndex((prevIndex) => (prevIndex === 0 ? pptSlides.length - 1 : prevIndex - 1));
+  };
+
+  const goToNextSlide = () => {
+    setPptIndex((prevIndex) => (prevIndex === pptSlides.length - 1 ? 0 : prevIndex + 1));
+  };
+
   return (
     <section className="py-32 bg-black text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -92,6 +111,30 @@ export default function Schedule() {
             <div className="bg-accent/10 border border-accent rounded-xl p-6 mt-8">
               <h4 className="font-bold text-lg mb-2">최상급 코트 시설과 부대시설</h4>
               <p className="text-gray-300">악취 벌레많은 창고형 아닌 최신식 건물 실내 건물</p>
+            </div>
+
+            {/* Slideshow Section */}
+            <div className="relative mt-12">
+              <img src={pptSlides[pptIndex]} alt={`Slide ${pptIndex + 1}`} className="w-full rounded-lg shadow-xl"/>
+              <div className="absolute inset-0 flex items-center justify-between px-4">
+                <button onClick={goToPreviousSlide} className="p-2 rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 transition">
+                  <ChevronLeft size={32} />
+                </button>
+                <button onClick={goToNextSlide} className="p-2 rounded-full bg-black bg-opacity-50 text-white hover:bg-opacity-75 transition">
+                  <ChevronRight size={32} />
+                </button>
+              </div>
+              <div className="absolute bottom-4 left-0 right-0 flex justify-center space-x-3">
+                {pptSlides.map((_, index) => (
+                  <span
+                    key={index}
+                    className={`block w-3 h-3 rounded-full cursor-pointer transition ${
+                      index === pptIndex ? "bg-accent" : "bg-white bg-opacity-50"
+                    }`}
+                    onClick={() => setPptIndex(index)}
+                  />
+                ))}
+              </div>
             </div>
           </div>
         </div>
