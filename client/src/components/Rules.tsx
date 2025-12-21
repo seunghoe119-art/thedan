@@ -94,16 +94,16 @@ export default function Rules() {
             <h3 className="font-bold text-2xl mb-6">큰 운영적인 운영비</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-700">3시간 체육관 대여료</span>
-                <span className="font-semibold text-lg">-₩110,000 / 주</span>
+                <span className="text-red-600">3시간 체육관 대여료</span>
+                <span className="font-semibold text-lg text-red-600">-₩110,000 / 주</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-700">회원과 게스트비</span>
-                <span className="font-semibold text-lg">+₩110,000 / 주</span>
+                <span className="text-blue-600">회원과 게스트비</span>
+                <span className="font-semibold text-lg text-blue-600">+₩110,000 / 주</span>
               </div>
               <div className="flex justify-between items-center py-2">
-                <span className="text-gray-700">운영보조 등 여분비</span>
-                <span className="font-semibold text-lg">+₩10,000 / 주</span>
+                <span className="text-blue-600">운영보조 등 여분비</span>
+                <span className="font-semibold text-lg text-blue-600">+₩10,000 / 주</span>
               </div>
             </div>
           </div>
