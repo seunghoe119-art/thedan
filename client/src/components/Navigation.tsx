@@ -16,9 +16,9 @@ export default function Navigation() {
   useEffect(() => {
     const handleScroll = () => {
       const currentScrollY = window.scrollY;
-      
+
       setIsScrolled(currentScrollY > 50);
-      
+
       // Show navigation when at top or scrolling up, hide when scrolling down
       if (currentScrollY <= 50) {
         setIsVisible(true);
@@ -30,7 +30,7 @@ export default function Navigation() {
         // Scrolling up
         setIsVisible(true);
       }
-      
+
       setLastScrollY(currentScrollY);
     };
 
@@ -51,7 +51,7 @@ export default function Navigation() {
     e.preventDefault();
     const newCount = assistantClickCount + 1;
     setAssistantClickCount(newCount);
-    
+
     if (newCount === 6) {
       setLocation('/guest');
       setAssistantClickCount(0);
@@ -72,7 +72,7 @@ export default function Navigation() {
               <span style={{ color: '#e60000' }}>THE DAN</span>
             </span>
           </div>
-          
+
           <div className="hidden md:flex items-center space-x-8">
             <Link href="/" onClick={() => handleNavigation("/")}>
               <span className={`font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
@@ -181,13 +181,6 @@ export default function Navigation() {
                   Join Us
                 </span>
               </Link>
-              <a href="/guest" onClick={handleAssistantClick}>
-                <span className={`block w-full text-left px-3 py-2 font-medium cursor-pointer ${
-                  location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
-                }`}>
-                  Assistant(운영자전용)
-                </span>
-              </a>
               <span className={`block w-full text-left px-3 py-2 font-medium ${
                   location === "/finance" ? "text-[#e60000] font-bold" : "text-gray-600"
                 }`}>
