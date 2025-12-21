@@ -35,7 +35,7 @@ export default function About() {
   };
 
   return (
-    <section className="bg-white relative z-10">
+    <section className="bg-white relative z-10 pt-8">
       <div className="max-w-7xl mx-auto pb-0">
         <div className="relative w-full overflow-hidden">
           <div
