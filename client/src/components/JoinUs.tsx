@@ -60,7 +60,7 @@ export default function JoinUs() {
     message += `\n[${getMembershipText(formData.membershipType)}]`;
     message += `\n연락처: ${formData.contact}`;
     message += `\n유니폼 사이즈: ${getSizeText(formData.jerseySize)}`;
-    
+
     return message;
   };
 
