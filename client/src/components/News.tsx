@@ -1,3 +1,4 @@
+import React from "react";
 import { ArrowRight } from "lucide-react";
 import { useLocation } from "wouter";
 
@@ -21,11 +22,18 @@ const newsItems = [
 
 export default function News() {
   const [location, setLocation] = useLocation();
+  const [clickCount, setClickCount] = React.useState(0);
   
   const handleSecretAccess = (index: number) => {
-    // Secret button: only the third button (index 2, "선수 스포트라이트") leads to admin
+    // Secret button: only the third button (index 2) requires 6 clicks to access admin
     if (index === 2) {
-      setLocation('/admin/new-post');
+      const newCount = clickCount + 1;
+      setClickCount(newCount);
+      
+      if (newCount >= 6) {
+        setLocation('/admin/new-post');
+        setClickCount(0); // Reset counter
+      }
     }
   };
   
