@@ -58,18 +58,20 @@ export default function Schedule() {
     <section className="pt-32 pb-8 bg-black text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Team Banner - Centered */}
-        <div className="flex justify-center mb-16">
-          <img 
-            src="/the_dan_banner.png" 
-            alt="THE DAN Basketball Team" 
-            className="w-full max-w-md rounded-lg shadow-2xl"
-          />
+        <div className="flex justify-center mb-8 md:mb-16">
+          <div className="relative w-full md:max-w-4xl">
+            <img
+              src="/the_dan_banner.png"
+              alt="THE DAN Team"
+              className="w-full h-auto md:rounded-2xl md:shadow-2xl"
+            />
+          </div>
         </div>
 
         {/* Navigation Buttons */}
         <div className="flex justify-center space-x-4 mb-8">
           <Link href="/">
-            <button className="px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 ease-in-out shadow-lg 
+            <button className="px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 ease-in-out shadow-lg
                              bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl">
               Home
             </button>
@@ -96,16 +98,16 @@ export default function Schedule() {
             {/* Court Images */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
               <div className="relative overflow-hidden rounded-xl shadow-2xl">
-                <img 
-                  src="/gym1.jpeg" 
-                  alt="Basketball Court 1" 
+                <img
+                  src="/gym1.jpeg"
+                  alt="Basketball Court 1"
                   className="w-full h-48 sm:h-64 object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
               <div className="relative overflow-hidden rounded-xl shadow-2xl">
-                <img 
-                  src="/gym2.jpeg" 
-                  alt="Basketball Court 2" 
+                <img
+                  src="/gym2.jpeg"
+                  alt="Basketball Court 2"
                   className="w-full h-48 sm:h-64 object-cover transition-transform duration-500 hover:scale-105"
                 />
               </div>
@@ -128,7 +130,7 @@ export default function Schedule() {
               <p className="text-gray-300">악취 벌레많은 창고형 아닌 최신식 건물 실내 건물</p>
             </div>
 
-            
+
 
             {/* Slideshow Section */}
             <div className="relative mt-12">
