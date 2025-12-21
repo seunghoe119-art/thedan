@@ -152,7 +152,7 @@ export default function GuestContact() {
                 <div>
                   <Label className="text-white">연락처</Label>
                   <div className="relative mt-2">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black pointer-events-none">
+                    <span className={`absolute left-4 top-1/2 -translate-y-1/2 pointer-events-none transition-colors ${formData.contact ? 'text-black' : 'text-gray-500'}`}>
                       010-
                     </span>
                     <Input 
