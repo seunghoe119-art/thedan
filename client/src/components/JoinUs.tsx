@@ -140,7 +140,7 @@ export default function JoinUs() {
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">(둘째달부터) 레드 상의 필수</h4>
                   <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 다이소 조끼 착용</p>
-                  <p className="text-2xl font-bold text-accent">₩9,000 (공구보유)<br />₩11,000 (커스텀)</p>
+                  <p className="text-2xl font-bold text-accent">₩9,000 (공구보유)<br />₩12,000 (커스텀)</p>
                 </div>
 
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4">
