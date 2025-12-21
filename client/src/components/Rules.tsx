@@ -16,7 +16,7 @@ export default function Rules() {
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-bold">정규 회원 - 가입비 없음</h4>
                 <p className="text-gray-600">₩5,000 / 회</p>
-                <p className="text-xs text-gray-500 mt-1">*정규회원이 많아 대관비 불충족 시 ₩6,000, 천원은 다음달 회비 입금시 청구</p>
+                <p className="text-xs text-gray-500 mt-1">*정규회원이 많아 대관비 부족시 ₩1,000원 익월 청구</p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-bold">매월 회 선택가능</h4>
@@ -30,29 +30,29 @@ export default function Rules() {
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="font-bold text-2xl mb-6">팀 주의사항</h3>
+            <h3 className="font-bold text-2xl mb-6">팀 공지사항</h3>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
-                <span>비난 혹은 욕설 금지 바로 추방, 게스트도 금지</span>
+                <span>욕설 및 비난 금지, 즉시 추방 및 게스트 참여 금지</span>
               </li>
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
-                <span>개인 위주의 플레이. 게임의 상황과 상관없는 받자마자 슛, 수비자5명에 단독드리블 주의</span>
+                <span>개인 플레이 자제. 게임의 상황과 상관없는 받자마자 슛, 수비자5명에 단독드리블등</span>
               </li>
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
-                <span>동료들과의 팀워크 및 협동심을 중시합니다.</span>
+                <span>패스 플레이, 협동심을 중시합니다.</span>
               </li>
               <li className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
-                <span>게스트 분들에게 불건전한 언행, 텃세 주의</span>
+                <span>언행에 주의하고 텃세 없이 즐거운 경기합시다.</span>
               </li>
             </ul>
             
             <div className="mt-6">
               <p className="text-xs text-amber-600 italic font-medium bg-amber-50 px-3 py-2 rounded-lg border border-amber-200">
-                *게스트분들도 언제든지 정규팀원이 될 수 있습니다.
+                *게스트분들도 언제든지 정규 팀원이 될 수 있습니다.
               </p>
             </div>
           </div>
@@ -60,7 +60,7 @@ export default function Rules() {
           <div className="bg-white rounded-2xl p-8 shadow-lg">
             <h3 className="font-bold text-2xl mb-6">재정 사용처</h3>
             <p className="text-gray-700 mb-4">
-              체육관 대관료<br />경기 게임볼, 예비 레드 유니폼 등 구입<br />게임볼, 운영 용품 택배비<br />경기운영자 특혜 및 게스트 미달 예비금액<br />사이트 서버 비용 등<br />
+              체육관 대관료<br />시합용 공, 예비 팀조끼 등 구입<br />시합용 공, 운영 용품 택배비<br />경기운영자 특혜 및 게스트 미달 예비금액<br />서버비용 및 예비비<br />
             </p>
           </div>
 
@@ -94,26 +94,26 @@ export default function Rules() {
             <h3 className="font-bold text-2xl mb-6">큰 운영적인 운영비</h3>
             <div className="space-y-4">
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
-                <span className="text-gray-700">3시간over 체육관 대여료</span>
-                <span className="font-semibold text-lg">₩110,000 / 주</span>
+                <span className="text-gray-700">3시간 체육관 대여료</span>
+                <span className="font-semibold text-lg">-₩110,000 / 주</span>
               </div>
               <div className="flex justify-between items-center py-2 border-b border-gray-100">
                 <span className="text-gray-700">회원과 게스트비</span>
-                <span className="font-semibold text-lg">₩110,000</span>
+                <span className="font-semibold text-lg">+₩110,000 / 주</span>
               </div>
               <div className="flex justify-between items-center py-2">
                 <span className="text-gray-700">운영보조 등 여분비</span>
-                <span className="font-semibold text-lg">₩10,000</span>
+                <span className="font-semibold text-lg">+₩10,000 / 주</span>
               </div>
             </div>
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="font-bold text-2xl mb-6">경기 운영 총괄자 특혜</h3>
+            <h3 className="font-bold text-2xl mb-6">추가 경기 운영자 특혜</h3>
             <div className="space-y-4 text-gray-700">
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                <span className="text-sm leading-relaxed">운영 주관자는 경기 준비와 책임을 맡음</span>
+                <span className="text-sm leading-relaxed">운영자는 경기 준비와 책임을 맡음</span>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
@@ -121,7 +121,7 @@ export default function Rules() {
               </div>
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
-                <span className="text-sm leading-relaxed">다른 회원도 운영에 참여하도록 동기 부여<br />누구나 게임 운영 총괄자 가능</span>
+                <span className="text-sm leading-relaxed">다른 회원도 운영에 참여하도록 동기 부여<br />누구나 게임 운영자 가능</span>
               </div>
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
@@ -131,7 +131,7 @@ export default function Rules() {
             
             <div className="mt-6 pt-4 border-t border-gray-100">
               <p className="text-xs text-blue-600 italic font-medium">
-                *감독 총무가 진행하지 못할때, 운영 총괄자가 진행합니다.
+                *감독과 총무가 진행하지 못할때, 추가 운영자가 진행합니다.
               </p>
             </div>
           </div>
