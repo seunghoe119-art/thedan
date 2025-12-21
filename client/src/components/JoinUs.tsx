@@ -122,7 +122,7 @@ export default function JoinUs() {
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">정규 회원</h4>
                   <p className="text-gray-400 mb-3">월 2회 / 월 4회 선택가능</p>
-                  <p className="text-2xl font-bold text-accent">₩5,000/회</p>
+                  <p className="text-2xl font-bold text-white">₩5,000/회</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
