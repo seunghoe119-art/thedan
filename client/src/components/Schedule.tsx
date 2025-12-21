@@ -1,3 +1,6 @@
+import { Users, MapPin, Clock } from "lucide-react";
+import { Link } from "wouter";
+
 const scheduleItems = [
   {
     title: "매주 3시간 금요일 대관",
@@ -29,6 +32,22 @@ export default function Schedule() {
           />
         </div>
 
+        {/* Navigation Buttons */}
+        <div className="flex justify-center space-x-4 mb-8">
+          <Link href="/">
+            <button className="px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 ease-in-out shadow-lg 
+                             bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 hover:shadow-xl">
+              Home
+            </button>
+          </Link>
+          <Link href="/rules">
+            <button className="px-6 py-3 rounded-full text-white font-semibold transition-all duration-300 ease-in-out shadow-lg
+                             bg-gradient-to-r from-green-400 to-teal-500 hover:from-green-500 hover:to-teal-600 hover:shadow-xl">
+              회 5,000원
+            </button>
+          </Link>
+        </div>
+
         {/* Gym Info and Images Grid */}
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           <div>
@@ -37,9 +56,9 @@ export default function Schedule() {
               <span className="text-accent">HOME GYM</span>
             </h2>
             <p className="text-xl text-gray-400 font-light mb-12">
-              삼성리틀썬더스농구교실 김포점<br/>경기 김포시 감정로 86 2층<br/>경기 김포시 감정동 626-10
+              삼성리틀썬더스농구교실김포점<br/>경기 김포시 감정로 86 2층<br/>경기 김포시 감정동 626-10
             </p>
-            
+
             {/* Court Images */}
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 mt-8">
               <div className="relative overflow-hidden rounded-xl shadow-2xl">
