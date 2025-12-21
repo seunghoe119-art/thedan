@@ -7,7 +7,7 @@ const contactMethods = [
     icon: MessageCircle,
     color: "yellow-400",
     hoverColor: "yellow-400",
-    url: "http://open.kakao.com/o/s5gBNvNh",
+    url: "https://open.kakao.com/o/gD85Jo7h",
   },
   {
     name: "인스타그램(예정)",
