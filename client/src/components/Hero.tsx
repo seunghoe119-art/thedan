@@ -21,8 +21,22 @@ export default function Hero() {
           BEYOND<br/>
           <span className="text-accent">THE COURT</span>
         </h1>
-        <p className="text-xl md:text-2xl text-white/90 font-light mb-12 max-w-2xl mx-auto">
-          Elite basketball club where passion meets excellence
+        <p className="text-xl md:text-2xl text-white/90 font-light mb-4 max-w-2xl mx-auto">
+          Basketball Team, <span 
+            className="font-black text-3xl md:text-4xl"
+            style={{ 
+              background: 'linear-gradient(135deg, #ff0000, #cc0000, #990000)', 
+              WebkitBackgroundClip: 'text', 
+              WebkitTextFillColor: 'transparent',
+              backgroundClip: 'text'
+            }}
+          >
+            THE DAN
+          </span>
+        </p>
+        
+        <p className="text-lg md:text-xl text-white/80 font-light mb-12">
+          5천원 정도로 매주 선택형 출석 가능합니다
         </p>
         
         <div className="flex flex-col sm:flex-row gap-4 justify-center">
