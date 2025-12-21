@@ -34,13 +34,6 @@ export default function Contact() {
           <p className="text-xl text-gray-600 font-light max-w-3xl mx-auto">
             가입이나 연습에 대한 궁금한 점이 있으신가요? 언제든지 연락하세요.
           </p>
-          <div className="mt-8">
-            <img 
-              src="/123.jpeg" 
-              alt="Contact information" 
-              className="mx-auto rounded-lg shadow-lg max-w-md w-full"
-            />
-          </div>
         </div>
 
         <div className="grid md:grid-cols-3 gap-8">
