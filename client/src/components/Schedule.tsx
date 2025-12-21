@@ -128,53 +128,7 @@ export default function Schedule() {
               <p className="text-gray-300">악취 벌레많은 창고형 아닌 최신식 건물 실내 건물</p>
             </div>
 
-            {/* About Us Slide Section */}
-            <div className="relative w-full overflow-hidden mt-12 rounded-lg">
-              <div
-                className="flex transition-transform duration-500 ease-in-out"
-                style={{ transform: `translateX(-${currentIndex * 100}%)` }}
-              >
-                {slides.map((slide, index) => (
-                  <div key={index} className="w-full flex-shrink-0">
-                    <img
-                      src={slide}
-                      alt={`Slide ${index + 1}`}
-                      className="w-full h-auto object-cover"
-                      data-testid={`slide-image-${index}`}
-                    />
-                  </div>
-                ))}
-              </div>
-
-              <button
-                onClick={goToPrevious}
-                className="absolute left-2 md:left-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-3 md:p-4 rounded-full transition-all duration-300"
-                data-testid="button-previous-slide"
-              >
-                <ChevronLeft className="w-6 h-6 md:w-8 md:h-8" />
-              </button>
-
-              <button
-                onClick={goToNext}
-                className="absolute right-2 md:right-4 top-1/2 -translate-y-1/2 bg-black/40 hover:bg-black/60 text-white p-3 md:p-4 rounded-full transition-all duration-300"
-                data-testid="button-next-slide"
-              >
-                <ChevronRight className="w-6 h-6 md:w-8 md:h-8" />
-              </button>
-
-              <div className="absolute bottom-4 left-1/2 -translate-x-1/2 flex gap-2">
-                {slides.map((_, index) => (
-                  <button
-                    key={index}
-                    onClick={() => setCurrentIndex(index)}
-                    className={`w-2 h-2 md:w-3 md:h-3 rounded-full transition-all duration-300 ${
-                      index === currentIndex ? "bg-white" : "bg-white/50"
-                    }`}
-                    data-testid={`button-slide-indicator-${index}`}
-                  />
-                ))}
-              </div>
-            </div>
+            
 
             {/* Slideshow Section */}
             <div className="relative mt-12">
