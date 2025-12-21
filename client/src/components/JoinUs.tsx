@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
-import { Copy, Send } from "lucide-react";
+import { Copy, Send, ArrowRight } from "lucide-react";
+import { Link } from "wouter";
 
 export default function JoinUs() {
   const { toast } = useToast();
@@ -94,12 +95,19 @@ export default function JoinUs() {
   return (
     <section className="py-32 bg-black text-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-        <div className="text-center mb-16">
-          <h2 className="text-5xl md:text-6xl font-black mb-6">작성 중</h2>
-          <p className="text-xl text-gray-400 font-light max-w-3xl mx-auto">
-            수정중
-          </p>
-        </div>
+        <Link href="/rules">
+          <div className="text-center mb-16 cursor-pointer group">
+            <div className="inline-block bg-gradient-to-br from-yellow-50 via-amber-50 to-orange-100 rounded-3xl p-8 shadow-2xl transform transition-all duration-300 hover:scale-105 hover:shadow-orange-500/20">
+              <h2 className="text-5xl md:text-6xl font-black mb-4 bg-gradient-to-r from-gray-900 via-gray-800 to-gray-700 bg-clip-text text-transparent">
+                Club Guidelines
+              </h2>
+              <div className="flex items-center justify-center gap-2 text-gray-700 font-medium">
+                <span>클럽 규칙 자세히 보기</span>
+                <ArrowRight className="w-5 h-5 transform group-hover:translate-x-2 transition-transform" />
+              </div>
+            </div>
+          </div>
+        </Link>
 
         <div className="grid lg:grid-cols-2 gap-16 items-start">
           <div className="space-y-8">
