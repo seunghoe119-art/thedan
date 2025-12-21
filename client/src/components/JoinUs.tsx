@@ -139,6 +139,12 @@ export default function JoinUs() {
                   <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 다이소 조끼 착용</p>
                   <p className="text-2xl font-bold text-accent">₩9,000 (공구보유)<br />₩11,000 (커스텀)</p>
                 </div>
+
+                <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4">
+                  <p className="text-sm text-yellow-800 leading-relaxed">
+                    *3파전을 기본으로 블랙,화이트,레드 진행하기에 필수인점 양해바랍니다.
+                  </p>
+                </div>
               </div>
             </div>
           </div>
