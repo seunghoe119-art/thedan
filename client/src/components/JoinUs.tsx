@@ -135,9 +135,9 @@ export default function JoinUs() {
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">(2회부터) 레드 스포츠 저지</h4>
+                  <h4 className="font-bold text-lg mb-2">(2회부터) 레드 유니폼 필수</h4>
                   <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 다이소 조끼 착용</p>
-                  <p className="text-2xl font-bold text-accent">₩9,000 (공구보유)<br />₩11,000 (커스텀가능)</p>
+                  <p className="text-2xl font-bold text-accent">₩9,000 (공구보유)<br />₩11,000 (커스텀)</p>
                 </div>
               </div>
             </div>
