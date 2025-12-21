@@ -163,7 +163,7 @@ export default function JoinUs() {
                 <div>
                   <Label className="text-white">연락처</Label>
                   <div className="relative mt-2">
-                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-white pointer-events-none">
+                    <span className="absolute left-4 top-1/2 -translate-y-1/2 text-black pointer-events-none">
                       010-
                     </span>
                     <Input 
