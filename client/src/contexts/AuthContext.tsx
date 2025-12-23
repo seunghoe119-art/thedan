@@ -2,15 +2,8 @@ import { createContext, useContext, useEffect, useState, ReactNode } from 'react
 import { User } from '@supabase/supabase-js';
 import { supabase } from '@/lib/supabaseClient';
 
-interface Profile {
-  user_id: string;
-  role: string;
-  status: string;
-}
-
 interface AuthContextType {
   user: User | null;
-  profile: Profile | null;
   loading: boolean;
   isAdmin: boolean;
   signOut: () => Promise<void>;
@@ -32,10 +25,8 @@ interface AuthProviderProps {
 
 export const AuthProvider = ({ children }: AuthProviderProps) => {
   const [user, setUser] = useState<User | null>(null);
-  const [profile, setProfile] = useState<Profile | null>(null);
+  const [isAdmin, setIsAdmin] = useState(false);
   const [loading, setLoading] = useState(true);
-
-  const isAdmin = profile?.role === 'admin' && profile?.status === 'approved';
 
   useEffect(() => {
     if (!supabase) {
@@ -43,26 +34,24 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
       return;
     }
 
-    // Get initial session
     supabase.auth.getSession().then(({ data: { session } }) => {
       setUser(session?.user ?? null);
       if (session?.user) {
-        fetchProfile(session.user.id);
+        checkAdminStatus(session.user.id);
       } else {
         setLoading(false);
       }
     });
 
-    // Listen for auth changes
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange(async (event, session) => {
       if (event === 'SIGNED_IN' && session?.user) {
         setUser(session.user);
-        await fetchProfile(session.user.id);
+        await checkAdminStatus(session.user.id);
       } else if (event === 'SIGNED_OUT') {
         setUser(null);
-        setProfile(null);
+        setIsAdmin(false);
         setLoading(false);
       }
     });
@@ -70,27 +59,27 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     return () => subscription.unsubscribe();
   }, []);
 
-  const fetchProfile = async (userId: string) => {
+  const checkAdminStatus = async (userId: string) => {
     if (!supabase) {
       setLoading(false);
       return;
     }
     try {
       const { data, error } = await supabase
-        .from('profiles')
-        .select('user_id, role, status')
+        .from('admin_users')
+        .select('user_id')
         .eq('user_id', userId)
         .single();
 
       if (error) {
-        console.error('Error fetching profile:', error);
-        setProfile(null);
-      } else {
-        setProfile(data);
+        console.log('Not admin or error:', error.message);
+        setIsAdmin(false);
+      } else if (data) {
+        setIsAdmin(true);
       }
     } catch (error) {
-      console.error('Error fetching profile:', error);
-      setProfile(null);
+      console.error('Error checking admin status:', error);
+      setIsAdmin(false);
     } finally {
       setLoading(false);
     }
@@ -99,23 +88,19 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
   const signOut = async () => {
     if (!supabase) {
       setUser(null);
-      setProfile(null);
+      setIsAdmin(false);
       setLoading(false);
       return;
     }
     try {
-      // First, call Supabase signOut with global scope
       await supabase.auth.signOut({ scope: 'global' });
-      
-      // Immediately update local state for instant UI response
       setUser(null);
-      setProfile(null);
+      setIsAdmin(false);
       setLoading(false);
     } catch (error) {
       console.error('SignOut error:', error);
-      // Even if signOut fails, clear local state
       setUser(null);
-      setProfile(null);
+      setIsAdmin(false);
       setLoading(false);
       throw error;
     }
@@ -125,7 +110,6 @@ export const AuthProvider = ({ children }: AuthProviderProps) => {
     <AuthContext.Provider
       value={{
         user,
-        profile,
         loading,
         isAdmin,
         signOut,
