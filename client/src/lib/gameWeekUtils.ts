@@ -100,6 +100,21 @@ export function formatPhoneForDisplay(phone: string): string {
 
 export function formatHeightForDisplay(height: string): string {
   if (!height) return '';
+  
+  // Map specific ranges to display values
+  const heightMap: { [key: string]: string } = {
+    '170~175': '173cm',
+    '175~180': '178cm',
+    '180~185': '183cm',
+    '185~190': '188cm',
+  };
+  
+  // Check if it's a mapped range
+  if (heightMap[height]) {
+    return heightMap[height];
+  }
+  
+  // Otherwise use the original logic
   const match = height.match(/(\d+)~?(\d+)?/);
   if (match) {
     if (match[2]) {
