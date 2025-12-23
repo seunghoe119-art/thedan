@@ -84,7 +84,7 @@ export default function Rules() {
               </div>
             </div>
             <div className="space-y-2 text-sm text-gray-600">
-              <p>• 블랙팀. 창단 멤버 + 정규멤버</p>
+              <p>• 블랙팀 창단 멤버 + 정규멤버</p>
               <p>• 화이트팀 정규멤버</p>
               <p>• 레드팀 정규멤버 + 게스트위주</p>
             </div>
@@ -109,7 +109,7 @@ export default function Rules() {
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg">
-            <h3 className="font-bold text-2xl mb-6">추가 경기 운영자 특혜</h3>
+            <h3 className="font-bold text-2xl mb-6">경기 운영자 특혜</h3>
             <div className="space-y-4 text-gray-700">
               <div className="flex items-start space-x-3">
                 <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
