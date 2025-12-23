@@ -198,11 +198,8 @@ export default function GuestApplicationBoard() {
           <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
             금주 신청 현황
           </h1>
-          <p className="text-gray-600 mb-2">
-            {gameWeeks.length > 0 && gameWeeks[Math.floor(gameWeeks.length / 2) + selectedWeekOffset]?.label || ''} 신청 명단입니다. (Supabase 연동)
-          </p>
           <p className="text-gray-900 font-bold text-lg">
-            {gameDateString}, (금)<br />21:00 ~ 23:30
+            {gameDateString}, (금)
           </p>
         </div>
 
