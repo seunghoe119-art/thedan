@@ -18,15 +18,14 @@ interface GuestApplication {
 
 export default function GuestApplicationBoard() {
   const [gameWeeks, setGameWeeks] = useState<GameWeek[]>([]);
-  const [selectedWeekIndex, setSelectedWeekIndex] = useState(0);
+  const [selectedWeekOffset, setSelectedWeekOffset] = useState(0); // 0 = 현재 주차, -1 = 지난주, 1 = 다음주
   const [applications, setApplications] = useState<GuestApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    const weeks = getGameWeeks(8);
+    // 현재 주차 기준으로 앞뒤 20주씩 생성 (총 41주)
+    const weeks = getGameWeeks(41);
     setGameWeeks(weeks);
-    // 현재 주차를 기본값으로 설정 (첫 번째 주차가 현재 주차)
-    setSelectedWeekIndex(0);
   }, []);
 
   useEffect(() => {
@@ -41,7 +40,10 @@ export default function GuestApplicationBoard() {
         return;
       }
 
-      const selectedWeek = gameWeeks[selectedWeekIndex];
+      // offset을 실제 인덱스로 변환 (현재 주차는 배열의 중간에 위치)
+      const currentWeekIndex = Math.floor(gameWeeks.length / 2);
+      const actualIndex = currentWeekIndex + selectedWeekOffset;
+      const selectedWeek = gameWeeks[actualIndex];
       
       try {
         const { data, error } = await supabase
@@ -66,7 +68,7 @@ export default function GuestApplicationBoard() {
     };
 
     fetchApplications();
-  }, [gameWeeks, selectedWeekIndex]);
+  }, [gameWeeks, selectedWeekOffset]);
 
   return (
     <section className="py-16 bg-gradient-to-b from-gray-100 to-gray-200 min-h-screen">
@@ -76,27 +78,45 @@ export default function GuestApplicationBoard() {
             금주 신청 현황
           </h1>
           <p className="text-gray-600">
-            {gameWeeks[selectedWeekIndex]?.label || ''} 신청 명단입니다. (Supabase 연동)
+            {gameWeeks.length > 0 && gameWeeks[Math.floor(gameWeeks.length / 2) + selectedWeekOffset]?.label || ''} 신청 명단입니다. (Supabase 연동)
           </p>
         </div>
 
         <div className="mb-6 flex items-center justify-center gap-4">
           <Button
             variant="outline"
-            onClick={() => setSelectedWeekIndex((prev) => Math.max(0, prev - 1))}
-            disabled={selectedWeekIndex === 0}
+            onClick={() => {
+              setSelectedWeekOffset((prev) => {
+                const newOffset = prev - 1;
+                // 범위 끝에 가까워지면 더 많은 주차 생성
+                if (Math.abs(newOffset) >= Math.floor(gameWeeks.length / 2) - 5) {
+                  const moreWeeks = getGameWeeks(gameWeeks.length + 20);
+                  setGameWeeks(moreWeeks);
+                }
+                return newOffset;
+              });
+            }}
             className="flex items-center gap-2"
           >
             <ChevronLeft className="h-4 w-4" />
             이전
           </Button>
           <div className="min-w-[200px] text-center font-semibold text-lg">
-            {gameWeeks[selectedWeekIndex]?.label || ''}
+            {gameWeeks.length > 0 && gameWeeks[Math.floor(gameWeeks.length / 2) + selectedWeekOffset]?.label || ''}
           </div>
           <Button
             variant="outline"
-            onClick={() => setSelectedWeekIndex((prev) => Math.min(gameWeeks.length - 1, prev + 1))}
-            disabled={selectedWeekIndex === gameWeeks.length - 1}
+            onClick={() => {
+              setSelectedWeekOffset((prev) => {
+                const newOffset = prev + 1;
+                // 범위 끝에 가까워지면 더 많은 주차 생성
+                if (Math.abs(newOffset) >= Math.floor(gameWeeks.length / 2) - 5) {
+                  const moreWeeks = getGameWeeks(gameWeeks.length + 20);
+                  setGameWeeks(moreWeeks);
+                }
+                return newOffset;
+              });
+            }}
             className="flex items-center gap-2"
           >
             다음

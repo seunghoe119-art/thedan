@@ -24,7 +24,11 @@ export function getGameWeeks(weeksCount: number = 8): GameWeek[] {
   
   const weeks: GameWeek[] = [];
   
-  for (let i = 0; i < weeksCount; i++) {
+  // 현재 주차를 중심으로 앞뒤로 주차 생성
+  const startOffset = -Math.floor(weeksCount / 2);
+  const endOffset = Math.ceil(weeksCount / 2);
+  
+  for (let i = startOffset; i < endOffset; i++) {
     const weekDeadlineUTC = addDays(currentDeadlineUTC, i * 7);
     const weekDeadlineKST = toZonedTime(weekDeadlineUTC, KST_TIMEZONE);
     
