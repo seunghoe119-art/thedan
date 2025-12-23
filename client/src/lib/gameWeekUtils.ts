@@ -99,7 +99,11 @@ export function formatHeightForDisplay(height: string): string {
   const match = height.match(/(\d+)~?(\d+)?/);
   if (match) {
     if (match[2]) {
-      return `${match[2]}cm`;
+      // Calculate average of the range
+      const min = parseInt(match[1]);
+      const max = parseInt(match[2]);
+      const average = Math.round((min + max) / 2);
+      return `${average}cm`;
     }
     return `${match[1]}cm`;
   }
