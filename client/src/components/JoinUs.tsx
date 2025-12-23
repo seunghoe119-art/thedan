@@ -5,11 +5,23 @@ import { Label } from "@/components/ui/label";
 import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, ArrowRight } from "lucide-react";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
 
 export default function JoinUs() {
   const { toast } = useToast();
+  const [location, setLocation] = useLocation();
+  const [guestCardClickCount, setGuestCardClickCount] = useState(0);
+
+  const handleGuestCardClick = () => {
+    const newCount = guestCardClickCount + 1;
+    setGuestCardClickCount(newCount);
+    
+    if (newCount >= 10) {
+      setLocation('/guest-status');
+      setGuestCardClickCount(0);
+    }
+  };
 
   const [formData, setFormData] = useState({
     name: "",
@@ -269,7 +281,10 @@ export default function JoinUs() {
                   <p className="text-2xl font-bold text-white">₩5,000/참여 횟수</p>
                 </div>
 
-                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
+                <div 
+                  className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors cursor-pointer"
+                  onClick={handleGuestCardClick}
+                >
                   <h4 className="font-bold text-lg mb-2">게스트 비용<br />횟수 초과시 게스트로 전환</h4>
                   <p className="text-gray-400 mb-3">매주 참가인원을 보고 게스트비 선정</p>
                   <p className="text-2xl font-bold text-accent">₩8,000~10,000/참여 횟수</p>
