@@ -18,6 +18,7 @@ import ContactPage from "@/pages/ContactPage";
 import GuestPage from "@/pages/GuestPage";
 import Guest2Page from "@/pages/Guest2Page";
 import BoardPage from "@/pages/BoardPage";
+import GuestStatusPage from "@/pages/GuestStatusPage";
 import LoginPage from "@/pages/LoginPage";
 import AdminNewPostPage from "@/pages/AdminNewPostPage";
 import AdminEditPostPage from "@/pages/AdminEditPostPage";
@@ -74,6 +75,11 @@ function AppRouter() {
                 <Route path="/board" component={() => (
                   <PageTransition key="/board">
                     <BoardPage />
+                  </PageTransition>
+                )} />
+                <Route path="/guest-status" component={() => (
+                  <PageTransition key="/guest-status">
+                    <GuestStatusPage />
                   </PageTransition>
                 )} />
                 <Route path="/login" component={() => (
