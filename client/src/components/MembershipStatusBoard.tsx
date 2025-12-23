@@ -24,7 +24,6 @@ interface DisplayApplication extends MembershipApplication {
   cumulativeCount: number;
   planDisplay: string;
   remainingCount: number;
-  attendanceCount: number;
 }
 
 function getMonthOptions(range: number = 41): { label: string; value: string }[] {
@@ -73,6 +72,15 @@ export default function MembershipStatusBoard() {
   const selectedMonth = monthOptions[selectedMonthIndex];
 
   const handleAttendance = async (app: DisplayApplication) => {
+    if (!supabase) {
+      toast({
+        title: "연결 오류",
+        description: "데이터베이스 연결이 없습니다.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
     try {
       const newUsedCount = (app.used_count || 0) + 1;
       const totalCount = app.plan === 'regular_4' ? 4 : 2;
@@ -101,7 +109,6 @@ export default function MembershipStatusBoard() {
           a.id === app.id 
             ? { 
                 ...a, 
-                attendanceCount: a.attendanceCount + 1,
                 used_count: newUsedCount,
                 remainingCount: Math.max(0, totalCount - newUsedCount)
               }
@@ -191,7 +198,6 @@ export default function MembershipStatusBoard() {
             cumulativeCount: phoneCounts[app.phone] || 1,
             planDisplay: getPlanDisplay(app.plan),
             remainingCount,
-            attendanceCount: 0,
           };
         });
 
@@ -347,7 +353,7 @@ export default function MembershipStatusBoard() {
                           <span className="font-semibold text-blue-600">{app.planDisplay}</span>
                         </TableCell>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                          <span className="font-semibold text-purple-600">{app.attendanceCount}회</span>
+                          <span className="font-semibold text-purple-600">{app.used_count || 0}회</span>
                         </TableCell>
                       </>
                     )}
