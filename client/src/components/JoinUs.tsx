@@ -16,6 +16,7 @@ export default function JoinUs() {
     age: "",
     position: "",
     jerseySize: "",
+    applicationPeriod: "",
     membershipType: "",
     agreeRules: false,
     dataConsent: false,
@@ -51,13 +52,29 @@ export default function JoinUs() {
     return membershipMap[type] || type;
   };
 
+  const getPeriodText = (period: string) => {
+    const now = new Date();
+    const currentYear = now.getFullYear() % 100; // Get last 2 digits of year
+    const currentMonth = now.getMonth() + 1; // 0-indexed, so add 1
+    
+    if (period === "thisMonth") {
+      return `${currentYear}년 ${currentMonth}월 신청`;
+    } else if (period === "nextMonth") {
+      const nextMonth = currentMonth === 12 ? 1 : currentMonth + 1;
+      const nextYear = currentMonth === 12 ? currentYear + 1 : currentYear;
+      return `${nextYear}년 ${nextMonth}월 신청`;
+    }
+    return "";
+  };
+
   const generateMessage = () => {
-    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.applicationPeriod || !formData.membershipType) {
       return "위 항목을 선택하면 자동으로 메시지가 구성됩니다.";
     }
 
     let message = `안녕하세요. THE DAN 농구 정규 회원제 신청 문의입니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
     message += `\n[${getSizeText(formData.jerseySize)}, ${getMembershipText(formData.membershipType)}]`;
+    message += `\n[${getPeriodText(formData.applicationPeriod)}]`;
     message += `\n연락처: ${formData.contact}`;
 
     return message;
@@ -83,7 +100,7 @@ export default function JoinUs() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.membershipType) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.applicationPeriod || !formData.membershipType) {
       toast({
         title: "입력사항 확인",
         description: "모든 필드를 입력해주세요.",
@@ -270,6 +287,36 @@ export default function JoinUs() {
                     <option value="xl">사이즈 XL 110 185이상</option>
                     <option value="xxl">사이즈 XXL 115 185이상</option>
                   </select>
+                </div>
+              </div>
+
+              <div>
+                <Label className="text-white">신청 기간</Label>
+                <div className="space-y-3 mt-2">
+                  <label className="flex items-center">
+                    <input 
+                      type="radio" 
+                      name="period" 
+                      value="thisMonth" 
+                      className="text-accent focus:ring-accent"
+                      onChange={(e) => setFormData({ ...formData, applicationPeriod: e.target.value })}
+                      required
+                      data-testid="radio-period-this-month"
+                    />
+                    <span className="ml-3">이번달</span>
+                  </label>
+                  <label className="flex items-center">
+                    <input 
+                      type="radio" 
+                      name="period" 
+                      value="nextMonth" 
+                      className="text-accent focus:ring-accent"
+                      onChange={(e) => setFormData({ ...formData, applicationPeriod: e.target.value })}
+                      required
+                      data-testid="radio-period-next-month"
+                    />
+                    <span className="ml-3">다음달</span>
+                  </label>
                 </div>
               </div>
 
