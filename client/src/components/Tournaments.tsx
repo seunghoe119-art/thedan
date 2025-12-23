@@ -36,11 +36,11 @@ export default function Tournaments() {
             </div>
 
             <div className="border-2 border-gray-200 rounded-2xl p-8">
-              <h3 className="font-bold text-xl mb-4">매주 투표 진행</h3>
+              <h3 className="font-bold text-xl mb-4">참여 인원 관리</h3>
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
-                  <span className="text-gray-700 pt-1 text-sm md:text-base">목요일 18시 전까지 정규참가자 파악 매주 투표 진행</span>
+                  <span className="text-gray-700 pt-1 text-sm md:text-base">목요일 18시 전까지, 참가 투표 진행 진행</span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
