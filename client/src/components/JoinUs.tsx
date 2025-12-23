@@ -138,7 +138,11 @@ export default function JoinUs() {
               <div className="space-y-6">
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">정규 회원. 월 2회/4회 선택</h4>
-                  <p className="text-gray-400 mb-3">*정규회원 대다수로 게임이 진행되어 대관비 부족시 ₩1,000원 익월 청구</p>
+                  <p className="text-gray-400 mb-3 text-[0.7em] leading-relaxed">
+                    *정규회원 대다수로<br />
+                    게임이 진행되어 대관비 부족시<br />
+                    ₩1,000원 익월 청구
+                  </p>
                   <p className="text-2xl font-bold text-white">₩5,000/참여 횟수</p>
                 </div>
 
