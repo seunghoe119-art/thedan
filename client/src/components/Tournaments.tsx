@@ -22,7 +22,7 @@ export default function Tournaments() {
                 </li>
                 <li className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>
-                  <span>5천원/회 정규회원 및 운영안내</span>
+                  <span className="text-sm md:text-base">회당 5천원,<br className="md:hidden" /> 정규회원 및 운영안내</span>
                 </li>
                 <li className="flex items-center space-x-3">
                   <div className="w-2 h-2 bg-accent rounded-full flex-shrink-0"></div>
