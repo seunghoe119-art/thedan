@@ -20,6 +20,28 @@ export const insertGuestApplicationSchema = createInsertSchema(guestApplications
 export type GuestApplication = typeof guestApplications.$inferSelect;
 export type InsertGuestApplication = z.infer<typeof insertGuestApplicationSchema>;
 
+export const membershipApplications = pgTable("membership_applications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  phone: text("phone").notNull(),
+  age: text("age").notNull(),
+  position: text("position").notNull(),
+  uniform_size: text("uniform_size").notNull(),
+  height_range: text("height_range").notNull(),
+  plan: text("plan").notNull(),
+  payment_status: text("payment_status").notNull().default('pending'),
+  target_month: text("target_month").notNull(),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+});
+
+export const insertMembershipApplicationSchema = createInsertSchema(membershipApplications).omit({
+  id: true,
+  created_at: true,
+});
+
+export type MembershipApplication = typeof membershipApplications.$inferSelect;
+export type InsertMembershipApplication = z.infer<typeof insertMembershipApplicationSchema>;
+
 export const youtubePosts = pgTable("youtube_posts", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
   title: text("title").notNull(),

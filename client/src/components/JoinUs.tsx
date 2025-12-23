@@ -6,6 +6,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, ArrowRight } from "lucide-react";
 import { Link } from "wouter";
+import { supabase } from "@/lib/supabaseClient";
 
 export default function JoinUs() {
   const { toast } = useToast();
@@ -97,7 +98,55 @@ export default function JoinUs() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  // Map membership type to plan value for Supabase
+  const getPlanValue = (membershipType: string): string => {
+    const planMap: { [key: string]: string } = {
+      regular: "regular_2",
+      dormant: "regular_4",
+      firefighter: "guest_once"
+    };
+    return planMap[membershipType] || "guest_once";
+  };
+
+  // Get target month as first day of month (YYYY-MM-01)
+  const getTargetMonth = (period: string): string => {
+    const now = new Date();
+    let targetDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    
+    if (period === "nextMonth") {
+      targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+    }
+    
+    return targetDate.toISOString().split('T')[0];
+  };
+
+  // Get height range from jersey size
+  const getHeightRange = (size: string): string => {
+    const heightMap: { [key: string]: string } = {
+      s: "170-175",
+      m: "175-180",
+      l: "180-185",
+      xl: "185이상",
+      xxl: "185이상"
+    };
+    return heightMap[size] || "175-180";
+  };
+
+  // Get uniform size label
+  const getUniformSize = (size: string): string => {
+    const sizeMap: { [key: string]: string } = {
+      s: "2XL",
+      m: "3XL",
+      l: "4XL",
+      xl: "5XL",
+      xxl: "6XL"
+    };
+    return sizeMap[size] || "3XL";
+  };
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.jerseySize || !formData.applicationPeriod || !formData.membershipType) {
@@ -109,8 +158,66 @@ export default function JoinUs() {
       return;
     }
 
-    // Redirect to KakaoTalk open chat
-    window.open("https://open.kakao.com/o/skS1in7h", "_blank");
+    setIsSubmitting(true);
+
+    try {
+      if (!supabase) {
+        throw new Error("Supabase 연결이 설정되지 않았습니다.");
+      }
+
+      const { error } = await supabase
+        .from('membership_applications')
+        .insert({
+          name: formData.name,
+          phone: formData.contact,
+          age: formData.age,
+          position: getPositionText(formData.position),
+          uniform_size: getUniformSize(formData.jerseySize),
+          height_range: getHeightRange(formData.jerseySize),
+          plan: getPlanValue(formData.membershipType),
+          target_month: getTargetMonth(formData.applicationPeriod),
+          payment_status: 'pending'
+        });
+
+      if (error) {
+        // Check for duplicate entry
+        if (error.code === '23505') {
+          throw new Error("이미 해당 월에 신청하셨습니다.");
+        }
+        throw error;
+      }
+
+      // Redirect to KakaoTalk open chat
+      window.open("https://open.kakao.com/o/skS1in7h", "_blank");
+
+      toast({
+        title: "신청 완료",
+        description: "신청이 저장되었습니다. 카카오톡 오픈채팅방으로 이동합니다.",
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        contact: "",
+        age: "",
+        position: "",
+        jerseySize: "",
+        applicationPeriod: "",
+        membershipType: "",
+        agreeRules: false,
+        dataConsent: false,
+      });
+
+    } catch (error: any) {
+      console.error("Submit error:", error);
+      toast({
+        title: "저장 실패",
+        description: error.message || "신청 저장 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -388,11 +495,12 @@ export default function JoinUs() {
 
                 <Button 
                   type="submit" 
-                  className="bg-accent text-white hover:bg-red-600 py-4 rounded-lg font-bold text-lg"
+                  className="bg-accent text-white hover:bg-red-600 py-4 rounded-lg font-bold text-lg disabled:opacity-50"
                   data-testid="button-submit"
+                  disabled={isSubmitting}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  신청서 제출
+                  {isSubmitting ? "저장 중..." : "신청서 제출"}
                 </Button>
               </div>
             </form>

@@ -1,0 +1,56 @@
+-- 1. UUID 확장 기능
+create extension if not exists pgcrypto;
+
+-- 2. 테이블 생성 (데이터 무결성 강화 버전)
+create table if not exists public.membership_applications (
+  id uuid primary key default gen_random_uuid(),
+
+  -- 입력 데이터 검증
+  name text not null check (char_length(name) between 1 and 50),
+  phone text not null check (char_length(phone) between 7 and 20),
+  age text not null check (char_length(age) between 1 and 20),
+  position text not null check (char_length(position) between 1 and 50),
+  uniform_size text not null check (char_length(uniform_size) between 1 and 10),
+  height_range text not null check (char_length(height_range) between 1 and 20),
+  
+  -- 플랜 및 상태
+  plan text not null check (plan in ('regular_2', 'regular_4', 'guest_once')),
+  
+  -- 중요: 테이블 자체는 'paid'를 허용함 (그래야 나중에 관리자가 수정 가능)
+  payment_status text not null default 'pending'
+    check (payment_status in ('pending', 'paid', 'cancelled')),
+
+  -- 날짜 강제 (매월 1일)
+  target_month date not null
+    check (target_month = date_trunc('month', target_month)::date),
+
+  created_at timestamptz not null default now(),
+  created_at_kst timestamp generated always as (created_at at time zone 'Asia/Seoul') stored
+);
+
+-- 3. 중복 신청 방지 (같은 폰번호 + 같은 월 = 신청 불가)
+create unique index if not exists membership_applications_phone_month_uniq
+  on public.membership_applications (phone, target_month);
+
+-- 4. 조회 속도 향상
+create index if not exists membership_applications_target_month_idx
+  on public.membership_applications (target_month desc);
+create index if not exists membership_applications_created_at_idx
+  on public.membership_applications (created_at desc);
+
+-- 5. 보안 정책 (RLS) 활성화
+alter table public.membership_applications enable row level security;
+
+-- 정책 1: 누구나 조회 가능 (공개 게시판 목적)
+create policy "public read"
+on public.membership_applications
+for select
+to anon, authenticated
+using (true);
+
+-- 정책 2: 누구나 신청 가능 (단, 'pending' 상태로만!)
+create policy "public insert pending only"
+on public.membership_applications
+for insert
+to anon, authenticated
+with check (payment_status = 'pending');
