@@ -100,6 +100,20 @@ export default function JoinUs() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 전화번호 마스킹 함수: 010-12xx-xxxx 형태로 변환
+  const maskPhoneNumber = (phone: string): string => {
+    // 숫자만 추출
+    const numbers = phone.replace(/[^0-9]/g, '');
+    
+    if (numbers.length !== 11) {
+      return phone; // 형식이 맞지 않으면 원본 반환
+    }
+    
+    // 010-12xx-xxxx 형태로 마스킹
+    const masked = numbers.slice(0, 5) + '000000';
+    return masked.slice(0, 3) + '-' + masked.slice(3, 7) + '-' + masked.slice(7);
+  };
+
   // Map membership type to plan value for Supabase
   const getPlanValue = (membershipType: string): string => {
     const planMap: { [key: string]: string } = {
@@ -176,7 +190,7 @@ export default function JoinUs() {
         .from('membership_applications')
         .insert({
           name: formData.name,
-          phone: formData.contact,
+          phone: maskPhoneNumber(formData.contact),
           age: formData.age,
           position: getPositionText(formData.position),
           uniform_size: getUniformSize(formData.jerseySize),
