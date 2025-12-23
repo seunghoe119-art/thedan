@@ -214,7 +214,6 @@ export default function GuestApplicationBoard() {
                 <TableHead className="font-bold text-gray-900 text-center">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">키</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">포지션</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">연락처</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -231,7 +230,7 @@ export default function GuestApplicationBoard() {
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={5} className="text-center text-gray-500 py-8">
                     해당 주차에 신청 내역이 없습니다.
                   </TableCell>
                 </TableRow>
@@ -253,7 +252,6 @@ export default function GuestApplicationBoard() {
                       <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{app.age}</TableCell>
                       <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
                       <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
-                      <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{formatPhoneForDisplay(app.phone)}</TableCell>
                     </TableRow>
                   );
                 })
