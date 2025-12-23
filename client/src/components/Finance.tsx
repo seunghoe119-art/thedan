@@ -1,7 +1,7 @@
 import { useState, useEffect } from "react";
 import { useAuth } from "@/contexts/AuthContext";
 import { supabase } from "@/lib/supabaseClient";
-import { Link } from "wouter";
+import { Link, useLocation } from "wouter";
 import { Button } from "@/components/ui/button";
 import { Lock, ChevronDown } from "lucide-react";
 
@@ -168,9 +168,30 @@ export default function Finance() {
     );
   }
 
+  const { signOut } = useAuth();
+  const [, setLocation] = useLocation();
+
+  const handleLogout = async () => {
+    try {
+      await signOut();
+      setLocation('/');
+    } catch (error) {
+      console.error('Logout error:', error);
+    }
+  };
+
   return (
     <section className="py-16 md:py-32 bg-gray-50 relative z-10">
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex justify-end mb-4">
+          <Button
+            onClick={handleLogout}
+            variant="outline"
+            className="border-red-600 text-red-600 hover:bg-red-50"
+          >
+            로그아웃
+          </Button>
+        </div>
         <div className="text-center mb-8 md:mb-12">
           <h2 className="text-3xl md:text-5xl font-black text-black mb-4">금주 신청 현황</h2>
           <p className="text-base md:text-lg text-gray-600">
