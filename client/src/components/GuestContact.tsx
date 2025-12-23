@@ -13,6 +13,7 @@ interface AdditionalGuest {
   name: string;
   age: string;
   position: string;
+  height: string;
 }
 
 export default function GuestContact() {
@@ -23,6 +24,7 @@ export default function GuestContact() {
     contact: "",
     age: "",
     position: "",
+    height: "",
     jerseySize: "m",
     membershipType: "firefighter",
     agreeRules: true,
@@ -36,7 +38,8 @@ export default function GuestContact() {
       id: Date.now().toString(),
       name: "",
       age: "",
-      position: ""
+      position: "",
+      height: ""
     };
     setAdditionalGuests([...additionalGuests, newGuest]);
   };
@@ -120,10 +123,10 @@ export default function GuestContact() {
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.contact || !formData.age || !formData.position) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.height) {
       toast({
         title: "입력사항 확인",
-        description: "이름, 연락처, 나이, 포지션을 입력해주세요.",
+        description: "이름, 연락처, 나이, 포지션, 키를 입력해주세요.",
         variant: "destructive",
       });
       return;
@@ -179,6 +182,23 @@ export default function GuestContact() {
                   <option value="leading">리딩 가드 1,2번</option>
                   <option value="small">스몰포워드 2,3번</option>
                   <option value="baseline">밑선라인 4,5번</option>
+                </select>
+              </div>
+
+              <div>
+                <Label className="text-white">키</Label>
+                <select 
+                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
+                  value={formData.height}
+                  onChange={(e) => setFormData({ ...formData, height: e.target.value })}
+                  required
+                  data-testid="guest-select-height"
+                >
+                  <option value="">키 선택</option>
+                  <option value="170~175">170~175</option>
+                  <option value="175~180">175~180</option>
+                  <option value="180~185">180~185</option>
+                  <option value="185~190">185~190</option>
                 </select>
               </div>
 
@@ -280,6 +300,21 @@ export default function GuestContact() {
                       <option value="leading">리딩 가드 1,2번</option>
                       <option value="small">스몰포워드 2,3번</option>
                       <option value="baseline">밑선라인 4,5번</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <Label className="text-white text-sm">키</Label>
+                    <select 
+                      className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-accent focus:outline-none mt-1"
+                      value={guest.height}
+                      onChange={(e) => updateAdditionalGuest(guest.id, 'height', e.target.value)}
+                    >
+                      <option value="">키 선택</option>
+                      <option value="170~175">170~175</option>
+                      <option value="175~180">175~180</option>
+                      <option value="180~185">180~185</option>
+                      <option value="185~190">185~190</option>
                     </select>
                   </div>
 
