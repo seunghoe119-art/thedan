@@ -439,7 +439,7 @@ export default function GuestContact() {
                   disabled={isSubmitting}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {isSubmitting ? "저장 중..." : "② 신청서 제출"}
+                  {isSubmitting ? "여는중..." : "② 신청서 제출"}
                 </Button>
               </div>
 
