@@ -109,6 +109,11 @@ export default function Navigation() {
                 POST
               </Button>
             </Link>
+            <Link href="/finance" onClick={() => handleNavigation("/finance")}>
+              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100 rounded-full">
+                Finance
+              </Button>
+            </Link>
             <Link href="/board" onClick={() => handleNavigation("/board")}>
               <Button className="bg-accent text-white hover:bg-accent/90 rounded-full">
                 GO VIDEO
@@ -175,6 +180,11 @@ export default function Navigation() {
                 <Link href="/admin/new-post" onClick={() => handleNavigation("/admin/new-post")}>
                   <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-100">
                     POST
+                  </Button>
+                </Link>
+                <Link href="/finance" onClick={() => handleNavigation("/finance")}>
+                  <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-100">
+                    Finance
                   </Button>
                 </Link>
                 <Link href="/board" onClick={() => handleNavigation("/board")}>
