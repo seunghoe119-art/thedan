@@ -22,16 +22,16 @@ const newsItems = [
 
 export default function News() {
   const [location, setLocation] = useLocation();
-  const [clickCount, setClickCount] = React.useState(0);
+  const [clickCounts, setClickCounts] = React.useState<Record<number, number>>({});
   
   const handleSecretAccess = (index: number) => {
-    // Index 0 (first button): 7 clicks to access admin new post page
-    // Index 1 (second button): 7 clicks to access finance page
-    // Other buttons: 7 clicks to access guest page
-    const newCount = clickCount + 1;
-    setClickCount(newCount);
+    // Index 0 (first button): 6 clicks to access admin new post page
+    // Index 1 (second button): 6 clicks to access finance page
+    // Other buttons: 6 clicks to access guest page
+    const currentCount = (clickCounts[index] || 0) + 1;
+    setClickCounts({ ...clickCounts, [index]: currentCount });
     
-    if (newCount >= 7) {
+    if (currentCount >= 6) {
       if (index === 0) {
         setLocation('/admin/new-post');
       } else if (index === 1) {
@@ -39,7 +39,7 @@ export default function News() {
       } else {
         setLocation('/guest');
       }
-      setClickCount(0); // Reset counter
+      setClickCounts({ ...clickCounts, [index]: 0 }); // Reset counter
     }
   };
   
