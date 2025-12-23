@@ -283,7 +283,7 @@ export default function JoinUs() {
 
               <div className="space-y-6">
                 <div 
-                  className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors cursor-pointer"
+                  className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors"
                   onClick={handleRegularCardClick}
                 >
                   <h4 className="font-bold text-lg mb-2">정규 회원. 월 2회/4회 선택</h4>
@@ -296,7 +296,7 @@ export default function JoinUs() {
                 </div>
 
                 <div 
-                  className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors cursor-pointer"
+                  className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors"
                   onClick={handleGuestCardClick}
                 >
                   <h4 className="font-bold text-lg mb-2">게스트 비용<br />횟수 초과시 게스트로 전환</h4>
