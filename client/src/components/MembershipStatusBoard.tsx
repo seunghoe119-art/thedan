@@ -13,6 +13,7 @@ interface MembershipApplication {
   age: string;
   position: string;
   height_range: string;
+  uniform_size: string;
   plan: string;
   target_month: string;
 }
@@ -270,7 +271,7 @@ export default function MembershipStatusBoard() {
                     )}
                     {isExpanded && (
                       <>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.uniform_size}</TableCell>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.phone.substring(0, 2)}</TableCell>
                       </>
                     )}
