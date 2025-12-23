@@ -109,15 +109,8 @@ export default function Navigation() {
                 Join Us
               </span>
             </Link>
-            <a href="/guest" onClick={handleAssistantClick}>
-              <span className={`font-medium cursor-pointer ${
-                location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
-              }`}>
-                Assistant(운영자전용)
-              </span>
-            </a>
             <Link href="/board" onClick={() => handleNavigation("/board")}>
-              <Button className="bg-black text-white hover:bg-gray-800 rounded-full">
+              <Button className="bg-gradient-to-r from-[#e60000] to-[#ff4444] text-white hover:from-[#cc0000] hover:to-[#e60000] rounded-full shadow-lg hover:shadow-xl transition-all duration-300">
                 GO VIDEO
               </Button>
             </Link>
