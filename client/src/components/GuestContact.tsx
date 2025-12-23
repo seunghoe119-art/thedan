@@ -339,10 +339,20 @@ export default function GuestContact() {
               </div>
 
               <div className="mt-6">
-                <Link href="/about">
+                <Link href="/about#facilities-section">
                   <Button 
                     type="button"
                     className="w-full bg-gradient-to-r from-blue-500 via-blue-600 to-cyan-700 text-white hover:from-blue-600 hover:via-blue-700 hover:to-cyan-800 py-4 rounded-lg font-bold text-lg shadow-lg hover:shadow-blue-500/50 transition-all duration-300"
+                    onClick={() => {
+                      setTimeout(() => {
+                        const element = document.getElementById('facilities-section');
+                        if (element) {
+                          const yOffset = -80; // Navigation bar height
+                          const y = element.getBoundingClientRect().top + window.pageYOffset + yOffset;
+                          window.scrollTo({ top: y, behavior: 'smooth' });
+                        }
+                      }, 100);
+                    }}
                   >
                     <MapPin className="w-5 h-5 mr-2" />
                     ③ 코트 위치 & 시설안내

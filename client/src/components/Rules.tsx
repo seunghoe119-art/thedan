@@ -131,7 +131,7 @@ export default function Rules() {
             
             <div className="mt-6 pt-4 border-t border-gray-100">
               <p className="text-xs text-blue-600 italic font-medium">
-                *일반적으로 감독과 총무가 게임을 진행하지만 감독과 총무가 진행하지 못할때, 추가 운영자가 진행합니다.
+                *일반적으로 감독과 총무가 게임을 진행하지만 감독과 총무가 진행하지 못할때, 운영자가 진행합니다.
               </p>
             </div>
           </div>

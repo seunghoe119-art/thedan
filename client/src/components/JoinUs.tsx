@@ -160,16 +160,16 @@ export default function JoinUs() {
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">레드팀 유니폼 관련 안내</h4>
-                  <p className="text-gray-400 mb-3">둘째달부터 빨간색 상의 보유를 의무화합니다. 개인 보유시 면제</p>
+                  <p className="text-gray-400 mb-3">둘째달부터 빨간색 상의 보유를 의무화합니다.<br />빨간 유니폼 보유 시 개인것 사용</p>
                   <p className="text-sm md:text-base lg:text-lg font-bold text-white leading-relaxed">
-                    빨간색 상의 미보유시 공구 팀유니폼을 구매하여 이용 ₩9,000<br className="hidden md:inline" />(등번호 랜덤)<br />
+                    빨간색 상의 미보유시 공구 팀유니폼을 구매하여 이용 ₩9,000<br className="hidden md:inline" />(등번호 랜덤)<br /><br />
                     커스텀 상의 구매 희망시에 등번호 및 이름 지정 가능 ₩12,000
                   </p>
                 </div>
 
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4">
                   <p className="text-sm text-yellow-800 leading-relaxed">
-                    *3파전을 기본으로 블랙,화이트,레드로 진행하기에 필수인점 양해바랍니다.
+                    *3파전으로 진행, 블랙-화이트-레드로<br />진행하기에 필수인점 양해바랍니다.
                   </p>
                 </div>
               </div>
