@@ -133,14 +133,14 @@ export default function JoinUs() {
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">첫 달은 체험 기간으로 운영</h4>
-                  <p className="text-gray-400 mb-3">개인 검/흰 유니폼 사용</p>
+                  <p className="text-gray-400 mb-3">개인복 검/흰 , 다이소 팀조끼 사용</p>
                   <p className="text-2xl font-bold text-green-500">체험 운영</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">둘째 달부터 레드 상의 보유를 의무화합니다.</h4>
-                  <p className="text-gray-400 mb-3">개인 레드유니폼 보유시 면제 or 임시 다이소 조끼 착용</p>
-                  <p className="text-2xl font-bold text-accent">₩9,000 팀조끼(레드<br />₩12,000 커스텀(레드</p>
+                  <h4 className="font-bold text-lg mb-2">레드팀 유니폼 관련 안내</h4>
+                  <p className="text-gray-400 mb-3">둘째달부터 빨간색 상의 보유를 의무화합니다. 개인 보유시 면제</p>
+                  <p className="text-2xl font-bold text-accent">빨간색 상의 미보유시 공구 팀유니폼 구매하여 이용 ₩9,000(등번호 랜덤, 이름 없음)<br />커스텀 상의 구매 희망시 등번호 및 이름 지정 가능 ₩12,000</p>
                 </div>
 
                 <div className="bg-yellow-50 border-l-4 border-yellow-400 rounded-lg p-4">
