@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, Plus, X, MapPin } from "lucide-react";
 import { Link } from "wouter";
+import { supabase } from "@/lib/supabaseClient";
 
 interface AdditionalGuest {
   id: string;
@@ -120,7 +121,9 @@ export default function GuestContact() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const [isSubmitting, setIsSubmitting] = useState(false);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.height) {
@@ -132,13 +135,79 @@ export default function GuestContact() {
       return;
     }
 
-    // Open KakaoTalk chat link
-    window.open("https://open.kakao.com/o/gnHeHo7h", "_blank");
+    setIsSubmitting(true);
 
-    toast({
-      title: "신청 완료",
-      description: "카카오톡 오픈채팅방으로 이동합니다.",
-    });
+    try {
+      if (!supabase) {
+        throw new Error("Supabase 연결이 설정되지 않았습니다.");
+      }
+
+      // Save main applicant to Supabase
+      const { error: mainError } = await supabase
+        .from('guest_applications')
+        .insert({
+          name: formData.name,
+          age: formData.age,
+          position: getPositionText(formData.position),
+          height: formData.height,
+          phone: formData.contact,
+        });
+
+      if (mainError) {
+        throw mainError;
+      }
+
+      // Save additional guests to Supabase
+      for (const guest of additionalGuests) {
+        if (guest.name && guest.age && guest.position && guest.height) {
+          const { error: guestError } = await supabase
+            .from('guest_applications')
+            .insert({
+              name: guest.name,
+              age: guest.age,
+              position: getPositionText(guest.position),
+              height: guest.height,
+              phone: formData.contact, // Use main applicant's contact
+            });
+
+          if (guestError) {
+            console.error("Additional guest save error:", guestError);
+          }
+        }
+      }
+
+      // Open KakaoTalk chat link
+      window.open("https://open.kakao.com/o/gnHeHo7h", "_blank");
+
+      toast({
+        title: "신청 완료",
+        description: "신청이 저장되었습니다. 카카오톡 오픈채팅방으로 이동합니다.",
+      });
+
+      // Reset form
+      setFormData({
+        name: "",
+        contact: "",
+        age: "",
+        position: "",
+        height: "",
+        jerseySize: "m",
+        membershipType: "firefighter",
+        agreeRules: true,
+        dataConsent: true,
+      });
+      setAdditionalGuests([]);
+
+    } catch (error: any) {
+      console.error("Submit error:", error);
+      toast({
+        title: "저장 실패",
+        description: error.message || "신청 저장 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -365,11 +434,12 @@ export default function GuestContact() {
                 
                 <Button 
                   type="submit" 
-                  className="bg-accent text-white hover:bg-red-600 py-4 rounded-lg font-bold text-lg"
+                  className="bg-accent text-white hover:bg-red-600 py-4 rounded-lg font-bold text-lg disabled:opacity-50"
                   data-testid="guest-button-submit"
+                  disabled={isSubmitting}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  ② 신청서 제출
+                  {isSubmitting ? "저장 중..." : "② 신청서 제출"}
                 </Button>
               </div>
 

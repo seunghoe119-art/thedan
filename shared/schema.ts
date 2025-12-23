@@ -1,6 +1,24 @@
-import { pgTable, text, timestamp, integer } from "drizzle-orm/pg-core";
+import { pgTable, text, timestamp, integer, uuid } from "drizzle-orm/pg-core";
 import { createInsertSchema } from "drizzle-zod";
 import { z } from "zod";
+
+export const guestApplications = pgTable("guest_applications", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  name: text("name").notNull(),
+  age: text("age").notNull(),
+  position: text("position").notNull(),
+  height: text("height").notNull(),
+  phone: text("phone").notNull(),
+  applied_at: timestamp("applied_at", { withTimezone: true }).defaultNow(),
+});
+
+export const insertGuestApplicationSchema = createInsertSchema(guestApplications).omit({
+  id: true,
+  applied_at: true,
+});
+
+export type GuestApplication = typeof guestApplications.$inferSelect;
+export type InsertGuestApplication = z.infer<typeof insertGuestApplicationSchema>;
 
 export const youtubePosts = pgTable("youtube_posts", {
   id: integer("id").primaryKey().generatedAlwaysAsIdentity(),
