@@ -197,11 +197,6 @@ export default function JoinUs() {
       // Redirect to KakaoTalk open chat
       window.open("https://open.kakao.com/o/skS1in7h", "_blank");
 
-      toast({
-        title: "신청 완료",
-        description: "신청이 저장되었습니다. 카카오톡 오픈채팅방으로 이동합니다.",
-      });
-
       // Reset form
       setFormData({
         name: "",
@@ -507,7 +502,7 @@ export default function JoinUs() {
                   disabled={isSubmitting}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {isSubmitting ? "저장 중..." : "신청서 제출"}
+                  {isSubmitting ? "여는중..." : "신청서 제출"}
                 </Button>
               </div>
             </form>
