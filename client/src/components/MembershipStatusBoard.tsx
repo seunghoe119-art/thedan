@@ -198,25 +198,24 @@ export default function MembershipStatusBoard() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="font-bold text-gray-900 text-center px-2">이름</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">나이</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">키</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">포지션</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">횟수</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">누적</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">이름</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">나이</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">키</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">포지션</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">횟수</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">누적</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
-                    <TableCell className="px-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
-                    <TableCell><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
                   </TableRow>
                 ))
               ) : applications.length === 0 ? (
@@ -228,12 +227,12 @@ export default function MembershipStatusBoard() {
               ) : (
                 applications.map((app) => (
                   <TableRow key={app.id} data-testid={`row-member-${app.id}`}>
-                    <TableCell className="text-center font-medium px-2 whitespace-nowrap">{app.name}</TableCell>
-                    <TableCell className="text-center">{app.age}</TableCell>
-                    <TableCell className="text-center">{formatHeightForDisplay(app.height_range)}</TableCell>
-                    <TableCell className="text-center">{formatPositionForDisplay(app.position)}</TableCell>
-                    <TableCell className="text-center font-semibold text-blue-600">{app.planDisplay}</TableCell>
-                    <TableCell className="text-center font-semibold text-green-600">{app.cumulativeCount}회차</TableCell>
+                    <TableCell className="text-center font-medium px-1 py-2 whitespace-nowrap">{app.name}</TableCell>
+                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.age}</TableCell>
+                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
+                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatPositionForDisplay(app.position)}</TableCell>
+                    <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.planDisplay}</TableCell>
+                    <TableCell className="text-center font-semibold text-green-600 px-1 py-2 whitespace-nowrap">{app.cumulativeCount}회차</TableCell>
                   </TableRow>
                 ))
               )}
