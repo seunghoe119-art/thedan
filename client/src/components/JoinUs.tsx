@@ -516,7 +516,7 @@ export default function JoinUs() {
                   disabled={isSubmitting}
                 >
                   <Send className="w-5 h-5 mr-2" />
-                  {isSubmitting ? "여는중..." : "신청서 제출"}
+                  {isSubmitting ? "여는중..." : "신청서 제출, 카카오톡 연결"}
                 </Button>
               </div>
             </form>
