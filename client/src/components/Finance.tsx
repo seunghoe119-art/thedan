@@ -54,14 +54,14 @@ export default function Finance() {
           setApplications([]);
         } else if (data) {
           setApplications(data);
-          
+
           const uniqueDates = Array.from(new Set(data.map(app => app.game_date)));
           const options = uniqueDates.map(date => ({
             value: date,
             label: getWeekLabel(date)
           }));
           setWeekOptions(options);
-          
+
           if (options.length > 0 && !selectedWeek) {
             setSelectedWeek(options[0].value);
           }
@@ -80,15 +80,26 @@ export default function Finance() {
     }
   }, [user, authLoading]);
 
-  const filteredApplications = selectedWeek 
+  const filteredApplications = selectedWeek
     ? applications.filter(app => app.game_date === selectedWeek)
     : applications;
 
   if (authLoading || loading) {
     return (
       <section className="py-32 bg-gray-50 relative z-10">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
-          <p className="text-gray-600">로딩 중...</p>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6 animate-pulse">
+              <Lock className="w-10 h-10 text-gray-500" />
+            </div>
+            <h2 className="text-3xl font-bold text-black mb-4">로딩 중...</h2>
+            <p className="text-gray-600 mb-8">관리자 계정이 필요합니다</p>
+            <Link href="/login">
+              <Button className="bg-accent text-white hover:bg-red-600 rounded-full px-8 py-3">
+                관리자 회원가입 / 로그인
+              </Button>
+            </Link>
+          </div>
         </div>
       </section>
     );
@@ -106,7 +117,7 @@ export default function Finance() {
             <p className="text-gray-600 mb-8">이 페이지는 관리자만 볼 수 있습니다.</p>
             <Link href="/login">
               <Button className="bg-accent text-white hover:bg-red-600 rounded-full px-8 py-3">
-                로그인하기
+                관리자 회원가입 / 로그인
               </Button>
             </Link>
           </div>
@@ -124,7 +135,33 @@ export default function Finance() {
               <Lock className="w-10 h-10 text-gray-500" />
             </div>
             <h2 className="text-3xl font-bold text-black mb-4">접근 권한 없음</h2>
-            <p className="text-gray-600">관리자 권한이 필요합니다.</p>
+            <p className="text-gray-600 mb-8">관리자 승인이 필요합니다. 다시 회원가입하거나 관리자에게 문의하세요.</p>
+            <Link href="/login">
+              <Button className="bg-accent text-white hover:bg-red-600 rounded-full px-8 py-3">
+                다시 회원가입하기
+              </Button>
+            </Link>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
+  if (!isAdmin && applications.length === 0) {
+    return (
+      <section className="py-32 bg-gray-50 relative z-10">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="text-center">
+            <div className="w-20 h-20 bg-gray-200 rounded-full flex items-center justify-center mx-auto mb-6">
+              <Lock className="w-10 h-10 text-gray-500" />
+            </div>
+            <h2 className="text-3xl font-bold text-black mb-4">접근 권한 없음</h2>
+            <p className="text-gray-600 mb-8">관리자 승인이 필요합니다. 다시 회원가입하거나 관리자에게 문의하세요.</p>
+            <Link href="/login">
+              <Button className="bg-accent text-white hover:bg-red-600 rounded-full px-8 py-3">
+                다시 회원가입하기
+              </Button>
+            </Link>
           </div>
         </div>
       </section>
