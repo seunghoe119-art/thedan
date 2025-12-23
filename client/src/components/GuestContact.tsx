@@ -7,6 +7,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, Plus, X, MapPin } from "lucide-react";
 import { Link } from "wouter";
+import { supabase } from "@/lib/supabaseClient";
 
 interface AdditionalGuest {
   id: string;
@@ -120,7 +121,7 @@ export default function GuestContact() {
     }
   };
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
     if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.height) {
@@ -132,7 +133,23 @@ export default function GuestContact() {
       return;
     }
 
-    // Open KakaoTalk chat link
+    const generatedMessage = generateMessage();
+
+    if (supabase) {
+      try {
+        await supabase.from('guest_applications').insert({
+          name: formData.name,
+          phone: formData.contact,
+          age_group: formData.age,
+          height_range: formData.height,
+          positions: getPositionText(formData.position),
+          generated_message: generatedMessage,
+        });
+      } catch (error) {
+        console.error('Error saving application:', error);
+      }
+    }
+
     window.open("https://open.kakao.com/o/gnHeHo7h", "_blank");
 
     toast({
