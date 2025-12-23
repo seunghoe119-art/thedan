@@ -115,17 +115,6 @@ export default function MembershipStatusBoard() {
         description: `${app.name}님의 출석이 완료되었습니다.`,
       });
 
-      // Auto dismiss after 3 seconds
-      setTimeout(() => {
-        const toastElements = document.querySelectorAll('[data-radix-toast-viewport] > *');
-        toastElements.forEach(element => {
-          const closeButton = element.querySelector('button[toast-close]');
-          if (closeButton instanceof HTMLElement) {
-            closeButton.click();
-          }
-        });
-      }, 3000);
-
     } catch (err) {
       console.error('Attendance error:', err);
       toast({
