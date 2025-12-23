@@ -209,6 +209,18 @@ export default function JoinUs() {
         throw new Error("Supabase 연결이 설정되지 않았습니다.");
       }
 
+      // Copy message to clipboard first
+      const message = generateMessage();
+      try {
+        await navigator.clipboard.writeText(message);
+        toast({
+          title: "메시지 복사 완료!",
+          description: "신청 메시지가 클립보드에 복사되었습니다.",
+        });
+      } catch (clipboardErr) {
+        console.error("Clipboard error:", clipboardErr);
+      }
+
       const { error } = await supabase
         .from('membership_applications')
         .insert({
