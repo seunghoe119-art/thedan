@@ -12,6 +12,7 @@ export default function JoinUs() {
   const { toast } = useToast();
   const [location, setLocation] = useLocation();
   const [guestCardClickCount, setGuestCardClickCount] = useState(0);
+  const [regularCardClickCount, setRegularCardClickCount] = useState(0);
 
   const handleGuestCardClick = () => {
     const newCount = guestCardClickCount + 1;
@@ -20,6 +21,16 @@ export default function JoinUs() {
     if (newCount >= 10) {
       setLocation('/guest-status');
       setGuestCardClickCount(0);
+    }
+  };
+
+  const handleRegularCardClick = () => {
+    const newCount = regularCardClickCount + 1;
+    setRegularCardClickCount(newCount);
+    
+    if (newCount >= 10) {
+      setLocation('/team-status');
+      setRegularCardClickCount(0);
     }
   };
 
@@ -271,7 +282,10 @@ export default function JoinUs() {
               <h3 className="font-bold text-2xl mb-4">회비 안내</h3>
 
               <div className="space-y-6">
-                <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
+                <div 
+                  className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors cursor-pointer"
+                  onClick={handleRegularCardClick}
+                >
                   <h4 className="font-bold text-lg mb-2">정규 회원. 월 2회/4회 선택</h4>
                   <p className="text-gray-400 mb-3 text-[0.7em] leading-relaxed">
                     *정규회원 대다수로<br />
