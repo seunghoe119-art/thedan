@@ -22,11 +22,12 @@ interface DisplayApplication extends MembershipApplication {
   planDisplay: string;
 }
 
-function getMonthOptions(): { label: string; value: string }[] {
+function getMonthOptions(range: number = 41): { label: string; value: string }[] {
   const months: { label: string; value: string }[] = [];
   const now = new Date();
+  const halfRange = Math.floor(range / 2);
   
-  for (let i = -3; i <= 6; i++) {
+  for (let i = -halfRange; i <= halfRange; i++) {
     const date = new Date(now.getFullYear(), now.getMonth() + i, 1);
     const year = date.getFullYear();
     const month = date.getMonth() + 1;
@@ -55,10 +56,10 @@ function getPlanDisplay(plan: string): string {
 export default function MembershipStatusBoard() {
   const [applications, setApplications] = useState<DisplayApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
-  const [monthOptions] = useState(getMonthOptions);
+  const [monthOptions, setMonthOptions] = useState(() => getMonthOptions(41));
   const [selectedMonthIndex, setSelectedMonthIndex] = useState(() => {
     const currentMonth = getCurrentMonth();
-    const options = getMonthOptions();
+    const options = getMonthOptions(41);
     return options.findIndex(opt => opt.value === currentMonth);
   });
 
@@ -82,7 +83,7 @@ export default function MembershipStatusBoard() {
           .select('*')
           .eq('target_month', selectedMonth.value)
           .in('plan', ['regular_2', 'regular_4'])
-          .order('created_at', { ascending: true });
+          .order('name', { ascending: true });
 
         if (monthError) {
           console.error('Error fetching membership applications:', monthError);
@@ -153,8 +154,17 @@ export default function MembershipStatusBoard() {
         <div className="mb-6 flex items-center justify-center gap-4">
           <Button
             variant="outline"
-            onClick={() => setSelectedMonthIndex(prev => Math.max(0, prev - 1))}
-            disabled={selectedMonthIndex <= 0}
+            onClick={() => {
+              setSelectedMonthIndex(prev => {
+                const newIndex = prev - 1;
+                if (newIndex < 5) {
+                  const moreMonths = getMonthOptions(monthOptions.length + 20);
+                  setMonthOptions(moreMonths);
+                  return newIndex + 10;
+                }
+                return newIndex;
+              });
+            }}
             className="flex items-center gap-2"
             data-testid="button-prev-month"
           >
@@ -166,8 +176,16 @@ export default function MembershipStatusBoard() {
           </div>
           <Button
             variant="outline"
-            onClick={() => setSelectedMonthIndex(prev => Math.min(monthOptions.length - 1, prev + 1))}
-            disabled={selectedMonthIndex >= monthOptions.length - 1}
+            onClick={() => {
+              setSelectedMonthIndex(prev => {
+                const newIndex = prev + 1;
+                if (newIndex >= monthOptions.length - 5) {
+                  const moreMonths = getMonthOptions(monthOptions.length + 20);
+                  setMonthOptions(moreMonths);
+                }
+                return newIndex;
+              });
+            }}
             className="flex items-center gap-2"
             data-testid="button-next-month"
           >
