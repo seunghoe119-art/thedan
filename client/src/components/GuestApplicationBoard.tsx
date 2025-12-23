@@ -6,6 +6,58 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
+// 2초 이내 신청자를 같은 일행으로 그룹화
+function groupByParty(applications: GuestApplication[]): GroupedApplication[] {
+  if (applications.length === 0) return [];
+
+  const grouped: GroupedApplication[] = [];
+  let currentGroup: GuestApplication[] = [];
+  let colorIndex = 0;
+
+  applications.forEach((app, index) => {
+    if (index === 0) {
+      currentGroup.push(app);
+      return;
+    }
+
+    const prevApp = applications[index - 1];
+    const currentTime = new Date(app.applied_at_kst || app.applied_at).getTime();
+    const prevTime = new Date(prevApp.applied_at_kst || prevApp.applied_at).getTime();
+    const timeDiff = Math.abs(currentTime - prevTime) / 1000; // 초 단위
+
+    if (timeDiff <= 2) {
+      // 같은 일행
+      currentGroup.push(app);
+    } else {
+      // 이전 그룹 완료
+      if (currentGroup.length > 1) {
+        // 일행이 2명 이상일 때만 색상 적용
+        const color = GROUP_COLORS[colorIndex % GROUP_COLORS.length];
+        currentGroup.forEach(member => {
+          grouped.push({ ...member, groupColor: color });
+        });
+        colorIndex++;
+      } else {
+        // 혼자인 경우 색상 없음
+        grouped.push({ ...currentGroup[0] });
+      }
+      currentGroup = [app];
+    }
+  });
+
+  // 마지막 그룹 처리
+  if (currentGroup.length > 1) {
+    const color = GROUP_COLORS[colorIndex % GROUP_COLORS.length];
+    currentGroup.forEach(member => {
+      grouped.push({ ...member, groupColor: color });
+    });
+  } else if (currentGroup.length === 1) {
+    grouped.push({ ...currentGroup[0] });
+  }
+
+  return grouped;
+}
+
 interface GuestApplication {
   id: string;
   name: string;
@@ -14,12 +66,25 @@ interface GuestApplication {
   position: string;
   phone: string;
   applied_at: string;
+  applied_at_kst?: string;
 }
+
+interface GroupedApplication extends GuestApplication {
+  groupColor?: string;
+}
+
+const GROUP_COLORS = [
+  'text-red-600 font-bold',
+  'text-yellow-600 font-bold',
+  'text-green-600 font-bold',
+  'text-blue-600 font-bold',
+  'text-pink-600 font-bold',
+];
 
 export default function GuestApplicationBoard() {
   const [gameWeeks, setGameWeeks] = useState<GameWeek[]>([]);
   const [selectedWeekOffset, setSelectedWeekOffset] = useState(0); // 0 = 현재 주차, -1 = 지난주, 1 = 다음주
-  const [applications, setApplications] = useState<GuestApplication[]>([]);
+  const [applications, setApplications] = useState<GroupedApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -48,7 +113,7 @@ export default function GuestApplicationBoard() {
       try {
         const { data, error } = await supabase
           .from('guest_applications')
-          .select('id, name, age, height, position, phone, applied_at')
+          .select('id, name, age, height, position, phone, applied_at, applied_at_kst')
           .gte('applied_at', selectedWeek.startDateUTC)
           .lte('applied_at', selectedWeek.endDateUTC)
           .order('applied_at', { ascending: true });
@@ -57,7 +122,9 @@ export default function GuestApplicationBoard() {
           console.error('Error fetching applications:', error);
           setApplications([]);
         } else {
-          setApplications(data || []);
+          // 일행 그룹화 (2초 이내 신청자)
+          const groupedData = groupByParty(data || []);
+          setApplications(groupedData);
         }
       } catch (err) {
         console.error('Fetch error:', err);
@@ -155,11 +222,11 @@ export default function GuestApplicationBoard() {
               ) : (
                 applications.map((app) => (
                   <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
-                    <TableCell className="text-center font-medium">{app.name}</TableCell>
-                    <TableCell className="text-center">{app.age}</TableCell>
-                    <TableCell className="text-center">{formatHeightForDisplay(app.height)}</TableCell>
-                    <TableCell className="text-center">{formatPositionForDisplay(app.position)}</TableCell>
-                    <TableCell className="text-center">{formatPhoneForDisplay(app.phone)}</TableCell>
+                    <TableCell className={`text-center font-medium ${app.groupColor || ''}`}>{app.name}</TableCell>
+                    <TableCell className={`text-center ${app.groupColor || ''}`}>{app.age}</TableCell>
+                    <TableCell className={`text-center ${app.groupColor || ''}`}>{formatHeightForDisplay(app.height)}</TableCell>
+                    <TableCell className={`text-center ${app.groupColor || ''}`}>{formatPositionForDisplay(app.position)}</TableCell>
+                    <TableCell className={`text-center ${app.groupColor || ''}`}>{formatPhoneForDisplay(app.phone)}</TableCell>
                   </TableRow>
                 ))
               )}
