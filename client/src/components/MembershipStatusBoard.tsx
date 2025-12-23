@@ -217,7 +217,7 @@ export default function MembershipStatusBoard() {
                 )}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
-                    <span>누적</span>
+                    <span>{isExpanded ? '누적' : '출석'}</span>
                     <button
                       onClick={() => setIsExpanded(!isExpanded)}
                       className="text-xs hover:text-blue-600 transition-colors"
@@ -276,14 +276,18 @@ export default function MembershipStatusBoard() {
                       </>
                     )}
                     <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                      <button
-                        onClick={() => {
-                          // 출석 기능은 나중에 추가
-                        }}
-                        className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
-                      >
-                        출석
-                      </button>
+                      {isExpanded ? (
+                        <span className="font-semibold text-green-600">{app.cumulativeCount}회차</span>
+                      ) : (
+                        <button
+                          onClick={() => {
+                            // 출석 기능은 나중에 추가
+                          }}
+                          className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
+                        >
+                          출석
+                        </button>
+                      )}
                     </TableCell>
                   </TableRow>
                 ))
