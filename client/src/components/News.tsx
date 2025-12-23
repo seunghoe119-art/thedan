@@ -25,13 +25,16 @@ export default function News() {
   const [clickCount, setClickCount] = React.useState(0);
   
   const handleSecretAccess = (index: number) => {
+    // Index 0 (first button): 7 clicks to access admin new post page
     // Index 1 (second button): 7 clicks to access finance page
     // Other buttons: 7 clicks to access guest page
     const newCount = clickCount + 1;
     setClickCount(newCount);
     
     if (newCount >= 7) {
-      if (index === 1) {
+      if (index === 0) {
+        setLocation('/admin/new-post');
+      } else if (index === 1) {
         setLocation('/finance');
       } else {
         setLocation('/guest');
