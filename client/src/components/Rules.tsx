@@ -15,12 +15,12 @@ export default function Rules() {
             <div className="space-y-4">
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-bold">정규 회원 - 가입비 없음</h4>
-                <p className="text-gray-600">₩5,000 / 회</p>
+                <p className="text-gray-600">₩5,000 / 참여 횟수</p>
                 <p className="text-xs text-gray-500 mt-1">*정규회원이 많아 대관비 부족시 ₩1,000원 익월 청구</p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-bold">매월 회 선택가능</h4>
-                <p className="text-gray-600">₩10,000 / 2회, 월 <br />₩20,000 / 4회, 월</p>
+                <p className="text-gray-600">₩10,000 / 2회 참여, 월 <br />₩20,000 / 4회 참여, 월</p>
               </div>
               <div className="border-l-4 border-accent pl-4">
                 <h4 className="font-bold">선택횟수보다 더 많이 참여한 경우, 게스트비로 청구</h4>
@@ -60,14 +60,14 @@ export default function Rules() {
           <div className="bg-white rounded-2xl p-8 shadow-lg">
             <h3 className="font-bold text-2xl mb-6">재정 사용처</h3>
             <p className="text-gray-700 mb-4">
-              체육관 대관료<br />시합용 공, 예비 팀조끼 등 구입<br />시합용 공, 운영 용품 택배비<br />경기운영자 특혜 및 게스트 미달 예비금액<br />서버비용 및 예비비<br />
+              체육관 대관료<br />시합용 공, 예비 팀조끼 등 구입<br />시합용 공과 운영 용품 택배비<br />경기운영자 특혜 및 게스트 미달 예비금액<br />서버비용 및 예비비<br />
             </p>
           </div>
 
           <div className="bg-white rounded-2xl p-8 shadow-lg">
             <h3 className="font-bold text-2xl mb-6">3파전 진행</h3>
             <p className="text-gray-700 mb-4">
-              매주 팀의 밸런스는 키/나이/포지션 을 참고로 큰틀에서 AI가 매칭후, 친구 or 미세조정 합니다
+              키/나이/포지션을 바탕으로 AI를 통해 결정하고 일행을 고려하여 조정합니다.
             </p>
             <div className="grid grid-cols-3 gap-4 mb-4">
               <div className="flex flex-col items-center">
@@ -131,7 +131,7 @@ export default function Rules() {
             
             <div className="mt-6 pt-4 border-t border-gray-100">
               <p className="text-xs text-blue-600 italic font-medium">
-                *감독과 총무가 진행하지 못할때, 추가 운영자가 진행합니다.
+                *일반적으로 감독과 총무가 게임을 진행하지만 감독과 총무가 진행하지 못할때, 추가 운영자가 진행합니다.
               </p>
             </div>
           </div>

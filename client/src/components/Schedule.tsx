@@ -19,9 +19,9 @@ const slides = [slide1, slide2, slide3, slide4, slide5];
 
 const scheduleItems = [
   {
-    title: "매주 금요일 21:00~24:00",
-    time: "",
-    location: "정규 대관 시간",
+    title: "매주 금요일 21:00~24:00 대관시간",
+    time: " 21:15 ~ 23:30 경기시간",
+    location: "",
   },
   {
     title: "연습용 공·정수기 모두 제공됩니다.",
@@ -29,7 +29,7 @@ const scheduleItems = [
     location: "가볍게 농구화와 유니폼만 준비해 주세요.",
   },
   {
-    title: "냉난방기*3, 유리 대기실, 샤워실, 넉넉한 주차장",
+    title: "냉난방기3대, 큰 대기실, 샤워실, 넉넉한 주차장",
     time: " ",
     location: "동영상촬영도 진행",
   },
@@ -164,7 +164,7 @@ export default function Schedule() {
 
             <div className="bg-accent/10 border border-accent rounded-xl p-6 mt-8">
               <h4 className="font-bold text-lg mb-2">최상급 코트 시설과 부대시설</h4>
-              <p className="text-gray-300">악취 벌레많은 창고형 아닌 최신식 건물 실내 건물</p>
+              <p className="text-gray-300">최신식 건물로, 악취 및 모기등 해충 없음.</p>
             </div>
 
 
