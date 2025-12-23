@@ -20,7 +20,7 @@ const slides = [slide1, slide2, slide3, slide4, slide5];
 const scheduleItems = [
   {
     title: "매주 금요일 21:00~24:00 대관시간",
-    time: " 21:15 ~ 23:30 경기시간",
+    time: " 21:15 ~ 23:30\n경기시간",
     location: "",
   },
   {
