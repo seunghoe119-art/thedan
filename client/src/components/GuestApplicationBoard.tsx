@@ -4,6 +4,7 @@ import { getGameWeeks, formatPhoneForDisplay, formatHeightForDisplay, formatPosi
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
+import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 // 2초 이내 신청자를 같은 일행으로 그룹화
@@ -86,12 +87,25 @@ export default function GuestApplicationBoard() {
   const [selectedWeekOffset, setSelectedWeekOffset] = useState(0); // 0 = 현재 주차, -1 = 지난주, 1 = 다음주
   const [applications, setApplications] = useState<GroupedApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [hiddenRows, setHiddenRows] = useState<Set<string>>(new Set());
 
   useEffect(() => {
     // 현재 주차 기준으로 앞뒤 20주씩 생성 (총 41주)
     const weeks = getGameWeeks(41);
     setGameWeeks(weeks);
   }, []);
+
+  const toggleRowVisibility = (id: string) => {
+    setHiddenRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
 
   useEffect(() => {
     if (gameWeeks.length === 0) return;
@@ -195,6 +209,7 @@ export default function GuestApplicationBoard() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
+                <TableHead className="font-bold text-gray-900 text-center w-20">숨김처리</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">이름</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">키</TableHead>
@@ -206,6 +221,7 @@ export default function GuestApplicationBoard() {
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
+                    <TableCell><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
                     <TableCell><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
@@ -215,20 +231,32 @@ export default function GuestApplicationBoard() {
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={6} className="text-center text-gray-500 py-8">
                     해당 주차에 신청 내역이 없습니다.
                   </TableCell>
                 </TableRow>
               ) : (
-                applications.map((app) => (
-                  <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
-                    <TableCell className={`text-center font-medium ${app.groupColor || ''}`}>{app.name}</TableCell>
-                    <TableCell className={`text-center ${app.groupColor || ''}`}>{app.age}</TableCell>
-                    <TableCell className={`text-center ${app.groupColor || ''}`}>{formatHeightForDisplay(app.height)}</TableCell>
-                    <TableCell className={`text-center ${app.groupColor || ''}`}>{formatPositionForDisplay(app.position)}</TableCell>
-                    <TableCell className={`text-center ${app.groupColor || ''}`}>{formatPhoneForDisplay(app.phone)}</TableCell>
-                  </TableRow>
-                ))
+                applications.map((app) => {
+                  const isHidden = hiddenRows.has(app.id);
+                  const textColorClass = isHidden ? 'text-white' : '';
+                  return (
+                    <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
+                      <TableCell className="text-center">
+                        <div className="flex justify-center">
+                          <Checkbox
+                            checked={isHidden}
+                            onCheckedChange={() => toggleRowVisibility(app.id)}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className={`text-center font-medium ${app.groupColor || ''} ${textColorClass}`}>{app.name}</TableCell>
+                      <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{app.age}</TableCell>
+                      <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
+                      <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
+                      <TableCell className={`text-center ${app.groupColor || ''} ${textColorClass}`}>{formatPhoneForDisplay(app.phone)}</TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
