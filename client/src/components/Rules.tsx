@@ -33,19 +33,19 @@ export default function Rules() {
             <h3 className="font-bold text-2xl mb-6">팀 공지사항</h3>
             <ul className="space-y-3 text-gray-700">
               <li className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
                 <span>욕설 및 비난 금지, 즉시 추방 및 게스트 참여 금지</span>
               </li>
               <li className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
                 <span>개인 플레이 자제. 게임의 상황과 상관없는 받자마자 슛, 수비자5명에 단독드리블등</span>
               </li>
               <li className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
                 <span>패스 플레이, 협동심을 중시합니다.</span>
               </li>
               <li className="flex items-start space-x-3">
-                <div className="w-2 h-2 bg-accent rounded-full mt-2"></div>
+                <div className="w-2 h-2 bg-accent rounded-full mt-2 flex-shrink-0"></div>
                 <span>언행에 주의하고 텃세 없이 즐거운 경기합시다.</span>
               </li>
             </ul>
