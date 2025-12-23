@@ -5,6 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
 import { formatPhoneForDisplay, formatHeightForDisplay, formatPositionForDisplay } from '@/lib/gameWeekUtils';
+import { useToast } from '@/hooks/use-toast';
 
 interface MembershipApplication {
   id: string;
@@ -67,8 +68,73 @@ export default function MembershipStatusBoard() {
     return options.findIndex(opt => opt.value === currentMonth);
   });
   const [isExpanded, setIsExpanded] = useState(false);
+  const { toast } = useToast();
 
   const selectedMonth = monthOptions[selectedMonthIndex];
+
+  const handleAttendance = async (app: DisplayApplication) => {
+    try {
+      const newUsedCount = (app.used_count || 0) + 1;
+      const totalCount = app.plan === 'regular_4' ? 4 : 2;
+      
+      const { error } = await supabase
+        .from('membership_applications')
+        .update({ 
+          used_count: newUsedCount,
+          last_game_date: new Date().toISOString()
+        })
+        .eq('id', app.id);
+
+      if (error) {
+        console.error('Error updating attendance:', error);
+        toast({
+          title: "출석 처리 실패",
+          description: "다시 시도해주세요.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      // Update local state
+      setApplications(prev => 
+        prev.map(a => 
+          a.id === app.id 
+            ? { 
+                ...a, 
+                attendanceCount: a.attendanceCount + 1,
+                used_count: newUsedCount,
+                remainingCount: Math.max(0, totalCount - newUsedCount)
+              }
+            : a
+        )
+      );
+
+      // Show success toast with 3 second auto-dismiss
+      toast({
+        title: "출석이 되었습니다",
+        description: `${app.name}님의 출석이 완료되었습니다.`,
+      });
+
+      // Auto dismiss after 3 seconds
+      setTimeout(() => {
+        const toastElements = document.querySelectorAll('[data-radix-toast-viewport] > *');
+        toastElements.forEach(element => {
+          const closeButton = element.querySelector('button[toast-close]');
+          if (closeButton instanceof HTMLElement) {
+            closeButton.click();
+          }
+        });
+      }, 3000);
+
+    } catch (err) {
+      console.error('Attendance error:', err);
+      toast({
+        title: "오류 발생",
+        description: "출석 처리 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    }
+  };
 
   useEffect(() => {
     async function fetchApplications() {
@@ -301,15 +367,7 @@ export default function MembershipStatusBoard() {
                         <span className="font-semibold text-green-600">{app.cumulativeCount}회차</span>
                       ) : (
                         <button
-                          onClick={() => {
-                            setApplications(prev => 
-                              prev.map(a => 
-                                a.id === app.id 
-                                  ? { ...a, attendanceCount: a.attendanceCount + 1 }
-                                  : a
-                              )
-                            );
-                          }}
+                          onClick={() => handleAttendance(app)}
                           className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
                         >
                           출석
