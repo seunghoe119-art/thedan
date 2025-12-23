@@ -208,6 +208,12 @@ export default function MembershipStatusBoard() {
                     <TableHead className="font-bold text-gray-900 text-center px-1">횟수</TableHead>
                   </>
                 )}
+                {isExpanded && (
+                  <>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">사이즈</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">폰번호</TableHead>
+                  </>
+                )}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-center gap-1">
                     누적
@@ -220,12 +226,6 @@ export default function MembershipStatusBoard() {
                     </button>
                   </div>
                 </TableHead>
-                {isExpanded && (
-                  <>
-                    <TableHead className="font-bold text-gray-900 text-center px-1">사이즈</TableHead>
-                    <TableHead className="font-bold text-gray-900 text-center px-1">폰번호</TableHead>
-                  </>
-                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -241,13 +241,13 @@ export default function MembershipStatusBoard() {
                         <TableCell className="px-1 py-2"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
                       </>
                     )}
-                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
                     {isExpanded && (
                       <>
                         <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                         <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
                       </>
                     )}
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
                   </TableRow>
                 ))
               ) : applications.length === 0 ? (
@@ -268,13 +268,13 @@ export default function MembershipStatusBoard() {
                         <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.planDisplay}</TableCell>
                       </>
                     )}
-                    <TableCell className="text-center font-semibold text-green-600 px-1 py-2 whitespace-nowrap">{app.cumulativeCount}회차</TableCell>
                     {isExpanded && (
                       <>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.phone.substring(0, 2)}</TableCell>
                       </>
                     )}
+                    <TableCell className="text-center font-semibold text-green-600 px-1 py-2 whitespace-nowrap">{app.cumulativeCount}회차</TableCell>
                   </TableRow>
                 ))
               )}
