@@ -198,9 +198,6 @@ export default function GuestApplicationBoard() {
           <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
             금주 신청 현황
           </h1>
-          <p className="text-gray-900 font-bold text-lg">
-            {gameDateString}, (금)
-          </p>
         </div>
 
         <div className="mb-6 flex items-center justify-center gap-4">
@@ -223,7 +220,7 @@ export default function GuestApplicationBoard() {
             이전
           </Button>
           <div className="min-w-[200px] text-center font-semibold text-lg">
-            {gameWeeks.length > 0 && gameWeeks[Math.floor(gameWeeks.length / 2) + selectedWeekOffset]?.label || ''}
+            {gameDateString}, (금)
           </div>
           <Button
             variant="outline"
