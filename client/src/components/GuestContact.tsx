@@ -88,15 +88,15 @@ export default function GuestContact() {
       return "위 항목을 선택하면 자동으로 메시지가 구성됩니다.";
     }
     
-    let message = `안녕하세요. 김포 삼성썬더스 게스트 신청합니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
+    let message = `안녕하세요. 김포 삼성썬더스 게스트 신청합니다.\n[${formData.name}, ${formData.age}, ${formData.height}, ${getPositionText(formData.position)}]`;
     
     // Add contact info
     message += `\n연락처: ${formData.contact}`;
     
     // Add additional guests to the message
     additionalGuests.forEach((guest) => {
-      if (guest.name && guest.age && guest.position) {
-        message += `\n[${guest.name}, ${guest.age}, ${getPositionText(guest.position)}]`;
+      if (guest.name && guest.age && guest.position && guest.height) {
+        message += `\n[${guest.name}, ${guest.age}, ${guest.height}, ${getPositionText(guest.position)}]`;
       }
     });
     
@@ -195,10 +195,10 @@ export default function GuestContact() {
                   data-testid="guest-select-height"
                 >
                   <option value="">키 선택</option>
-                  <option value="170~175">170~175</option>
-                  <option value="175~180">175~180</option>
-                  <option value="180~185">180~185</option>
-                  <option value="185~190">185~190</option>
+                  <option value="170~175cm">170~175cm</option>
+                  <option value="175~180cm">175~180cm</option>
+                  <option value="180~185cm">180~185cm</option>
+                  <option value="185~190cm">185~190cm</option>
                 </select>
               </div>
 
@@ -311,10 +311,10 @@ export default function GuestContact() {
                       onChange={(e) => updateAdditionalGuest(guest.id, 'height', e.target.value)}
                     >
                       <option value="">키 선택</option>
-                      <option value="170~175">170~175</option>
-                      <option value="175~180">175~180</option>
-                      <option value="180~185">180~185</option>
-                      <option value="185~190">185~190</option>
+                      <option value="170~175cm">170~175cm</option>
+                      <option value="175~180cm">175~180cm</option>
+                      <option value="180~185cm">180~185cm</option>
+                      <option value="185~190cm">185~190cm</option>
                     </select>
                   </div>
 
