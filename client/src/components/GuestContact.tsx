@@ -123,6 +123,20 @@ export default function GuestContact() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  // 전화번호 마스킹 함수: 010-12xx-xxxx 형태로 변환
+  const maskPhoneNumber = (phone: string): string => {
+    // 숫자만 추출
+    const numbers = phone.replace(/[^0-9]/g, '');
+    
+    if (numbers.length !== 11) {
+      return phone; // 형식이 맞지 않으면 원본 반환
+    }
+    
+    // 010-12xx-xxxx 형태로 마스킹
+    const masked = numbers.slice(0, 5) + '000000';
+    return masked.slice(0, 3) + '-' + masked.slice(3, 7) + '-' + masked.slice(7);
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
@@ -142,7 +156,7 @@ export default function GuestContact() {
         throw new Error("Supabase 연결이 설정되지 않았습니다.");
       }
 
-      // Save main applicant to Supabase
+      // Save main applicant to Supabase (전화번호 마스킹 적용)
       const { error: mainError } = await supabase
         .from('guest_applications')
         .insert({
@@ -150,14 +164,14 @@ export default function GuestContact() {
           age: formData.age,
           position: getPositionText(formData.position),
           height: formData.height,
-          phone: formData.contact,
+          phone: maskPhoneNumber(formData.contact),
         });
 
       if (mainError) {
         throw mainError;
       }
 
-      // Save additional guests to Supabase
+      // Save additional guests to Supabase (전화번호 마스킹 적용)
       for (const guest of additionalGuests) {
         if (guest.name && guest.age && guest.position && guest.height) {
           const { error: guestError } = await supabase
@@ -167,7 +181,7 @@ export default function GuestContact() {
               age: guest.age,
               position: getPositionText(guest.position),
               height: guest.height,
-              phone: formData.contact, // Use main applicant's contact
+              phone: maskPhoneNumber(formData.contact), // Use main applicant's masked contact
             });
 
           if (guestError) {
