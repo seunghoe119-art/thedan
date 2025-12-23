@@ -102,20 +102,6 @@ export default function Navigation() {
                 APPLY(게스트신청)
               </span>
             </Link>
-            <Link href="/guest-status" onClick={() => handleNavigation("/guest-status")}>
-              <span className={`font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
-                location === "/guest-status" ? "text-[#e60000] font-bold" : "text-gray-600"
-              }`}>
-                신청현황
-              </span>
-            </Link>
-            <Link href="/team-status" onClick={() => handleNavigation("/team-status")}>
-              <span className={`font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
-                location === "/team-status" ? "text-[#e60000] font-bold" : "text-gray-600"
-              }`}>
-                팀현황
-              </span>
-            </Link>
             <Link href="/contact" onClick={() => handleNavigation("/contact")}>
               <span className={`font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
                 location === "/contact" ? "text-[#e60000] font-bold" : "text-gray-600"
@@ -181,20 +167,6 @@ export default function Navigation() {
                   location === "/guest2" ? "text-[#e60000] font-bold" : "text-gray-600"
                 }`}>
                   APPLY(게스트신청)
-                </span>
-              </Link>
-              <Link href="/guest-status" onClick={() => handleNavigation("/guest-status")}>
-                <span className={`block w-full text-left px-3 py-2 font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
-                  location === "/guest-status" ? "text-[#e60000] font-bold" : "text-gray-600"
-                }`}>
-                  신청현황
-                </span>
-              </Link>
-              <Link href="/team-status" onClick={() => handleNavigation("/team-status")}>
-                <span className={`block w-full text-left px-3 py-2 font-medium transition-all duration-200 ease-out hover:text-[#e60000] hover:font-bold hover:scale-105 hover:-translate-y-0.5 hover:drop-shadow-md focus-visible:text-[#e60000] focus-visible:font-bold focus-visible:underline focus-visible:outline-none ${
-                  location === "/team-status" ? "text-[#e60000] font-bold" : "text-gray-600"
-                }`}>
-                  팀현황
                 </span>
               </Link>
               <Link href="/contact" onClick={() => handleNavigation("/contact")}>
