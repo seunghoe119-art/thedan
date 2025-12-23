@@ -28,7 +28,7 @@ export default function LoginPage() {
       setAllowLogin(true);
     } else if (user && !allowLogin) {
       // Only redirect if user is logged in and this isn't a forced login
-      setLocation('/admin/new-post');
+      setLocation('/finance');
     }
   }, [user, setLocation, allowLogin]);
 
@@ -67,7 +67,7 @@ export default function LoginPage() {
         } else {
           // Clear the force parameter and redirect
           window.history.replaceState({}, '', '/login');
-          setLocation('/admin/new-post');
+          setLocation('/finance');
         }
       }
     } catch (err) {
