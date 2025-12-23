@@ -23,6 +23,7 @@ interface DisplayApplication extends MembershipApplication {
   cumulativeCount: number;
   planDisplay: string;
   remainingCount: number;
+  attendanceCount: number;
 }
 
 function getMonthOptions(range: number = 41): { label: string; value: string }[] {
@@ -135,6 +136,7 @@ export default function MembershipStatusBoard() {
             cumulativeCount: phoneCounts[app.phone] || 1,
             planDisplay: getPlanDisplay(app.plan),
             remainingCount,
+            attendanceCount: 0,
           };
         });
 
@@ -222,6 +224,8 @@ export default function MembershipStatusBoard() {
                   <>
                     <TableHead className="font-bold text-gray-900 text-center px-1">사이즈</TableHead>
                     <TableHead className="font-bold text-gray-900 text-center px-1">폰번호</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">신청횟수</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">출석횟수</TableHead>
                   </>
                 )}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
@@ -255,6 +259,8 @@ export default function MembershipStatusBoard() {
                       <>
                         <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                         <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                       </>
                     )}
                     <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
@@ -262,7 +268,7 @@ export default function MembershipStatusBoard() {
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isExpanded ? 4 : 6} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={isExpanded ? 6 : 6} className="text-center text-gray-500 py-8">
                     해당 월에 등록된 멤버가 없습니다.
                   </TableCell>
                 </TableRow>
@@ -282,6 +288,12 @@ export default function MembershipStatusBoard() {
                       <>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.uniform_size}</TableCell>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.phone.substring(0, 2)}</TableCell>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                          <span className="font-semibold text-blue-600">{app.planDisplay}</span>
+                        </TableCell>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                          <span className="font-semibold text-purple-600">{app.attendanceCount}회</span>
+                        </TableCell>
                       </>
                     )}
                     <TableCell className="text-center px-1 py-2 whitespace-nowrap">
@@ -290,7 +302,13 @@ export default function MembershipStatusBoard() {
                       ) : (
                         <button
                           onClick={() => {
-                            // 출석 기능은 나중에 추가
+                            setApplications(prev => 
+                              prev.map(a => 
+                                a.id === app.id 
+                                  ? { ...a, attendanceCount: a.attendanceCount + 1 }
+                                  : a
+                              )
+                            );
                           }}
                           className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
                         >
