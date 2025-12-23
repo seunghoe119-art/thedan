@@ -7,14 +7,12 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, Plus, X, MapPin } from "lucide-react";
 import { Link } from "wouter";
-import { supabase } from "@/lib/supabaseClient";
 
 interface AdditionalGuest {
   id: string;
   name: string;
   age: string;
   position: string;
-  height: string;
 }
 
 export default function GuestContact() {
@@ -25,7 +23,6 @@ export default function GuestContact() {
     contact: "",
     age: "",
     position: "",
-    height: "",
     jerseySize: "m",
     membershipType: "firefighter",
     agreeRules: true,
@@ -39,8 +36,7 @@ export default function GuestContact() {
       id: Date.now().toString(),
       name: "",
       age: "",
-      position: "",
-      height: ""
+      position: ""
     };
     setAdditionalGuests([...additionalGuests, newGuest]);
   };
@@ -85,19 +81,19 @@ export default function GuestContact() {
   };
 
   const generateMessage = () => {
-    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.height) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position) {
       return "위 항목을 선택하면 자동으로 메시지가 구성됩니다.";
     }
     
-    let message = `안녕하세요. 김포 삼성썬더스 게스트 신청합니다.\n[${formData.name}, ${formData.age}, ${formData.height}, ${getPositionText(formData.position)}]`;
+    let message = `안녕하세요. 김포 삼성썬더스 게스트 신청합니다.\n[${formData.name}, ${formData.age}, ${getPositionText(formData.position)}]`;
     
     // Add contact info
     message += `\n연락처: ${formData.contact}`;
     
     // Add additional guests to the message
     additionalGuests.forEach((guest) => {
-      if (guest.name && guest.age && guest.position && guest.height) {
-        message += `\n[${guest.name}, ${guest.age}, ${guest.height}, ${getPositionText(guest.position)}]`;
+      if (guest.name && guest.age && guest.position) {
+        message += `\n[${guest.name}, ${guest.age}, ${getPositionText(guest.position)}]`;
       }
     });
     
@@ -121,35 +117,19 @@ export default function GuestContact() {
     }
   };
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
 
-    if (!formData.name || !formData.contact || !formData.age || !formData.position || !formData.height) {
+    if (!formData.name || !formData.contact || !formData.age || !formData.position) {
       toast({
         title: "입력사항 확인",
-        description: "이름, 연락처, 나이, 포지션, 키를 입력해주세요.",
+        description: "이름, 연락처, 나이, 포지션을 입력해주세요.",
         variant: "destructive",
       });
       return;
     }
 
-    const generatedMessage = generateMessage();
-
-    if (supabase) {
-      try {
-        await supabase.from('guest_applications').insert({
-          name: formData.name,
-          phone: formData.contact,
-          age_group: formData.age,
-          height_range: formData.height,
-          positions: getPositionText(formData.position),
-          generated_message: generatedMessage,
-        });
-      } catch (error) {
-        console.error('Error saving application:', error);
-      }
-    }
-
+    // Open KakaoTalk chat link
     window.open("https://open.kakao.com/o/gnHeHo7h", "_blank");
 
     toast({
@@ -199,23 +179,6 @@ export default function GuestContact() {
                   <option value="leading">리딩 가드 1,2번</option>
                   <option value="small">스몰포워드 2,3번</option>
                   <option value="baseline">밑선라인 4,5번</option>
-                </select>
-              </div>
-
-              <div>
-                <Label className="text-white">키</Label>
-                <select 
-                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
-                  value={formData.height}
-                  onChange={(e) => setFormData({ ...formData, height: e.target.value })}
-                  required
-                  data-testid="guest-select-height"
-                >
-                  <option value="">키 선택</option>
-                  <option value="170~175cm">170~175cm</option>
-                  <option value="175~180cm">175~180cm</option>
-                  <option value="180~185cm">180~185cm</option>
-                  <option value="185~190cm">185~190cm</option>
                 </select>
               </div>
 
@@ -317,21 +280,6 @@ export default function GuestContact() {
                       <option value="leading">리딩 가드 1,2번</option>
                       <option value="small">스몰포워드 2,3번</option>
                       <option value="baseline">밑선라인 4,5번</option>
-                    </select>
-                  </div>
-
-                  <div>
-                    <Label className="text-white text-sm">키</Label>
-                    <select 
-                      className="w-full bg-gray-900 border border-gray-600 rounded-lg px-4 py-2 text-white focus:border-accent focus:outline-none mt-1"
-                      value={guest.height}
-                      onChange={(e) => updateAdditionalGuest(guest.id, 'height', e.target.value)}
-                    >
-                      <option value="">키 선택</option>
-                      <option value="170~175cm">170~175cm</option>
-                      <option value="175~180cm">175~180cm</option>
-                      <option value="180~185cm">180~185cm</option>
-                      <option value="185~190cm">185~190cm</option>
                     </select>
                   </div>
 

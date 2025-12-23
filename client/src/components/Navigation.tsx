@@ -11,6 +11,7 @@ export default function Navigation() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
   const [location, setLocation] = useLocation();
   const { setDirection } = useNavigationDirection();
+  const [assistantClickCount, setAssistantClickCount] = useState(0);
 
   useEffect(() => {
     const handleScroll = () => {
@@ -45,6 +46,18 @@ export default function Navigation() {
     setDirection(targetPath);
     closeMobileMenu();
   };
+
+  const handleAssistantClick = (e: React.MouseEvent) => {
+    e.preventDefault();
+    const newCount = assistantClickCount + 1;
+    setAssistantClickCount(newCount);
+
+    if (newCount === 6) {
+      setLocation('/guest');
+      setAssistantClickCount(0);
+    }
+  };
+
 
   return (
     <nav className={`fixed top-0 w-full z-50 transition-all duration-500 ease-in-out ${
@@ -96,24 +109,16 @@ export default function Navigation() {
                 Join Us
               </span>
             </Link>
+            <a href="/guest" onClick={handleAssistantClick}>
+              <span className={`font-medium cursor-pointer ${
+                location === "/guest" ? "text-[#e60000] font-bold" : "text-gray-600"
+              }`}>
+                Assistant(운영자전용)
+              </span>
+            </a>
           </div>
 
           <div className="hidden md:flex items-center space-x-4">
-            <Link href="/login" onClick={() => handleNavigation("/login")}>
-              <Button variant="outline" className="border-accent text-accent hover:bg-accent hover:text-white rounded-full">
-                관리자 로그인
-              </Button>
-            </Link>
-            <Link href="/admin/new-post" onClick={() => handleNavigation("/admin/new-post")}>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100 rounded-full">
-                POST
-              </Button>
-            </Link>
-            <Link href="/finance" onClick={() => handleNavigation("/finance")}>
-              <Button variant="outline" className="border-gray-300 text-gray-700 hover:bg-gray-100 rounded-full">
-                Finance
-              </Button>
-            </Link>
             <Link href="/board" onClick={() => handleNavigation("/board")}>
               <Button className="bg-accent text-white hover:bg-accent/90 rounded-full">
                 GO VIDEO
@@ -171,22 +176,7 @@ export default function Navigation() {
                   Join Us
                 </span>
               </Link>
-              <div className="px-3 py-2 border-t border-gray-100 mt-2 space-y-2">
-                <Link href="/login" onClick={() => handleNavigation("/login")}>
-                  <Button variant="outline" className="w-full border-accent text-accent hover:bg-accent hover:text-white">
-                    관리자 로그인
-                  </Button>
-                </Link>
-                <Link href="/admin/new-post" onClick={() => handleNavigation("/admin/new-post")}>
-                  <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-100">
-                    POST
-                  </Button>
-                </Link>
-                <Link href="/finance" onClick={() => handleNavigation("/finance")}>
-                  <Button variant="outline" className="w-full border-gray-300 text-gray-700 hover:bg-gray-100">
-                    Finance
-                  </Button>
-                </Link>
+              <div className="px-3 py-2 border-t border-gray-100 mt-2">
                 <Link href="/board" onClick={() => handleNavigation("/board")}>
                   <Button className="w-full bg-black text-white hover:bg-gray-800">
                     GO VIDEO

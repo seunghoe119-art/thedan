@@ -3,7 +3,7 @@ export default function Tournaments() {
     <section className="py-32 bg-white relative z-10">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
-          <h2 className="text-3xl md:text-4xl font-black text-black mb-6">
+          <h2 className="text-5xl md:text-6xl font-black text-black mb-6">
             우측 상단 메뉴<br />코트 및 기타 정보<br />확인
           </h2>
           <p className="text-xl text-gray-600 font-light max-w-4xl mx-auto">
@@ -40,7 +40,7 @@ export default function Tournaments() {
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
-                  <span className="text-gray-700 pt-1 text-sm md:text-base">목요일 18시 전까지, 참가 투표 진행 진행</span>
+                  <span className="text-gray-700 pt-1 text-sm md:text-base">목요일 18시 전까지, 참가 투표 진행</span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
