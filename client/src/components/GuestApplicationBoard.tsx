@@ -1,9 +1,10 @@
 import { useState, useEffect } from 'react';
 import { supabase } from '@/lib/supabaseClient';
 import { getGameWeeks, formatPhoneForDisplay, formatHeightForDisplay, formatPositionForDisplay, type GameWeek } from '@/lib/gameWeekUtils';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
+import { Button } from '@/components/ui/button';
+import { ChevronLeft, ChevronRight } from 'lucide-react';
 
 interface GuestApplication {
   id: string;
@@ -24,6 +25,8 @@ export default function GuestApplicationBoard() {
   useEffect(() => {
     const weeks = getGameWeeks(8);
     setGameWeeks(weeks);
+    // 현재 주차를 기본값으로 설정 (첫 번째 주차가 현재 주차)
+    setSelectedWeekIndex(0);
   }, []);
 
   useEffect(() => {
@@ -77,22 +80,28 @@ export default function GuestApplicationBoard() {
           </p>
         </div>
 
-        <div className="mb-6">
-          <Select
-            value={selectedWeekIndex.toString()}
-            onValueChange={(value) => setSelectedWeekIndex(parseInt(value))}
+        <div className="mb-6 flex items-center justify-center gap-4">
+          <Button
+            variant="outline"
+            onClick={() => setSelectedWeekIndex((prev) => Math.max(0, prev - 1))}
+            disabled={selectedWeekIndex === 0}
+            className="flex items-center gap-2"
           >
-            <SelectTrigger className="w-full md:w-64 bg-white" data-testid="select-week">
-              <SelectValue placeholder="주차 선택" />
-            </SelectTrigger>
-            <SelectContent>
-              {gameWeeks.map((week, index) => (
-                <SelectItem key={index} value={index.toString()} data-testid={`select-week-${index}`}>
-                  {week.label}
-                </SelectItem>
-              ))}
-            </SelectContent>
-          </Select>
+            <ChevronLeft className="h-4 w-4" />
+            이전
+          </Button>
+          <div className="min-w-[200px] text-center font-semibold text-lg">
+            {gameWeeks[selectedWeekIndex]?.label || ''}
+          </div>
+          <Button
+            variant="outline"
+            onClick={() => setSelectedWeekIndex((prev) => Math.min(gameWeeks.length - 1, prev + 1))}
+            disabled={selectedWeekIndex === gameWeeks.length - 1}
+            className="flex items-center gap-2"
+          >
+            다음
+            <ChevronRight className="h-4 w-4" />
+          </Button>
         </div>
 
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
