@@ -40,11 +40,11 @@ export default function Tournaments() {
               <div className="space-y-4">
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">1</div>
-                  <span className="text-gray-700 pt-1">1일 전까지 정규참가자 파악</span>
+                  <span className="text-gray-700 pt-1">목요일 18시 전까지 정규참가자 파악</span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
-                  <span className="text-gray-700 pt-1">당일날 게스트로 전환</span>
+                  <span className="text-gray-700 pt-1 text-sm md:text-base">당일 인원 부족 시<br className="md:hidden" /> 게스트 모집</span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
