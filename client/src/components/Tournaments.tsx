@@ -4,7 +4,7 @@ export default function Tournaments() {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div className="text-center mb-16">
           <h2 className="text-5xl md:text-6xl font-black text-black mb-6">
-            우측 상단 메뉴에서 코트 그외 정보확인
+            우측 상단 메뉴<br />코트 및 기타 정보<br />확인
           </h2>
           <p className="text-xl text-gray-600 font-light max-w-4xl mx-auto">
             모바일 환경에 최적화되어 있습니다.
@@ -44,11 +44,11 @@ export default function Tournaments() {
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-accent text-white rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">2</div>
-                  <span className="text-gray-700 pt-1 text-sm md:text-base">당일 인원 부족 시<br className="md:hidden" /> 게스트 모집</span>
+                  <span className="text-gray-700 pt-1 text-sm md:text-base">인원 부족 시<br className="md:hidden" /> 게스트 모집</span>
                 </div>
                 <div className="flex items-start space-x-4">
                   <div className="w-8 h-8 bg-gray-300 text-gray-600 rounded-full flex items-center justify-center font-bold text-sm flex-shrink-0">3</div>
-                  <span className="text-gray-500 pt-1">경기진행 보조시 월회비 면제함 <span className="font-semibold">(사전연락)</span></span>
+                  <span className="text-gray-500 pt-1">경기진행 보조시 회비 면제 <span className="font-semibold">(사전연락)</span></span>
                 </div>
               </div>
             </div>
