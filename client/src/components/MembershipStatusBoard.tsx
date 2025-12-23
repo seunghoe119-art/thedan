@@ -184,7 +184,6 @@ export default function MembershipStatusBoard() {
                 <TableHead className="font-bold text-gray-900 text-center">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">키</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">포지션</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center">연락처</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">횟수</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center">누적</TableHead>
               </TableRow>
@@ -204,7 +203,7 @@ export default function MembershipStatusBoard() {
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={7} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={6} className="text-center text-gray-500 py-8">
                     해당 월에 등록된 멤버가 없습니다.
                   </TableCell>
                 </TableRow>
@@ -215,7 +214,6 @@ export default function MembershipStatusBoard() {
                     <TableCell className="text-center">{app.age}</TableCell>
                     <TableCell className="text-center">{formatHeightForDisplay(app.height_range)}</TableCell>
                     <TableCell className="text-center">{formatPositionForDisplay(app.position)}</TableCell>
-                    <TableCell className="text-center">{formatPhoneForDisplay(app.phone)}</TableCell>
                     <TableCell className="text-center font-semibold text-blue-600">{app.planDisplay}</TableCell>
                     <TableCell className="text-center font-semibold text-green-600">{app.cumulativeCount}회차</TableCell>
                   </TableRow>
