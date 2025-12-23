@@ -62,6 +62,7 @@ export default function MembershipStatusBoard() {
     const options = getMonthOptions(41);
     return options.findIndex(opt => opt.value === currentMonth);
   });
+  const [isExpanded, setIsExpanded] = useState(false);
 
   const selectedMonth = monthOptions[selectedMonthIndex];
 
@@ -199,11 +200,32 @@ export default function MembershipStatusBoard() {
             <TableHeader>
               <TableRow className="bg-gray-50">
                 <TableHead className="font-bold text-gray-900 text-center px-1">이름</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center px-1">나이</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center px-1">키</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center px-1">포지션</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center px-1">횟수</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center px-1">누적</TableHead>
+                {!isExpanded && (
+                  <>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">나이</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">키</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">포지션</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">횟수</TableHead>
+                  </>
+                )}
+                <TableHead className="font-bold text-gray-900 text-center px-1">
+                  <div className="flex items-center justify-center gap-1">
+                    누적
+                    <button
+                      onClick={() => setIsExpanded(!isExpanded)}
+                      className="ml-1 text-xs hover:text-blue-600 transition-colors"
+                      aria-label={isExpanded ? "기본 보기" : "상세 보기"}
+                    >
+                      {isExpanded ? '<' : '>'}
+                    </button>
+                  </div>
+                </TableHead>
+                {isExpanded && (
+                  <>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">사이즈</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">폰번호</TableHead>
+                  </>
+                )}
               </TableRow>
             </TableHeader>
             <TableBody>
@@ -211,16 +233,26 @@ export default function MembershipStatusBoard() {
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
                     <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                    {!isExpanded && (
+                      <>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
+                      </>
+                    )}
                     <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
-                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
-                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
-                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
-                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
+                    {isExpanded && (
+                      <>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                        <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
+                      </>
+                    )}
                   </TableRow>
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={6} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={isExpanded ? 4 : 6} className="text-center text-gray-500 py-8">
                     해당 월에 등록된 멤버가 없습니다.
                   </TableCell>
                 </TableRow>
@@ -228,11 +260,21 @@ export default function MembershipStatusBoard() {
                 applications.map((app) => (
                   <TableRow key={app.id} data-testid={`row-member-${app.id}`}>
                     <TableCell className="text-center font-medium px-1 py-2 whitespace-nowrap">{app.name}</TableCell>
-                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.age}</TableCell>
-                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
-                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatPositionForDisplay(app.position)}</TableCell>
-                    <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.planDisplay}</TableCell>
+                    {!isExpanded && (
+                      <>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.age}</TableCell>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatPositionForDisplay(app.position)}</TableCell>
+                        <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.planDisplay}</TableCell>
+                      </>
+                    )}
                     <TableCell className="text-center font-semibold text-green-600 px-1 py-2 whitespace-nowrap">{app.cumulativeCount}회차</TableCell>
+                    {isExpanded && (
+                      <>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.phone.substring(0, 2)}</TableCell>
+                      </>
+                    )}
                   </TableRow>
                 ))
               )}
