@@ -34,11 +34,11 @@ export default function JoinUs() {
 
   const getSizeText = (size: string) => {
     const sizeMap: { [key: string]: string } = {
-      s: "사이즈 2XL 170-175",
-      m: "사이즈 3XL 175-180",
-      l: "사이즈 4XL 180-185",
-      xl: "사이즈 XL 110 185이상",
-      xxl: "사이즈 XXL 115 185이상"
+      s: "2XL 170-175",
+      m: "3XL 175-180",
+      l: "4XL 180-185",
+      xl: "5XL 110 185이상",
+      xxl: "6XL 115 185이상"
     };
     return sizeMap[size] || size;
   };
@@ -272,7 +272,7 @@ export default function JoinUs() {
                   </select>
                 </div>
                 <div>
-                  <Label className="text-white">유니폼 사이즈</Label>
+                  <Label className="text-white">유니폼 사이즈 / 키</Label>
                   <select 
                     className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
                     value={formData.jerseySize}
@@ -281,11 +281,11 @@ export default function JoinUs() {
                     data-testid="select-jersey-size"
                   >
                     <option value="">사이즈 선택</option>
-                    <option value="s">사이즈 2XL 170-175</option>
-                    <option value="m">사이즈 3XL 175-180</option>
-                    <option value="l">사이즈 4XL 180-185</option>
-                    <option value="xl">사이즈 XL 110 185이상</option>
-                    <option value="xxl">사이즈 XXL 115 185이상</option>
+                    <option value="s">2XL 170-175</option>
+                    <option value="m">3XL 175-180</option>
+                    <option value="l">4XL 180-185</option>
+                    <option value="xl">XL 110 185이상</option>
+                    <option value="xxl">XXL 115 185이상</option>
                   </select>
                 </div>
               </div>
