@@ -137,15 +137,15 @@ export default function JoinUs() {
 
               <div className="space-y-6">
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
-                  <h4 className="font-bold text-lg mb-2">정규 회원</h4>
-                  <p className="text-gray-400 mb-3">월 2회 / 월 4회 선택가능</p>
-                  <p className="text-2xl font-bold text-white">₩5,000/회</p>
+                  <h4 className="font-bold text-lg mb-2">정규 회원. 월 2회/4회 선택</h4>
+                  <p className="text-gray-400 mb-3">*정규회원 대다수로 게임이 진행되어 대관비 부족시 ₩1,000원 익월 청구</p>
+                  <p className="text-2xl font-bold text-white">₩5,000/참여 횟수</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
                   <h4 className="font-bold text-lg mb-2">게스트 비용<br />횟수 초과시 게스트로 전환</h4>
                   <p className="text-gray-400 mb-3">매주 참가인원을 보고 게스트비 선정</p>
-                  <p className="text-2xl font-bold text-accent">₩8,000~10,000/회</p>
+                  <p className="text-2xl font-bold text-accent">₩8,000~10,000/참여 횟수</p>
                 </div>
 
                 <div className="border border-gray-700 rounded-xl p-6 hover:border-accent transition-colors">
