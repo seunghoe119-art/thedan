@@ -179,11 +179,6 @@ export default function GuestContact() {
       // Open KakaoTalk chat link
       window.open("https://open.kakao.com/o/gnHeHo7h", "_blank");
 
-      toast({
-        title: "신청 완료",
-        description: "신청이 저장되었습니다. 카카오톡 오픈채팅방으로 이동합니다.",
-      });
-
       // Reset form
       setFormData({
         name: "",
