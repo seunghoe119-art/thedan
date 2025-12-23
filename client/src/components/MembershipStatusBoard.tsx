@@ -16,11 +16,13 @@ interface MembershipApplication {
   uniform_size: string;
   plan: string;
   target_month: string;
+  used_count: number;
 }
 
 interface DisplayApplication extends MembershipApplication {
   cumulativeCount: number;
   planDisplay: string;
+  remainingCount: number;
 }
 
 function getMonthOptions(range: number = 41): { label: string; value: string }[] {
@@ -123,11 +125,18 @@ export default function MembershipStatusBoard() {
           });
         }
 
-        const displayApps: DisplayApplication[] = monthData.map(app => ({
-          ...app,
-          cumulativeCount: phoneCounts[app.phone] || 1,
-          planDisplay: getPlanDisplay(app.plan),
-        }));
+        const displayApps: DisplayApplication[] = monthData.map(app => {
+          const totalCount = app.plan === 'regular_4' ? 4 : 2;
+          const usedCount = app.used_count || 0;
+          const remainingCount = Math.max(0, totalCount - usedCount);
+          
+          return {
+            ...app,
+            cumulativeCount: phoneCounts[app.phone] || 1,
+            planDisplay: getPlanDisplay(app.plan),
+            remainingCount,
+          };
+        });
 
         setApplications(displayApps);
       } catch (err) {
@@ -206,7 +215,7 @@ export default function MembershipStatusBoard() {
                     <TableHead className="font-bold text-gray-900 text-center px-1">나이</TableHead>
                     <TableHead className="font-bold text-gray-900 text-center px-1">키</TableHead>
                     <TableHead className="font-bold text-gray-900 text-center px-1">포지션</TableHead>
-                    <TableHead className="font-bold text-gray-900 text-center px-1">횟수</TableHead>
+                    <TableHead className="font-bold text-gray-900 text-center px-1">남은 횟수</TableHead>
                   </>
                 )}
                 {isExpanded && (
@@ -266,7 +275,7 @@ export default function MembershipStatusBoard() {
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.age}</TableCell>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
                         <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatPositionForDisplay(app.position)}</TableCell>
-                        <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.planDisplay}</TableCell>
+                        <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.remainingCount}회</TableCell>
                       </>
                     )}
                     {isExpanded && (
