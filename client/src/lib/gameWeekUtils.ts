@@ -108,11 +108,11 @@ export function formatHeightForDisplay(height: string): string {
 
 export function formatPositionForDisplay(position: string): string {
   const positionMap: { [key: string]: string } = {
-    '리딩 가드 1,2번': '공격수',
-    'leading': '공격수',
-    '스몰포워드 2,3번': '미드필더',
-    'small': '미드필더',
-    '밑선라인 4,5번': '수비수',
+    '리딩 가드 1,2번': '가드',
+    'leading': '가드',
+    '스몰포워드 2,3번': '포워드',
+    'small': '포워드',
+    '밑선라인 4,5번': '센터',
     'baseline': '수비수',
   };
   return positionMap[position] || position;
