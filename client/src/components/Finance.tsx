@@ -21,7 +21,6 @@ interface WeekOption {
 }
 
 export default function Finance() {
-  const { user, isAdmin, loading: authLoading } = useAuth();
   const [applications, setApplications] = useState<GuestApplication[]>([]);
   const [loading, setLoading] = useState(true);
   const [selectedWeek, setSelectedWeek] = useState<string>("");
@@ -37,7 +36,7 @@ export default function Finance() {
 
   useEffect(() => {
     const fetchApplications = async () => {
-      if (!supabase || !user) {
+      if (!supabase) {
         setLoading(false);
         return;
       }
