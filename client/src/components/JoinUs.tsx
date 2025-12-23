@@ -113,13 +113,20 @@ export default function JoinUs() {
   // Get target month as first day of month (YYYY-MM-01)
   const getTargetMonth = (period: string): string => {
     const now = new Date();
-    let targetDate = new Date(now.getFullYear(), now.getMonth(), 1);
+    let year = now.getFullYear();
+    let month = now.getMonth(); // 0-indexed
     
     if (period === "nextMonth") {
-      targetDate = new Date(now.getFullYear(), now.getMonth() + 1, 1);
+      month += 1;
+      if (month > 11) {
+        month = 0;
+        year += 1;
+      }
     }
     
-    return targetDate.toISOString().split('T')[0];
+    // Format as YYYY-MM-01 (avoid timezone issues with toISOString)
+    const monthStr = String(month + 1).padStart(2, '0');
+    return `${year}-${monthStr}-01`;
   };
 
   // Get height range from jersey size
