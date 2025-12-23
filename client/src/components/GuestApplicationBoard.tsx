@@ -6,6 +6,8 @@ import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
 import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { toZonedTime } from 'date-fns-tz';
+import { addDays, getDay } from 'date-fns';
 
 // 2초 이내 신청자를 같은 일행으로 그룹화
 function groupByParty(applications: GuestApplication[]): GroupedApplication[] {
@@ -88,12 +90,50 @@ export default function GuestApplicationBoard() {
   const [applications, setApplications] = useState<GroupedApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hiddenRows, setHiddenRows] = useState<Set<string>>(new Set());
+  const [gameDateString, setGameDateString] = useState<string>("");
+
+  const KST_TIMEZONE = 'Asia/Seoul';
+
+  // 현재 주차의 금요일 날짜를 계산하는 함수
+  const getCurrentWeekFridayDate = (offset: number = 0): string => {
+    const nowUTC = new Date();
+    const nowKST = toZonedTime(nowUTC, KST_TIMEZONE);
+    
+    const dayOfWeek = getDay(nowKST);
+    const hour = nowKST.getHours();
+    
+    let daysUntilFriday: number;
+    const isFriday = dayOfWeek === 5;
+    const isPastDeadline = hour >= 21;
+    
+    if (isFriday && !isPastDeadline) {
+      daysUntilFriday = 0;
+    } else if (isFriday && isPastDeadline) {
+      daysUntilFriday = 7;
+    } else if (dayOfWeek === 6) {
+      daysUntilFriday = 6;
+    } else if (dayOfWeek === 0) {
+      daysUntilFriday = 5;
+    } else {
+      daysUntilFriday = 5 - dayOfWeek;
+    }
+    
+    const fridayKST = addDays(nowKST, daysUntilFriday + (offset * 7));
+    const month = fridayKST.getMonth() + 1;
+    const day = fridayKST.getDate();
+    
+    return `${month}월 ${day}일`;
+  };
 
   useEffect(() => {
     // 현재 주차 기준으로 앞뒤 20주씩 생성 (총 41주)
     const weeks = getGameWeeks(41);
     setGameWeeks(weeks);
   }, []);
+
+  useEffect(() => {
+    setGameDateString(getCurrentWeekFridayDate(selectedWeekOffset));
+  }, [selectedWeekOffset]);
 
   const toggleRowVisibility = (id: string) => {
     setHiddenRows((prev) => {
@@ -158,8 +198,11 @@ export default function GuestApplicationBoard() {
           <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
             금주 신청 현황
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 mb-2">
             {gameWeeks.length > 0 && gameWeeks[Math.floor(gameWeeks.length / 2) + selectedWeekOffset]?.label || ''} 신청 명단입니다. (Supabase 연동)
+          </p>
+          <p className="text-gray-900 font-bold text-lg">
+            {gameDateString}, (금)<br />21:00 ~ 23:30
           </p>
         </div>
 
