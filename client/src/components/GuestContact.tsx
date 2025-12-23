@@ -269,7 +269,7 @@ export default function GuestContact() {
           <div className="bg-gray-900 rounded-2xl p-8">
             <h3 className="font-bold text-2xl mb-2">게스트 신청서</h3>
             <p className="text-accent text-lg mb-6">
-              게스트 신청, {gameDateString}, (금) 21:00 ~ 23:30
+              {gameDateString}, (금)<br />21:00 ~ 23:30
             </p>
             
             <form onSubmit={handleSubmit} className="space-y-6">
