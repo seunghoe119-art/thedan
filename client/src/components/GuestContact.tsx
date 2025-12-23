@@ -1,5 +1,5 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
@@ -8,6 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, Plus, X, MapPin } from "lucide-react";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
+import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+import { addDays, getDay } from 'date-fns';
 
 interface AdditionalGuest {
   id: string;
@@ -33,6 +35,44 @@ export default function GuestContact() {
   });
 
   const [additionalGuests, setAdditionalGuests] = useState<AdditionalGuest[]>([]);
+  const [gameDateString, setGameDateString] = useState<string>("");
+
+  const KST_TIMEZONE = 'Asia/Seoul';
+
+  // 현재 주차의 금요일 날짜를 계산하는 함수
+  const getCurrentWeekFridayDate = (): string => {
+    const nowUTC = new Date();
+    const nowKST = toZonedTime(nowUTC, KST_TIMEZONE);
+    
+    const dayOfWeek = getDay(nowKST);
+    const hour = nowKST.getHours();
+    
+    let daysUntilFriday: number;
+    const isFriday = dayOfWeek === 5;
+    const isPastDeadline = hour >= 21;
+    
+    if (isFriday && !isPastDeadline) {
+      daysUntilFriday = 0;
+    } else if (isFriday && isPastDeadline) {
+      daysUntilFriday = 7;
+    } else if (dayOfWeek === 6) {
+      daysUntilFriday = 6;
+    } else if (dayOfWeek === 0) {
+      daysUntilFriday = 5;
+    } else {
+      daysUntilFriday = 5 - dayOfWeek;
+    }
+    
+    const fridayKST = addDays(nowKST, daysUntilFriday);
+    const month = fridayKST.getMonth() + 1;
+    const day = fridayKST.getDate();
+    
+    return `${month}월 ${day}일`;
+  };
+
+  useEffect(() => {
+    setGameDateString(getCurrentWeekFridayDate());
+  }, []);
 
   const addGuestField = () => {
     const newGuest: AdditionalGuest = {
@@ -227,7 +267,10 @@ export default function GuestContact() {
 
         <div className="max-w-2xl mx-auto">
           <div className="bg-gray-900 rounded-2xl p-8">
-            <h3 className="font-bold text-2xl mb-6">게스트 신청서</h3>
+            <h3 className="font-bold text-2xl mb-2">게스트 신청서</h3>
+            <p className="text-accent text-lg mb-6">
+              게스트 신청, {gameDateString}, (금) 21:00 ~ 23:30
+            </p>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
