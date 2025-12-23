@@ -116,11 +116,8 @@ export default function Navigation() {
                 Assistant(운영자전용)
               </span>
             </a>
-          </div>
-
-          <div className="hidden md:flex items-center space-x-4">
             <Link href="/board" onClick={() => handleNavigation("/board")}>
-              <Button className="bg-accent text-white hover:bg-accent/90 rounded-full">
+              <Button className="bg-black text-white hover:bg-gray-800 rounded-full">
                 GO VIDEO
               </Button>
             </Link>
