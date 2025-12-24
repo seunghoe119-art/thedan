@@ -274,7 +274,7 @@ export default function GuestApplicationBoard() {
               ) : (
                 applications.map((app) => {
                   const isHidden = hiddenRows.has(app.id);
-                  const textColorClass = isHidden ? 'text-white' : '';
+                  const colorClass = isHidden ? 'text-white' : (app.groupColor || '');
                   return (
                     <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
                       <TableCell className="text-center px-0 py-3 whitespace-nowrap">
@@ -285,10 +285,10 @@ export default function GuestApplicationBoard() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className={`text-center font-medium px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{app.name}</TableCell>
-                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{app.age}</TableCell>
-                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
-                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
+                      <TableCell className={`text-center font-medium px-0 py-3 whitespace-nowrap ${colorClass}`}>{app.name}</TableCell>
+                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${colorClass}`}>{app.age}</TableCell>
+                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${colorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
+                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${colorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
                     </TableRow>
                   );
                 })
