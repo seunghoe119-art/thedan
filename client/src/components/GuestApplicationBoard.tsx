@@ -246,28 +246,28 @@ export default function GuestApplicationBoard() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="font-bold text-gray-900 text-center w-20 p-0 whitespace-nowrap">숨김처리</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center p-0 whitespace-nowrap">이름</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center p-0 whitespace-nowrap">나이</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center p-0 whitespace-nowrap">키</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center p-0 whitespace-nowrap">포지션</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center w-20 px-0 py-3 whitespace-nowrap">숨김처리</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">이름</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">나이</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">키</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">포지션</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
-                    <TableCell className="p-0"><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
-                    <TableCell className="p-0"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
-                    <TableCell className="p-0"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
-                    <TableCell className="p-0"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
-                    <TableCell className="p-0"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
-                    <TableCell className="p-0"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
                   </TableRow>
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-gray-500 py-8 p-0 whitespace-nowrap">
+                  <TableCell colSpan={5} className="text-center text-gray-500 py-12 px-0 whitespace-nowrap">
                     해당 주차에 신청 내역이 없습니다.
                   </TableCell>
                 </TableRow>
@@ -277,7 +277,7 @@ export default function GuestApplicationBoard() {
                   const textColorClass = isHidden ? 'text-white' : '';
                   return (
                     <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
-                      <TableCell className="text-center p-0 whitespace-nowrap">
+                      <TableCell className="text-center px-0 py-3 whitespace-nowrap">
                         <div className="flex justify-center">
                           <Checkbox
                             checked={isHidden}
@@ -285,10 +285,10 @@ export default function GuestApplicationBoard() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className={`text-center font-medium p-0 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{app.name}</TableCell>
-                      <TableCell className={`text-center p-0 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{app.age}</TableCell>
-                      <TableCell className={`text-center p-0 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
-                      <TableCell className={`text-center p-0 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
+                      <TableCell className={`text-center font-medium px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{app.name}</TableCell>
+                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{app.age}</TableCell>
+                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
+                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${app.groupColor || ''} ${textColorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
                     </TableRow>
                   );
                 })
