@@ -70,6 +70,7 @@ interface GuestApplication {
   phone: string;
   applied_at: string;
   applied_at_kst?: string;
+  is_hidden?: boolean;
 }
 
 interface GroupedApplication extends GuestApplication {
@@ -135,7 +136,11 @@ export default function GuestApplicationBoard() {
     setGameDateString(getCurrentWeekFridayDate(selectedWeekOffset));
   }, [selectedWeekOffset]);
 
-  const toggleRowVisibility = (id: string) => {
+  const toggleRowVisibility = async (id: string) => {
+    const isCurrentlyHidden = hiddenRows.has(id);
+    const newHiddenState = !isCurrentlyHidden;
+
+    // Update local state immediately for better UX
     setHiddenRows((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
@@ -145,6 +150,28 @@ export default function GuestApplicationBoard() {
       }
       return newSet;
     });
+
+    // Update Supabase
+    if (supabase) {
+      const { error } = await supabase
+        .from('guest_applications')
+        .update({ is_hidden: newHiddenState })
+        .eq('id', id);
+
+      if (error) {
+        console.error('Error updating hidden state:', error);
+        // Revert local state if update failed
+        setHiddenRows((prev) => {
+          const newSet = new Set(prev);
+          if (isCurrentlyHidden) {
+            newSet.add(id);
+          } else {
+            newSet.delete(id);
+          }
+          return newSet;
+        });
+      }
+    }
   };
 
   useEffect(() => {
@@ -167,7 +194,7 @@ export default function GuestApplicationBoard() {
       try {
         const { data, error } = await supabase
           .from('guest_applications')
-          .select('id, name, age, height, position, phone, applied_at, applied_at_kst')
+          .select('id, name, age, height, position, phone, applied_at, applied_at_kst, is_hidden')
           .gte('applied_at', selectedWeek.startDateUTC)
           .lte('applied_at', selectedWeek.endDateUTC)
           .order('applied_at', { ascending: true });
@@ -179,6 +206,14 @@ export default function GuestApplicationBoard() {
           // 일행 그룹화 (2초 이내 신청자)
           const groupedData = groupByParty(data || []);
           setApplications(groupedData);
+          
+          // Set hidden rows from database
+          const hiddenIds = new Set(
+            (data || [])
+              .filter(app => app.is_hidden)
+              .map(app => app.id)
+          );
+          setHiddenRows(hiddenIds);
         }
       } catch (err) {
         console.error('Fetch error:', err);
