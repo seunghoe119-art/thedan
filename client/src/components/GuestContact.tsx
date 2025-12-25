@@ -528,6 +528,18 @@ export default function GuestContact() {
                   </Button>
                 </Link>
               </div>
+
+              {/* Guest Application Example Image */}
+              <div className="mt-8">
+                <h4 className="text-white font-bold text-lg mb-4 text-center">신청 예시</h4>
+                <div className="rounded-lg overflow-hidden border border-gray-700">
+                  <img 
+                    src="/guestapplyimage.jpg" 
+                    alt="게스트 신청 예시" 
+                    className="w-full h-auto"
+                  />
+                </div>
+              </div>
             </form>
           </div>
         </div>
