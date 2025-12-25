@@ -205,7 +205,15 @@ export default function GuestApplicationBoard() {
         } else {
           // 일행 그룹화 (2초 이내 신청자)
           const groupedData = groupByParty(data || []);
-          setApplications(groupedData);
+          
+          // Sort: non-hidden first, then hidden at the bottom
+          const sortedData = groupedData.sort((a, b) => {
+            const aHidden = a.is_hidden ? 1 : 0;
+            const bHidden = b.is_hidden ? 1 : 0;
+            return aHidden - bHidden;
+          });
+          
+          setApplications(sortedData);
           
           // Set hidden rows from database
           const hiddenIds = new Set(
