@@ -93,6 +93,8 @@ export default function GuestApplicationBoard() {
   const [hiddenRows, setHiddenRows] = useState<Set<string>>(new Set());
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [gameDateString, setGameDateString] = useState<string>("");
+  const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
+  const [manualColors, setManualColors] = useState<Map<string, string>>(new Map());
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -100,14 +102,14 @@ export default function GuestApplicationBoard() {
   const getCurrentWeekFridayDate = (offset: number = 0): string => {
     const nowUTC = new Date();
     const nowKST = toZonedTime(nowUTC, KST_TIMEZONE);
-    
+
     const dayOfWeek = getDay(nowKST);
     const hour = nowKST.getHours();
-    
+
     let daysUntilFriday: number;
     const isFriday = dayOfWeek === 5;
     const isPastDeadline = hour >= 21;
-    
+
     if (isFriday && !isPastDeadline) {
       daysUntilFriday = 0;
     } else if (isFriday && isPastDeadline) {
@@ -119,11 +121,11 @@ export default function GuestApplicationBoard() {
     } else {
       daysUntilFriday = 5 - dayOfWeek;
     }
-    
+
     const fridayKST = addDays(nowKST, daysUntilFriday + (offset * 7));
     const month = fridayKST.getMonth() + 1;
     const day = fridayKST.getDate();
-    
+
     return `${month}월 ${day}일`;
   };
 
@@ -187,12 +189,27 @@ export default function GuestApplicationBoard() {
     });
   };
 
+  const cycleGroupColor = () => {
+    const colorCycle = [
+      'text-red-600 font-bold',
+      'text-yellow-600 font-bold',
+      'text-green-600 font-bold',
+      'text-blue-600 font-bold',
+      'text-pink-600 font-bold',
+      '', // 검정(기본)
+    ];
+
+    const currentIndex = colorCycle.indexOf(groupHeaderColor);
+    const nextIndex = (currentIndex + 1) % colorCycle.length;
+    setGroupHeaderColor(colorCycle[nextIndex]);
+  };
+
   useEffect(() => {
     if (gameWeeks.length === 0) return;
-    
+
     const fetchApplications = async () => {
       setIsLoading(true);
-      
+
       if (!supabase) {
         console.error('Supabase client not initialized');
         setIsLoading(false);
@@ -203,7 +220,7 @@ export default function GuestApplicationBoard() {
       const currentWeekIndex = Math.floor(gameWeeks.length / 2);
       const actualIndex = currentWeekIndex + selectedWeekOffset;
       const selectedWeek = gameWeeks[actualIndex];
-      
+
       try {
         const { data, error } = await supabase
           .from('guest_applications')
@@ -218,16 +235,16 @@ export default function GuestApplicationBoard() {
         } else {
           // 일행 그룹화 (2초 이내 신청자)
           const groupedData = groupByParty(data || []);
-          
+
           // Sort: non-hidden first, then hidden at the bottom
           const sortedData = groupedData.sort((a, b) => {
             const aHidden = a.is_hidden ? 1 : 0;
             const bHidden = b.is_hidden ? 1 : 0;
             return aHidden - bHidden;
           });
-          
+
           setApplications(sortedData);
-          
+
           // Set hidden rows from database
           const hiddenIds = new Set(
             (data || [])
@@ -303,7 +320,12 @@ export default function GuestApplicationBoard() {
             <TableHeader>
               <TableRow className="bg-gray-50">
                 <TableHead className="font-bold text-gray-900 text-center w-14 px-0 py-3 whitespace-nowrap">숨김</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center w-14 px-0 py-3 whitespace-nowrap">그룹</TableHead>
+                <TableHead
+                  className={`font-bold ${groupHeaderColor || 'text-gray-900'} text-center w-14 px-0 py-3 whitespace-nowrap cursor-pointer hover:bg-gray-100`}
+                  onClick={cycleGroupColor}
+                >
+                  그룹
+                </TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">이름</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">키</TableHead>
