@@ -349,13 +349,29 @@ export default function GuestContact() {
               <p className="text-white font-bold text-lg">
                 {gameDateString}, (금)<br />21:00 ~ 23:30
               </p>
-              {isClosed && (
+              {isClosed ? (
                 <div className="mt-3 bg-red-600 rounded-lg p-3 animate-in slide-in-from-top duration-300">
                   <p className="text-white font-bold text-center">
                     이번주 게스트 모집 마감입니다
                   </p>
                   <p className="text-white text-sm text-center mt-1">
                     {closedAt}
+                  </p>
+                </div>
+              ) : (
+                <div className="mt-3 bg-blue-600 rounded-lg p-3 animate-in slide-in-from-top duration-300">
+                  <p className="text-white font-bold text-center">
+                    게스트 모집중입니다
+                  </p>
+                  <p className="text-white text-sm text-center mt-1">
+                    {new Date().toLocaleString('ko-KR', { 
+                      timeZone: 'Asia/Seoul',
+                      month: 'numeric',
+                      day: 'numeric',
+                      hour: 'numeric',
+                      minute: '2-digit',
+                      hour12: true
+                    }).replace('오전', 'am').replace('오후', 'pm')} 기준
                   </p>
                 </div>
               )}
