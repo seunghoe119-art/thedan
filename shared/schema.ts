@@ -12,6 +12,14 @@ export const guestApplications = pgTable("guest_applications", {
   applied_at: timestamp("applied_at", { withTimezone: true }).defaultNow(),
 });
 
+export const guestRecruitmentStatus = pgTable("guest_recruitment_status", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  is_closed: text("is_closed").notNull().default('false'),
+  closed_at: timestamp("closed_at", { withTimezone: true }),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 export const insertGuestApplicationSchema = createInsertSchema(guestApplications).omit({
   id: true,
   applied_at: true,

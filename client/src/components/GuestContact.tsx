@@ -36,6 +36,9 @@ export default function GuestContact() {
 
   const [additionalGuests, setAdditionalGuests] = useState<AdditionalGuest[]>([]);
   const [gameDateString, setGameDateString] = useState<string>("");
+  const [clickCount, setClickCount] = useState(0);
+  const [isClosed, setIsClosed] = useState(false);
+  const [closedAt, setClosedAt] = useState<string>("");
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -72,7 +75,64 @@ export default function GuestContact() {
 
   useEffect(() => {
     setGameDateString(getCurrentWeekFridayDate());
+    fetchClosedStatus();
   }, []);
+
+  const fetchClosedStatus = async () => {
+    if (!supabase) return;
+    
+    const { data, error } = await supabase
+      .from('guest_recruitment_status')
+      .select('is_closed, closed_at')
+      .eq('id', '00000000-0000-0000-0000-000000000001')
+      .single();
+
+    if (!error && data) {
+      setIsClosed(data.is_closed);
+      if (data.closed_at) {
+        const closedDate = new Date(data.closed_at);
+        const kstDate = toZonedTime(closedDate, KST_TIMEZONE);
+        const month = kstDate.getMonth() + 1;
+        const day = kstDate.getDate();
+        const hours = kstDate.getHours();
+        const minutes = kstDate.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        const displayHours = hours % 12 || 12;
+        setClosedAt(`${month}.${day}. ${displayHours}:${minutes} ${ampm} 기준`);
+      }
+    }
+  };
+
+  const handleBannerClick = async () => {
+    const newCount = clickCount + 1;
+    setClickCount(newCount);
+
+    if (newCount === 10) {
+      setClickCount(0);
+      
+      if (!supabase) return;
+
+      const nowUTC = new Date();
+      const newIsClosed = !isClosed;
+
+      const { error } = await supabase
+        .from('guest_recruitment_status')
+        .update({ 
+          is_closed: newIsClosed,
+          closed_at: newIsClosed ? nowUTC.toISOString() : null,
+          updated_at: nowUTC.toISOString()
+        })
+        .eq('id', '00000000-0000-0000-0000-000000000001');
+
+      if (!error) {
+        await fetchClosedStatus();
+        toast({
+          title: newIsClosed ? "게스트 모집 마감" : "게스트 모집 재개",
+          description: newIsClosed ? "게스트 모집이 마감되었습니다." : "게스트 모집이 재개되었습니다.",
+        });
+      }
+    }
+  };
 
   const addGuestField = () => {
     const newGuest: AdditionalGuest = {
@@ -279,10 +339,27 @@ export default function GuestContact() {
 
         <div className="max-w-2xl mx-auto">
           <div className="bg-gray-900 rounded-2xl p-8">
-            <h3 className="font-bold text-2xl mb-2">게스트 신청서</h3>
-            <p className="text-white font-bold text-lg mb-6">
-              {gameDateString}, (금)<br />21:00 ~ 23:30
-            </p>
+            <h3 
+              className="font-bold text-2xl mb-2 cursor-pointer select-none"
+              onClick={handleBannerClick}
+            >
+              게스트 신청서
+            </h3>
+            <div className="mb-6">
+              <p className="text-white font-bold text-lg">
+                {gameDateString}, (금)<br />21:00 ~ 23:30
+              </p>
+              {isClosed && (
+                <div className="mt-3 bg-red-600 rounded-lg p-3 animate-in slide-in-from-top duration-300">
+                  <p className="text-white font-bold text-center">
+                    이번주 게스트 모집 마감입니다
+                  </p>
+                  <p className="text-white text-sm text-center mt-1">
+                    {closedAt}
+                  </p>
+                </div>
+              )}
+            </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
