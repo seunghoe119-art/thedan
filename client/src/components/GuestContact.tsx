@@ -340,7 +340,7 @@ export default function GuestContact() {
         <div className="max-w-2xl mx-auto">
           <div className="bg-gray-900 rounded-2xl p-8">
             <h3 
-              className="font-bold text-2xl mb-2 cursor-pointer select-none"
+              className="font-bold text-2xl mb-2 select-none"
               onClick={handleBannerClick}
             >
               게스트 신청서
@@ -364,14 +364,17 @@ export default function GuestContact() {
                     게스트 모집중입니다
                   </p>
                   <p className="text-white text-sm text-center mt-1">
-                    {new Date().toLocaleString('ko-KR', { 
-                      timeZone: 'Asia/Seoul',
-                      month: 'numeric',
-                      day: 'numeric',
-                      hour: 'numeric',
-                      minute: '2-digit',
-                      hour12: true
-                    }).replace('오전', 'am').replace('오후', 'pm')} 기준
+                    {(() => {
+                      const now = new Date();
+                      const kstDate = toZonedTime(now, KST_TIMEZONE);
+                      const month = kstDate.getMonth() + 1;
+                      const day = kstDate.getDate();
+                      const hours = kstDate.getHours();
+                      const minutes = kstDate.getMinutes().toString().padStart(2, '0');
+                      const ampm = hours >= 12 ? 'pm' : 'am';
+                      const displayHours = hours % 12 || 12;
+                      return `${month}/${day}. ${displayHours}:${minutes}${ampm} 기준`;
+                    })()}
                   </p>
                 </div>
               )}
