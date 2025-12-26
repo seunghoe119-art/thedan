@@ -91,6 +91,7 @@ export default function GuestApplicationBoard() {
   const [applications, setApplications] = useState<GroupedApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [hiddenRows, setHiddenRows] = useState<Set<string>>(new Set());
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [gameDateString, setGameDateString] = useState<string>("");
 
   const KST_TIMEZONE = 'Asia/Seoul';
@@ -172,6 +173,18 @@ export default function GuestApplicationBoard() {
         });
       }
     }
+  };
+
+  const toggleRowSelection = (id: string) => {
+    setSelectedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
   };
 
   useEffect(() => {
@@ -290,6 +303,7 @@ export default function GuestApplicationBoard() {
             <TableHeader>
               <TableRow className="bg-gray-50">
                 <TableHead className="font-bold text-gray-900 text-center w-20 px-0 py-3 whitespace-nowrap">숨김처리</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center w-20 px-0 py-3 whitespace-nowrap">선택</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">이름</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">키</TableHead>
@@ -301,22 +315,23 @@ export default function GuestApplicationBoard() {
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
                     <TableCell className="px-0 py-3"><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
                     <TableCell className="px-0 py-3"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                     <TableCell className="px-0 py-3"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
                     <TableCell className="px-0 py-3"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                     <TableCell className="px-0 py-3"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
-                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-28 mx-auto" /></TableCell>
                   </TableRow>
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={5} className="text-center text-gray-500 py-12 px-0 whitespace-nowrap">
+                  <TableCell colSpan={6} className="text-center text-gray-500 py-12 px-0 whitespace-nowrap">
                     해당 주차에 신청 내역이 없습니다.
                   </TableCell>
                 </TableRow>
               ) : (
                 applications.map((app) => {
                   const isHidden = hiddenRows.has(app.id);
+                  const isSelected = selectedRows.has(app.id);
                   const colorClass = isHidden ? 'text-white' : (app.groupColor || '');
                   return (
                     <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
@@ -325,6 +340,14 @@ export default function GuestApplicationBoard() {
                           <Checkbox
                             checked={isHidden}
                             onCheckedChange={() => toggleRowVisibility(app.id)}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className="text-center px-0 py-3 whitespace-nowrap">
+                        <div className="flex justify-center">
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => toggleRowSelection(app.id)}
                           />
                         </div>
                       </TableCell>
