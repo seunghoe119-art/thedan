@@ -190,8 +190,6 @@ export default function GuestApplicationBoard() {
   };
 
   const cycleGroupColor = async () => {
-    if (selectedRows.size === 0) return;
-
     const colorCycle = [
       'text-red-600 font-bold',
       'text-yellow-600 font-bold',
@@ -203,50 +201,53 @@ export default function GuestApplicationBoard() {
 
     const currentIndex = colorCycle.indexOf(groupHeaderColor);
     const nextIndex = (currentIndex + 1) % colorCycle.length;
-    setGroupHeaderColor(colorCycle[nextIndex]);
+    const nextColor = colorCycle[nextIndex];
+    setGroupHeaderColor(nextColor);
 
-    // 선택된 행들 중 가장 위쪽(첫 번째) 행의 시간을 찾기
-    const selectedApps = applications.filter(app => selectedRows.has(app.id));
-    if (selectedApps.length === 0) return;
+    // 선택된 행이 있으면 그 행들의 applied_at을 동일하게 변경
+    if (selectedRows.size > 0) {
+      const selectedApps = applications.filter(app => selectedRows.has(app.id));
+      if (selectedApps.length === 0) return;
 
-    // 첫 번째 선택된 항목의 시간을 기준으로 사용
-    const targetTime = selectedApps[0].applied_at;
+      // 첫 번째 선택된 항목의 시간을 기준으로 사용
+      const targetTime = selectedApps[0].applied_at;
 
-    // Supabase에서 모든 선택된 행들의 applied_at을 동일하게 업데이트
-    if (supabase) {
-      try {
-        const updates = selectedApps.map(app => 
-          supabase
+      // Supabase에서 모든 선택된 행들의 applied_at을 동일하게 업데이트
+      if (supabase) {
+        try {
+          const updates = selectedApps.map(app => 
+            supabase
+              .from('guest_applications')
+              .update({ applied_at: targetTime })
+              .eq('id', app.id)
+          );
+
+          await Promise.all(updates);
+
+          // 데이터 다시 불러오기
+          const currentWeekIndex = Math.floor(gameWeeks.length / 2);
+          const actualIndex = currentWeekIndex + selectedWeekOffset;
+          const selectedWeek = gameWeeks[actualIndex];
+
+          const { data, error } = await supabase
             .from('guest_applications')
-            .update({ applied_at: targetTime })
-            .eq('id', app.id)
-        );
+            .select('id, name, age, height, position, phone, applied_at, applied_at_kst, is_hidden')
+            .gte('applied_at', selectedWeek.startDateUTC)
+            .lte('applied_at', selectedWeek.endDateUTC)
+            .order('applied_at', { ascending: true });
 
-        await Promise.all(updates);
-
-        // 데이터 다시 불러오기
-        const currentWeekIndex = Math.floor(gameWeeks.length / 2);
-        const actualIndex = currentWeekIndex + selectedWeekOffset;
-        const selectedWeek = gameWeeks[actualIndex];
-
-        const { data, error } = await supabase
-          .from('guest_applications')
-          .select('id, name, age, height, position, phone, applied_at, applied_at_kst, is_hidden')
-          .gte('applied_at', selectedWeek.startDateUTC)
-          .lte('applied_at', selectedWeek.endDateUTC)
-          .order('applied_at', { ascending: true });
-
-        if (!error && data) {
-          const groupedData = groupByParty(data);
-          const sortedData = groupedData.sort((a, b) => {
-            const aHidden = a.is_hidden ? 1 : 0;
-            const bHidden = b.is_hidden ? 1 : 0;
-            return aHidden - bHidden;
-          });
-          setApplications(sortedData);
+          if (!error && data) {
+            const groupedData = groupByParty(data);
+            const sortedData = groupedData.sort((a, b) => {
+              const aHidden = a.is_hidden ? 1 : 0;
+              const bHidden = b.is_hidden ? 1 : 0;
+              return aHidden - bHidden;
+            });
+            setApplications(sortedData);
+          }
+        } catch (err) {
+          console.error('Error updating applied_at times:', err);
         }
-      } catch (err) {
-        console.error('Error updating applied_at times:', err);
       }
     }
   };
