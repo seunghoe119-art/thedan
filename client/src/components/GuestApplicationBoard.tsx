@@ -302,8 +302,8 @@ export default function GuestApplicationBoard() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
-                <TableHead className="font-bold text-gray-900 text-center w-20 px-0 py-3 whitespace-nowrap">숨김처리</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center w-20 px-0 py-3 whitespace-nowrap">선택</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center w-14 px-0 py-3 whitespace-nowrap">숨김</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center w-14 px-0 py-3 whitespace-nowrap">그룹</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">이름</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">키</TableHead>
