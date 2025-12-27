@@ -236,10 +236,6 @@ export default function JoinUs() {
         });
 
       if (error) {
-        // Check for duplicate entry
-        if (error.code === '23505') {
-          throw new Error("이미 해당 월에 신청하셨습니다.");
-        }
         throw error;
       }
 
