@@ -134,6 +134,47 @@ export default function Rules() {
                 *일반적으로 감독과 총무가 게임을 진행하지만 감독과 총무가 진행하지 못할때, 운영자가 진행합니다.
               </p>
             </div>
+            
+            <div className="mt-6 pt-4 border-t border-gray-100">
+              <h4 className="font-semibold text-sm mb-3 text-gray-700">3파전 이미지 다운로드</h4>
+              <div className="grid grid-cols-2 gap-2">
+                <a
+                  href="/3game1.png"
+                  download="3game1.png"
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors text-center"
+                >
+                  3game1.png
+                </a>
+                <a
+                  href="/3game2.png"
+                  download="3game2.png"
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors text-center"
+                >
+                  3game2.png
+                </a>
+                <a
+                  href="/3game3.png"
+                  download="3game3.png"
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors text-center"
+                >
+                  3game3.png
+                </a>
+                <a
+                  href="/3game4.png"
+                  download="3game4.png"
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors text-center"
+                >
+                  3game4.png
+                </a>
+                <a
+                  href="/3game5.png"
+                  download="3game5.png"
+                  className="px-3 py-2 bg-gray-100 hover:bg-gray-200 text-gray-700 text-xs font-medium rounded-lg transition-colors text-center col-span-2"
+                >
+                  3game5.png
+                </a>
+              </div>
+            </div>
           </div>
         </div>
       </div>
