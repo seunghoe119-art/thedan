@@ -39,6 +39,7 @@ export default function GuestContact() {
   const [clickCount, setClickCount] = useState(0);
   const [isClosed, setIsClosed] = useState(false);
   const [closedAt, setClosedAt] = useState<string>("");
+  const [availableSlots, setAvailableSlots] = useState<number>(8);
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -83,12 +84,13 @@ export default function GuestContact() {
     
     const { data, error } = await supabase
       .from('guest_recruitment_status')
-      .select('is_closed, closed_at')
+      .select('is_closed, closed_at, available_slots')
       .eq('id', '00000000-0000-0000-0000-000000000001')
       .single();
 
     if (!error && data) {
       setIsClosed(data.is_closed);
+      setAvailableSlots(data.available_slots ?? 8);
       if (data.closed_at) {
         const closedDate = new Date(data.closed_at);
         const kstDate = toZonedTime(closedDate, KST_TIMEZONE);
@@ -346,9 +348,24 @@ export default function GuestContact() {
               게스트 신청서
             </h3>
             <div className="mb-6">
-              <p className="text-white font-bold text-lg">
-                {gameDateString}, (금)<br />21:00 ~ 23:30
-              </p>
+              <div className="grid grid-cols-2 gap-4">
+                <div className="bg-gray-800 border border-blue-500 rounded-lg p-4">
+                  <p className="text-white font-bold text-lg">
+                    {gameDateString}, (금)
+                  </p>
+                  <p className="text-white font-bold text-lg">
+                    21:00 ~ 23:30
+                  </p>
+                </div>
+                <div className="bg-yellow-400 rounded-lg p-4 flex flex-col items-center justify-center">
+                  <p className="text-black font-bold text-sm mb-1">
+                    게스트 참여가능인원
+                  </p>
+                  <p className="text-black font-black text-4xl">
+                    {availableSlots}명
+                  </p>
+                </div>
+              </div>
               {isClosed ? (
                 <div className="mt-3 bg-red-600 rounded-lg p-3 animate-in slide-in-from-top duration-300">
                   <p className="text-white font-bold text-center">
