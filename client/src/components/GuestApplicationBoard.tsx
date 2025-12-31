@@ -426,6 +426,35 @@ export default function GuestApplicationBoard() {
           </Button>
         </div>
 
+        {/* 정규 멤버 게스트 목록 표시 */}
+        {applications.length > 0 && applications.some(app => app.name.includes('(정규)')) && (
+          <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
+            <div className="bg-yellow-50 p-4 border-b border-yellow-200">
+              <h3 className="font-bold text-lg text-yellow-900 mb-3">등록팀원 게스트 출석</h3>
+              <div className="space-y-2">
+                {applications
+                  .filter(app => app.name.includes('(정규)'))
+                  .reverse()
+                  .map((app, index) => (
+                    <div 
+                      key={app.id}
+                      className="flex items-center justify-between bg-yellow-100 rounded p-3 border border-yellow-300"
+                    >
+                      <div className="flex-1">
+                        <span className="font-semibold text-yellow-900 text-sm">
+                          {applications.filter(a => a.name.includes('(정규)')).length - index}. {app.name}
+                        </span>
+                      </div>
+                      <div className="text-xs text-yellow-700">
+                        {app.age} · {formatHeightForDisplay(app.height)} · {formatPositionForDisplay(app.position)}
+                      </div>
+                    </div>
+                  ))}
+              </div>
+            </div>
+          </div>
+        )}
+
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <Table>
             <TableHeader>
