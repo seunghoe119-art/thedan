@@ -93,7 +93,7 @@ export default function MembershipStatusBoard() {
       'text-yellow-600 font-bold',
       'text-green-600 font-bold',
       'text-blue-600 font-bold',
-      'text-pink-600 font-bold',
+      'text-purple-600 font-bold',
       '', // 검정(기본)
     ];
 

@@ -82,7 +82,7 @@ const GROUP_COLORS = [
   'text-yellow-600 font-bold',
   'text-green-600 font-bold',
   'text-blue-600 font-bold',
-  'text-pink-600 font-bold',
+  'text-purple-600 font-bold',
 ];
 
 export default function GuestApplicationBoard() {
@@ -230,7 +230,7 @@ export default function GuestApplicationBoard() {
       'text-yellow-600 font-bold',
       'text-green-600 font-bold',
       'text-blue-600 font-bold',
-      'text-pink-600 font-bold',
+      'text-purple-600 font-bold',
       '', // 검정(기본)
     ];
 
