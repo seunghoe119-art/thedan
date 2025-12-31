@@ -374,6 +374,7 @@ export default function MembershipStatusBoard() {
                     <TableHead className="font-bold text-gray-900 text-center px-1">출석횟수</TableHead>
                   </>
                 )}
+                <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 추가</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
                     <span>{isExpanded ? '누적' : '출석'}</span>
@@ -410,12 +411,13 @@ export default function MembershipStatusBoard() {
                         <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                       </>
                     )}
+                    <TableCell className="px-1 py-2"><Skeleton className="h-4 w-20 mx-auto" /></TableCell>
                     <TableCell className="px-1 py-2"><Skeleton className="h-4 w-12 mx-auto" /></TableCell>
                   </TableRow>
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isExpanded ? 7 : 7} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={isExpanded ? 8 : 8} className="text-center text-gray-500 py-8">
                     해당 월에 등록된 멤버가 없습니다.
                   </TableCell>
                 </TableRow>
@@ -454,6 +456,24 @@ export default function MembershipStatusBoard() {
                           </TableCell>
                         </>
                       )}
+                      <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                        {!isExpanded && (
+                          <button
+                            onClick={() => {
+                              toast({
+                                title: "게스트로 추가",
+                                description: `${app.name}님을 게스트로 추가하는 기능은 곧 구현될 예정입니다.`,
+                              });
+                            }}
+                            className="px-2 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition-colors"
+                          >
+                            출석
+                          </button>
+                        )}
+                        {isExpanded && (
+                          <span className="text-gray-400 text-xs">-</span>
+                        )}
+                      </TableCell>
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
                         {isExpanded ? (
                           <span className={`font-semibold ${colorClass || 'text-green-600'}`}>{app.cumulativeCount}회차</span>
