@@ -20,6 +20,14 @@ export const guestRecruitmentStatus = pgTable("guest_recruitment_status", {
   updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
 });
 
+export const weeklyGuestSlots = pgTable("weekly_guest_slots", {
+  id: uuid("id").primaryKey().defaultRandom(),
+  week_start_date: text("week_start_date").notNull().unique(),
+  total_slots: integer("total_slots").notNull().default(8),
+  created_at: timestamp("created_at", { withTimezone: true }).defaultNow(),
+  updated_at: timestamp("updated_at", { withTimezone: true }).defaultNow(),
+});
+
 export const insertGuestApplicationSchema = createInsertSchema(guestApplications).omit({
   id: true,
   applied_at: true,

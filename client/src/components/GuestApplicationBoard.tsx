@@ -95,6 +95,9 @@ export default function GuestApplicationBoard() {
   const [gameDateString, setGameDateString] = useState<string>("");
   const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
   const [manualColors, setManualColors] = useState<Map<string, string>>(new Map());
+  const [totalSlots, setTotalSlots] = useState<number>(8);
+  const [inputSlots, setInputSlots] = useState<string>('8');
+  const [currentWeekStartDate, setCurrentWeekStartDate] = useState<string>('');
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -189,6 +192,38 @@ export default function GuestApplicationBoard() {
     });
   };
 
+  const updateWeeklySlots = async () => {
+    const slots = parseInt(inputSlots);
+    if (isNaN(slots) || slots < 0) {
+      return;
+    }
+
+    if (!supabase || !currentWeekStartDate) return;
+
+    try {
+      const { data: existingData } = await supabase
+        .from('weekly_guest_slots')
+        .select('*')
+        .eq('week_start_date', currentWeekStartDate)
+        .single();
+
+      if (existingData) {
+        await supabase
+          .from('weekly_guest_slots')
+          .update({ total_slots: slots, updated_at: new Date().toISOString() })
+          .eq('week_start_date', currentWeekStartDate);
+      } else {
+        await supabase
+          .from('weekly_guest_slots')
+          .insert({ week_start_date: currentWeekStartDate, total_slots: slots });
+      }
+
+      setTotalSlots(slots);
+    } catch (err) {
+      console.error('Error updating weekly slots:', err);
+    }
+  };
+
   const cycleGroupColor = async () => {
     const colorCycle = [
       'text-red-600 font-bold',
@@ -269,7 +304,11 @@ export default function GuestApplicationBoard() {
       const actualIndex = currentWeekIndex + selectedWeekOffset;
       const selectedWeek = gameWeeks[actualIndex];
 
+      // Set current week start date for slots tracking
+      setCurrentWeekStartDate(selectedWeek.startDateUTC);
+
       try {
+        // Fetch applications
         const { data, error } = await supabase
           .from('guest_applications')
           .select('id, name, age, height, position, phone, applied_at, applied_at_kst, is_hidden')
@@ -300,6 +339,21 @@ export default function GuestApplicationBoard() {
               .map(app => app.id)
           );
           setHiddenRows(hiddenIds);
+        }
+
+        // Fetch weekly guest slots
+        const { data: slotsData } = await supabase
+          .from('weekly_guest_slots')
+          .select('total_slots')
+          .eq('week_start_date', selectedWeek.startDateUTC)
+          .single();
+
+        if (slotsData) {
+          setTotalSlots(slotsData.total_slots);
+          setInputSlots(slotsData.total_slots.toString());
+        } else {
+          setTotalSlots(8);
+          setInputSlots('8');
         }
       } catch (err) {
         console.error('Fetch error:', err);
@@ -433,9 +487,34 @@ export default function GuestApplicationBoard() {
           </Table>
         </div>
 
-        {!isLoading && applications.length > 0 && (
-          <div className="mt-4 text-center text-sm text-gray-500">
-            총 {applications.filter(app => !hiddenRows.has(app.id)).length}명 신청
+        {!isLoading && (
+          <div className="mt-6 space-y-4">
+            <div className="flex items-center justify-center gap-4">
+              <div className="text-center text-sm text-gray-500">
+                총 {applications.filter(app => !hiddenRows.has(app.id)).length}명 신청
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="text-sm text-gray-500">/</span>
+                <input
+                  type="number"
+                  min="0"
+                  value={inputSlots}
+                  onChange={(e) => setInputSlots(e.target.value)}
+                  onBlur={updateWeeklySlots}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      updateWeeklySlots();
+                    }
+                  }}
+                  className="w-16 px-2 py-1 text-center border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-blue-500"
+                />
+              </div>
+            </div>
+            <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+              <p className="text-lg font-semibold text-blue-900">
+                {totalSlots}명 게스트 모집중.
+              </p>
+            </div>
           </div>
         )}
       </div>
