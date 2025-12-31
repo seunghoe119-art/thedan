@@ -426,7 +426,7 @@ export default function GuestContact() {
                     게스트 참여가능인원
                   </p>
                   <p className="text-black font-black text-4xl">
-                    {Math.min(8, Math.max(0, availableSlots - currentApplicationCount))}명
+                    {Math.max(0, Math.min(8, availableSlots - currentApplicationCount))}명
                   </p>
                 </div>
               </div>
