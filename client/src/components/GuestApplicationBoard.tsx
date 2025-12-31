@@ -95,8 +95,8 @@ export default function GuestApplicationBoard() {
   const [gameDateString, setGameDateString] = useState<string>("");
   const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
   const [manualColors, setManualColors] = useState<Map<string, string>>(new Map());
-  const [totalSlots, setTotalSlots] = useState<number>(8);
-  const [inputSlots, setInputSlots] = useState<string>('8');
+  const [totalSlots, setTotalSlots] = useState<number>(18);
+  const [inputSlots, setInputSlots] = useState<string>('18');
   const [currentWeekStartDate, setCurrentWeekStartDate] = useState<string>('');
 
   const KST_TIMEZONE = 'Asia/Seoul';
@@ -352,8 +352,8 @@ export default function GuestApplicationBoard() {
           setTotalSlots(slotsData.total_slots);
           setInputSlots(slotsData.total_slots.toString());
         } else {
-          setTotalSlots(8);
-          setInputSlots('8');
+          setTotalSlots(18);
+          setInputSlots('18');
         }
       } catch (err) {
         console.error('Fetch error:', err);
