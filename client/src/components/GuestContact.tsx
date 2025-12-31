@@ -449,6 +449,12 @@ export default function GuestContact() {
                   </p>
                 </div>
               )}
+              
+              <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
+                <p className="text-lg font-semibold text-blue-900">
+                  {Math.max(0, totalSlots - visibleApplicationCount)}명 게스트 모집중.
+                </p>
+              </div>
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
