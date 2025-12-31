@@ -163,10 +163,13 @@ export default function GuestContact() {
 
     if (applicationsData) {
       const visibleCount = applicationsData.filter(app => !app.is_hidden).length;
+      console.log('총 신청자:', applicationsData.length, '숨김 처리되지 않은 신청자:', visibleCount);
       setVisibleApplicationCount(visibleCount);
     } else {
       setVisibleApplicationCount(0);
     }
+    
+    console.log('totalSlots:', slotsData?.total_slots || 8, 'visibleApplicationCount:', applicationsData ? applicationsData.filter(app => !app.is_hidden).length : 0);
   };
 
   const handleBannerClick = async () => {
