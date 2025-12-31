@@ -8,7 +8,8 @@ import { useToast } from "@/hooks/use-toast";
 import { Copy, Send, Plus, X, MapPin } from "lucide-react";
 import { Link } from "wouter";
 import { supabase } from "@/lib/supabaseClient";
-import { toZonedTime, fromZonedTime } from 'date-fns-tz';
+import { getGameWeeks, type GameWeek } from "@/lib/gameWeekUtils";
+import { toZonedTime } from 'date-fns-tz';
 import { addDays, getDay } from 'date-fns';
 
 interface AdditionalGuest {
@@ -113,39 +114,16 @@ export default function GuestContact() {
       }
     }
 
-    // Calculate current week's date range (same logic as GuestApplicationBoard)
-    const nowUTC = new Date();
-    const nowKST = toZonedTime(nowUTC, KST_TIMEZONE);
-    const dayOfWeek = getDay(nowKST);
-    const hour = nowKST.getHours();
-    
-    let daysUntilFriday: number;
-    const isFriday = dayOfWeek === 5;
-    const isPastDeadline = hour >= 21;
-    
-    if (isFriday && !isPastDeadline) {
-      daysUntilFriday = 0;
-    } else if (isFriday && isPastDeadline) {
-      daysUntilFriday = 7;
-    } else if (dayOfWeek === 6) {
-      daysUntilFriday = 6;
-    } else if (dayOfWeek === 0) {
-      daysUntilFriday = 5;
-    } else {
-      daysUntilFriday = 5 - dayOfWeek;
-    }
-    
-    const fridayKST = addDays(nowKST, daysUntilFriday);
-    fridayKST.setHours(0, 0, 0, 0);
-    const weekStartUTC = fromZonedTime(fridayKST, KST_TIMEZONE);
-    const weekEndUTC = new Date(weekStartUTC);
-    weekEndUTC.setDate(weekEndUTC.getDate() + 7);
+    // Use getGameWeeks to get current week (same as GuestApplicationBoard)
+    const gameWeeks = getGameWeeks(3);
+    const currentWeekIndex = Math.floor(gameWeeks.length / 2);
+    const currentWeek = gameWeeks[currentWeekIndex];
 
-    // Fetch total slots from weekly_guest_slots (same as GuestApplicationBoard)
+    // Fetch total slots from weekly_guest_slots (same query as GuestApplicationBoard)
     const { data: slotsData } = await supabase
       .from('weekly_guest_slots')
       .select('total_slots')
-      .eq('week_start_date', weekStartUTC.toISOString())
+      .eq('week_start_date', currentWeek.startDateUTC)
       .single();
 
     if (slotsData) {
@@ -154,22 +132,19 @@ export default function GuestContact() {
       setTotalSlots(8);
     }
 
-    // Fetch visible application count for this week
+    // Fetch visible application count for this week (same query as GuestApplicationBoard)
     const { data: applicationsData } = await supabase
       .from('guest_applications')
       .select('id, is_hidden')
-      .gte('applied_at', weekStartUTC.toISOString())
-      .lte('applied_at', weekEndUTC.toISOString());
+      .gte('applied_at', currentWeek.startDateUTC)
+      .lte('applied_at', currentWeek.endDateUTC);
 
     if (applicationsData) {
       const visibleCount = applicationsData.filter(app => !app.is_hidden).length;
-      console.log('총 신청자:', applicationsData.length, '숨김 처리되지 않은 신청자:', visibleCount);
       setVisibleApplicationCount(visibleCount);
     } else {
       setVisibleApplicationCount(0);
     }
-    
-    console.log('totalSlots:', slotsData?.total_slots || 8, 'visibleApplicationCount:', applicationsData ? applicationsData.filter(app => !app.is_hidden).length : 0);
   };
 
   const handleBannerClick = async () => {
