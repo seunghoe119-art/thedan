@@ -20,6 +20,15 @@ interface AdditionalGuest {
   height: string;
 }
 
+interface GuestApplication {
+  id: string;
+  name: string;
+  age: string;
+  position: string;
+  height: string;
+  applied_at_kst: string | null;
+}
+
 export default function GuestContact() {
   const { toast } = useToast();
   
@@ -42,6 +51,7 @@ export default function GuestContact() {
   const [closedAt, setClosedAt] = useState<string>("");
   const [totalSlots, setTotalSlots] = useState<number>(8);
   const [visibleApplicationCount, setVisibleApplicationCount] = useState<number>(0);
+  const [guestApplications, setGuestApplications] = useState<GuestApplication[]>([]);
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -135,15 +145,18 @@ export default function GuestContact() {
     // Fetch visible application count for this week (same query as GuestApplicationBoard)
     const { data: applicationsData } = await supabase
       .from('guest_applications')
-      .select('id, is_hidden')
+      .select('id, name, age, position, height, applied_at_kst, is_hidden')
       .gte('applied_at', currentWeek.startDateUTC)
-      .lte('applied_at', currentWeek.endDateUTC);
+      .lte('applied_at', currentWeek.endDateUTC)
+      .order('applied_at_kst', { ascending: false, nullsFirst: false });
 
     if (applicationsData) {
-      const visibleCount = applicationsData.filter(app => !app.is_hidden).length;
-      setVisibleApplicationCount(visibleCount);
+      const visibleApps = applicationsData.filter(app => !app.is_hidden);
+      setVisibleApplicationCount(visibleApps.length);
+      setGuestApplications(visibleApps as GuestApplication[]);
     } else {
       setVisibleApplicationCount(0);
+      setGuestApplications([]);
     }
   };
 
@@ -433,6 +446,31 @@ export default function GuestContact() {
                   {Math.min(8, Math.max(0, totalSlots - visibleApplicationCount))}명 게스트 모집중.
                 </p>
               </div>
+
+              {guestApplications.length > 0 && (
+                <div className="mt-4 bg-gray-800 rounded-lg p-4">
+                  <h4 className="text-white font-semibold mb-3 text-sm">이번주 게스트 목록</h4>
+                  <div className="space-y-2 max-h-48 overflow-y-auto">
+                    {guestApplications.map((guest, index) => (
+                      <div 
+                        key={guest.id} 
+                        className={`flex items-center justify-between text-sm p-2 rounded ${
+                          guest.name.includes('(정규)') 
+                            ? 'bg-yellow-900/30 border border-yellow-600/50' 
+                            : 'bg-gray-700'
+                        }`}
+                      >
+                        <span className={`font-medium ${guest.name.includes('(정규)') ? 'text-yellow-400' : 'text-white'}`}>
+                          {guestApplications.length - index}. {guest.name}
+                        </span>
+                        <span className="text-gray-400 text-xs">
+                          {guest.age} · {guest.height} · {guest.position}
+                        </span>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              )}
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">

@@ -141,6 +141,59 @@ export default function MembershipStatusBoard() {
     }
   };
 
+  const handleAddAsGuest = async (app: DisplayApplication) => {
+    if (!supabase) {
+      toast({
+        title: "연결 오류",
+        description: "데이터베이스 연결이 없습니다.",
+        variant: "destructive",
+      });
+      return;
+    }
+    
+    try {
+      const nowUTC = new Date();
+      const nowKST = new Date(nowUTC.getTime() + (9 * 60 * 60 * 1000));
+      const kstString = nowKST.toISOString().slice(0, 19).replace('T', ' ');
+
+      const { error } = await supabase
+        .from('guest_applications')
+        .insert({
+          name: `${app.name}(정규)`,
+          age: app.age,
+          position: app.position,
+          height: app.height_range,
+          phone: app.phone,
+          applied_at: nowUTC.toISOString(),
+          applied_at_kst: kstString,
+          is_hidden: false
+        });
+
+      if (error) {
+        console.error('Error adding as guest:', error);
+        toast({
+          title: "게스트 추가 실패",
+          description: "다시 시도해주세요.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      toast({
+        title: "게스트로 추가됨",
+        description: `${app.name}님이 게스트 목록에 추가되었습니다.`,
+      });
+
+    } catch (err) {
+      console.error('Add as guest error:', err);
+      toast({
+        title: "오류 발생",
+        description: "게스트 추가 중 오류가 발생했습니다.",
+        variant: "destructive",
+      });
+    }
+  };
+
   const handleAttendance = async (app: DisplayApplication) => {
     if (!supabase) {
       toast({
@@ -459,12 +512,7 @@ export default function MembershipStatusBoard() {
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
                         {!isExpanded && (
                           <button
-                            onClick={() => {
-                              toast({
-                                title: "게스트로 추가",
-                                description: `${app.name}님을 게스트로 추가하는 기능은 곧 구현될 예정입니다.`,
-                              });
-                            }}
+                            onClick={() => handleAddAsGuest(app)}
                             className="px-2 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition-colors"
                           >
                             출석
