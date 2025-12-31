@@ -39,8 +39,8 @@ export default function GuestContact() {
   const [clickCount, setClickCount] = useState(0);
   const [isClosed, setIsClosed] = useState(false);
   const [closedAt, setClosedAt] = useState<string>("");
-  const [availableSlots, setAvailableSlots] = useState<number>(8);
-  const [currentApplicationCount, setCurrentApplicationCount] = useState<number>(0);
+  const [totalSlots, setTotalSlots] = useState<number>(8);
+  const [visibleApplicationCount, setVisibleApplicationCount] = useState<number>(0);
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -90,7 +90,7 @@ export default function GuestContact() {
   const fetchClosedStatus = async () => {
     if (!supabase) return;
     
-    // Fetch closed status
+    // Fetch closed status from guest_recruitment_status
     const { data: statusData, error: statusError } = await supabase
       .from('guest_recruitment_status')
       .select('is_closed, closed_at')
@@ -99,6 +99,7 @@ export default function GuestContact() {
 
     if (!statusError && statusData) {
       setIsClosed(statusData.is_closed);
+      
       if (statusData.closed_at) {
         const closedDate = new Date(statusData.closed_at);
         const kstDate = toZonedTime(closedDate, KST_TIMEZONE);
@@ -112,7 +113,7 @@ export default function GuestContact() {
       }
     }
 
-    // Fetch weekly slots for current week
+    // Calculate current week's date range (same logic as GuestApplicationBoard)
     const nowUTC = new Date();
     const nowKST = toZonedTime(nowUTC, KST_TIMEZONE);
     const dayOfWeek = getDay(nowKST);
@@ -136,36 +137,35 @@ export default function GuestContact() {
     
     const fridayKST = addDays(nowKST, daysUntilFriday);
     fridayKST.setHours(0, 0, 0, 0);
-    const fridayUTC = fromZonedTime(fridayKST, KST_TIMEZONE);
-    
+    const weekStartUTC = fromZonedTime(fridayKST, KST_TIMEZONE);
+    const weekEndUTC = new Date(weekStartUTC);
+    weekEndUTC.setDate(weekEndUTC.getDate() + 7);
+
+    // Fetch total slots from weekly_guest_slots (same as GuestApplicationBoard)
     const { data: slotsData } = await supabase
       .from('weekly_guest_slots')
       .select('total_slots')
-      .eq('week_start_date', fridayUTC.toISOString())
+      .eq('week_start_date', weekStartUTC.toISOString())
       .single();
 
     if (slotsData) {
-      setAvailableSlots(slotsData.total_slots);
+      setTotalSlots(slotsData.total_slots);
     } else {
-      setAvailableSlots(8);
+      setTotalSlots(8);
     }
 
-    // Fetch current application count for this week
+    // Fetch visible application count for this week
     const { data: applicationsData } = await supabase
       .from('guest_applications')
       .select('id, is_hidden')
-      .gte('applied_at', fridayUTC.toISOString())
-      .lte('applied_at', (() => {
-        const endOfWeek = new Date(fridayUTC);
-        endOfWeek.setDate(endOfWeek.getDate() + 7);
-        return endOfWeek.toISOString();
-      })());
+      .gte('applied_at', weekStartUTC.toISOString())
+      .lte('applied_at', weekEndUTC.toISOString());
 
     if (applicationsData) {
       const visibleCount = applicationsData.filter(app => !app.is_hidden).length;
-      setCurrentApplicationCount(visibleCount);
+      setVisibleApplicationCount(visibleCount);
     } else {
-      setCurrentApplicationCount(0);
+      setVisibleApplicationCount(0);
     }
   };
 
@@ -426,7 +426,7 @@ export default function GuestContact() {
                     게스트 참여가능인원
                   </p>
                   <p className="text-black font-black text-4xl">
-                    {Math.max(0, Math.min(8, availableSlots - currentApplicationCount))}명
+                    {Math.max(0, Math.min(8, totalSlots - visibleApplicationCount))}명
                   </p>
                 </div>
               </div>
