@@ -82,17 +82,17 @@ export default function GuestContact() {
   const fetchClosedStatus = async () => {
     if (!supabase) return;
     
-    const { data, error } = await supabase
+    // Fetch closed status
+    const { data: statusData, error: statusError } = await supabase
       .from('guest_recruitment_status')
-      .select('is_closed, closed_at, available_slots')
+      .select('is_closed, closed_at')
       .eq('id', '00000000-0000-0000-0000-000000000001')
       .single();
 
-    if (!error && data) {
-      setIsClosed(data.is_closed);
-      setAvailableSlots(data.available_slots ?? 8);
-      if (data.closed_at) {
-        const closedDate = new Date(data.closed_at);
+    if (!statusError && statusData) {
+      setIsClosed(statusData.is_closed);
+      if (statusData.closed_at) {
+        const closedDate = new Date(statusData.closed_at);
         const kstDate = toZonedTime(closedDate, KST_TIMEZONE);
         const month = kstDate.getMonth() + 1;
         const day = kstDate.getDate();
@@ -102,6 +102,46 @@ export default function GuestContact() {
         const displayHours = hours % 12 || 12;
         setClosedAt(`${month}.${day}. ${displayHours}:${minutes} ${ampm} 기준`);
       }
+    }
+
+    // Fetch weekly slots for current week
+    const nowUTC = new Date();
+    const nowKST = toZonedTime(nowUTC, KST_TIMEZONE);
+    const dayOfWeek = getDay(nowKST);
+    const hour = nowKST.getHours();
+    
+    let daysUntilFriday: number;
+    const isFriday = dayOfWeek === 5;
+    const isPastDeadline = hour >= 21;
+    
+    if (isFriday && !isPastDeadline) {
+      daysUntilFriday = 0;
+    } else if (isFriday && isPastDeadline) {
+      daysUntilFriday = 7;
+    } else if (dayOfWeek === 6) {
+      daysUntilFriday = 6;
+    } else if (dayOfWeek === 0) {
+      daysUntilFriday = 5;
+    } else {
+      daysUntilFriday = 5 - dayOfWeek;
+    }
+    
+    const fridayKST = addDays(nowKST, daysUntilFriday);
+    fridayKST.setHours(0, 0, 0, 0);
+    const fridayUTC = fromZonedTime(fridayKST, KST_TIMEZONE);
+    
+    const { data: slotsData } = await supabase
+      .from('weekly_guest_slots')
+      .select('total_slots')
+      .eq('week_start_date', fridayUTC.toISOString())
+      .single();
+
+    if (slotsData) {
+      // Cap at maximum 8
+      const slots = Math.min(slotsData.total_slots, 8);
+      setAvailableSlots(slots);
+    } else {
+      setAvailableSlots(8);
     }
   };
 
