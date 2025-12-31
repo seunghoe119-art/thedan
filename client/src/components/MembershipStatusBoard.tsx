@@ -153,8 +153,6 @@ export default function MembershipStatusBoard() {
     
     try {
       const nowUTC = new Date();
-      const nowKST = new Date(nowUTC.getTime() + (9 * 60 * 60 * 1000));
-      const kstString = nowKST.toISOString().slice(0, 19).replace('T', ' ');
 
       const { error } = await supabase
         .from('guest_applications')
@@ -165,7 +163,6 @@ export default function MembershipStatusBoard() {
           height: app.height_range,
           phone: app.phone,
           applied_at: nowUTC.toISOString(),
-          applied_at_kst: kstString,
           is_hidden: false
         });
 

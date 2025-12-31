@@ -1,0 +1,37 @@
+등록팀 현황에서, 게스트로 추가 버튼을 누르면, 게스트 추가된 페이지 상단에 목록이 뜨게 하려고 해. 그러려면, 출석 버튼을 눌렀을시 supabase에서 작업할게 있나? 있다면 SQL형식으로 알려주고. 게스트에서는, 이름, 나이, 키 , 포지션, 그리고 출석버튼을 눌렀을때 kst 시간으로 게스트 등록되어지나, 제일 최상단에 추가되어야해.
+이름옆에는(정규) 라고 하려고해.
+
+supabase에서 필요한 정보가 있나 싶어서 일단 참고용으로 다음 , 그룹과 게스트 supabase 값을 SQL로 돌렸을떄 값을 알려줄게.
+SELECT json_agg(t)
+FROM (
+SELECT
+column_name AS 컬럼명,
+data_type AS 데이터_타입,
+is_nullable AS NULL허용,
+column_default AS 기본값
+FROM
+information_schema.columns
+WHERE
+table_name = 'guest_applications'
+ORDER BY
+ordinal_position
+) t;
+
+[{"컬럼명":"id","데이터_타입":"uuid","null허용":"NO","기본값":"gen_random_uuid()"},{"컬럼명":"name","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"age","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"position","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"height","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"phone","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"applied_at","데이터_타입":"timestamp with time zone","null허용":"NO","기본값":"now()"},{"컬럼명":"applied_at_kst","데이터_타입":"timestamp without time zone","null허용":"YES","기본값":null},{"컬럼명":"is_hidden","데이터_타입":"boolean","null허용":"YES","기본값":"false"}]
+
+SELECT json_agg(t)
+FROM (
+SELECT
+column_name AS 컬럼명,
+data_type AS 데이터_타입,
+is_nullable AS NULL허용,
+column_default AS 기본값
+FROM
+information_schema.columns
+WHERE
+table_name = 'membership_applications'
+ORDER BY
+ordinal_position
+) t;
+
+[{"컬럼명":"id","데이터_타입":"uuid","null허용":"NO","기본값":"gen_random_uuid()"},{"컬럼명":"name","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"phone","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"age","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"position","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"uniform_size","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"height_range","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"plan","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"payment_status","데이터_타입":"text","null허용":"NO","기본값":"'pending'::text"},{"컬럼명":"target_month","데이터_타입":"date","null허용":"NO","기본값":null},{"컬럼명":"created_at","데이터_타입":"timestamp with time zone","null허용":"NO","기본값":"now()"},{"컬럼명":"created_at_kst","데이터_타입":"timestamp without time zone","null허용":"YES","기본값":null},{"컬럼명":"used_count","데이터_타입":"integer","null허용":"NO","기본값":"0"},{"컬럼명":"last_game_date","데이터_타입":"date","null허용":"YES","기본값":null},{"컬럼명":"is_over_limit","데이터_타입":"boolean","null허용":"NO","기본값":"false"}]
