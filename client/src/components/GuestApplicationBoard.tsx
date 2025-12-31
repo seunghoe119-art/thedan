@@ -435,7 +435,7 @@ export default function GuestApplicationBoard() {
 
         {!isLoading && applications.length > 0 && (
           <div className="mt-4 text-center text-sm text-gray-500">
-            총 {applications.length}명 신청
+            총 {applications.filter(app => !hiddenRows.has(app.id)).length}명 신청
           </div>
         )}
       </div>
