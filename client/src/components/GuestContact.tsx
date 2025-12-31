@@ -412,23 +412,13 @@ export default function GuestContact() {
               게스트 신청서
             </h3>
             <div className="mb-6">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="bg-gray-800 border border-blue-500 rounded-lg p-4">
-                  <p className="text-white font-bold text-lg">
-                    {gameDateString}, (금)
-                  </p>
-                  <p className="text-white font-bold text-lg">
-                    21:00 ~ 23:30
-                  </p>
-                </div>
-                <div className="bg-yellow-400 rounded-lg p-4 flex flex-col items-center justify-center">
-                  <p className="text-black font-bold text-sm mb-1">
-                    게스트 참여가능인원
-                  </p>
-                  <p className="text-black font-black text-4xl">
-                    {Math.max(0, totalSlots - visibleApplicationCount)}명
-                  </p>
-                </div>
+              <div className="bg-gray-800 border border-blue-500 rounded-lg p-4">
+                <p className="text-white font-bold text-lg">
+                  {gameDateString}, (금)
+                </p>
+                <p className="text-white font-bold text-lg">
+                  21:00 ~ 23:30
+                </p>
               </div>
               {isClosed ? (
                 <div className="mt-3 bg-red-600 rounded-lg p-3 animate-in slide-in-from-top duration-300">
