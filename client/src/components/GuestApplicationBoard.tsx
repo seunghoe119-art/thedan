@@ -512,7 +512,7 @@ export default function GuestApplicationBoard() {
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
               <p className="text-lg font-semibold text-blue-900">
-                {Math.max(0, Math.min(8, totalSlots) - applications.filter(app => !hiddenRows.has(app.id)).length)}명 게스트 모집중.
+                {Math.max(0, totalSlots - applications.filter(app => !hiddenRows.has(app.id)).length)}명 게스트 모집중.
               </p>
             </div>
           </div>

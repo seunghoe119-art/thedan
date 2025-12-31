@@ -137,9 +137,7 @@ export default function GuestContact() {
       .single();
 
     if (slotsData) {
-      // Cap at maximum 8
-      const slots = Math.min(slotsData.total_slots, 8);
-      setAvailableSlots(slots);
+      setAvailableSlots(slotsData.total_slots);
     } else {
       setAvailableSlots(8);
     }
