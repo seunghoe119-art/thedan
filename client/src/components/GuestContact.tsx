@@ -40,6 +40,7 @@ export default function GuestContact() {
   const [isClosed, setIsClosed] = useState(false);
   const [closedAt, setClosedAt] = useState<string>("");
   const [availableSlots, setAvailableSlots] = useState<number>(8);
+  const [currentApplicationCount, setCurrentApplicationCount] = useState<number>(0);
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -77,6 +78,13 @@ export default function GuestContact() {
   useEffect(() => {
     setGameDateString(getCurrentWeekFridayDate());
     fetchClosedStatus();
+    
+    // Poll for updates every 5 seconds
+    const interval = setInterval(() => {
+      fetchClosedStatus();
+    }, 5000);
+    
+    return () => clearInterval(interval);
   }, []);
 
   const fetchClosedStatus = async () => {
@@ -140,6 +148,24 @@ export default function GuestContact() {
       setAvailableSlots(slotsData.total_slots);
     } else {
       setAvailableSlots(8);
+    }
+
+    // Fetch current application count for this week
+    const { data: applicationsData } = await supabase
+      .from('guest_applications')
+      .select('id, is_hidden')
+      .gte('applied_at', fridayUTC.toISOString())
+      .lte('applied_at', (() => {
+        const endOfWeek = new Date(fridayUTC);
+        endOfWeek.setDate(endOfWeek.getDate() + 7);
+        return endOfWeek.toISOString();
+      })());
+
+    if (applicationsData) {
+      const visibleCount = applicationsData.filter(app => !app.is_hidden).length;
+      setCurrentApplicationCount(visibleCount);
+    } else {
+      setCurrentApplicationCount(0);
     }
   };
 
@@ -400,7 +426,7 @@ export default function GuestContact() {
                     게스트 참여가능인원
                   </p>
                   <p className="text-black font-black text-4xl">
-                    {availableSlots}명
+                    {Math.min(8, Math.max(0, availableSlots - currentApplicationCount))}명
                   </p>
                 </div>
               </div>
