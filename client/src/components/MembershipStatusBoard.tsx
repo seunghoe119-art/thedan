@@ -223,6 +223,15 @@ export default function MembershipStatusBoard() {
           <p className="text-gray-600">
             {selectedMonth?.label || ''} 등록 멤버 명단입니다. (Supabase 연동)
           </p>
+          <div className="mt-4">
+            <a
+              href="/guest-status"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md"
+            >
+              금주 게스트 명단 보기
+              <ChevronRight className="h-5 w-5" />
+            </a>
+          </div>
         </div>
 
         <div className="mb-6 flex items-center justify-center gap-4">

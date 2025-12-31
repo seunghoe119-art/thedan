@@ -373,6 +373,15 @@ export default function GuestApplicationBoard() {
           <h1 className="text-4xl md:text-5xl font-black text-gray-900 mb-4">
             금주 신청 현황
           </h1>
+          <div className="mt-4">
+            <a
+              href="/team-status"
+              className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md"
+            >
+              클럽회원명단 보기
+              <ChevronRight className="h-5 w-5" />
+            </a>
+          </div>
         </div>
 
         <div className="mb-6 flex items-center justify-center gap-4">
