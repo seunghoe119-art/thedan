@@ -1,0 +1,63 @@
+게스트 모집 현황에 있는 그룹 시스템을, 클럽현황에서도 만드려고해.
+똑같이 그룹버튼을 누르면, 색깔 변경후, 게스트 이름을 선택후 다시 그룹을 누르면 , 지정된 그룹색상으로 저장되는거지, 새로고침해도. 그러려면, supabase에 넣을 SQL을 먼저 너가 알려줘야겠네 . 어떻게 값을 입력할까?
+
+참고로 먼저 supabase에 입력한 값을 알려줄게.
+
+SQL에 다음과 같이 쳐서
+SELECT json_agg(t)
+FROM (
+SELECT
+column_name AS 컬럼명,
+data_type AS 데이터_타입,
+is_nullable AS NULL허용,
+column_default AS 기본값
+FROM
+information_schema.columns
+WHERE
+table_name = 'membership_applications'
+ORDER BY
+ordinal_position
+) t;
+다음과 같은 값을 얻었어.
+[{"컬럼명":"id","데이터_타입":"uuid","null허용":"NO","기본값":"gen_random_uuid()"},{"컬럼명":"name","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"phone","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"age","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"position","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"uniform_size","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"height_range","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"plan","데이터_타입":"text","null허용":"NO","기본값":null},{"컬럼명":"payment_status","데이터_타입":"text","null허용":"NO","기본값":"'pending'::text"},{"컬럼명":"target_month","데이터_타입":"date","null허용":"NO","기본값":null},{"컬럼명":"created_at","데이터_타입":"timestamp with time zone","null허용":"NO","기본값":"now()"},{"컬럼명":"created_at_kst","데이터_타입":"timestamp without time zone","null허용":"YES","기본값":null},{"컬럼명":"used_count","데이터_타입":"integer","null허용":"NO","기본값":"0"},{"컬럼명":"last_game_date","데이터_타입":"date","null허용":"YES","기본값":null},{"컬럼명":"is_over_limit","데이터_타입":"boolean","null허용":"NO","기본값":"false"}]
+
+12
+
+sj2403241
+Assistant
+2 minutes ago
+좋습니다! 클럽회원명단에서도 게스트 신청 현황과 동일한 그룹 시스템을 구현하려면, membership_applications 테이블에 그룹 색상 정보를 저장할 컬럼을 추가해야 합니다.
+
+Supabase SQL 추가 작업
+현재 membership_applications 테이블에 다음 컬럼을 추가해야 합니다:
+
+ALTER TABLE membership_applications 
+ADD COLUMN group_color text;
+이 컬럼은:
+
+용도: 멤버의 그룹 색상 클래스를 저장 (예: 'text-red-600 font-bold')
+NULL 허용: 기본적으로 NULL (그룹이 지정되지 않은 경우)
+데이터 예시:
+'text-red-600 font-bold'
+'text-yellow-600 font-bold'
+'text-green-600 font-bold'
+'text-blue-600 font-bold'
+'text-pink-600 font-bold'
+null (그룹 미지정)
+이제 코드를 수정하여 그룹 기능을 구현하겠습니다:
+
+client/src/components/MembershipStatusBoard.tsx
++129
+-41
+사용 방법
+Supabase에서 SQL 실행:
+
+ALTER TABLE membership_applications 
+ADD COLUMN group_color text;
+그룹 설정 방법:
+
+"그룹" 헤더를 클릭하면 색상이 빨강 → 노랑 → 초록 → 파랑 → 분홍 → 검정(기본) 순으로 변경됩니다
+원하는 멤버들의 체크박스를 선택합니다
+"그룹" 헤더를 다시 클릭하면 선택된 멤버들에게 현재 표시된 색상이 저장됩니다
+새로고침해도 저장된 색상이 유지됩니다
+게스트 신청 현황과 동일한 방식으로 동작합니다!
