@@ -18,6 +18,7 @@ interface MembershipApplication {
   plan: string;
   target_month: string;
   used_count: number;
+  group_color?: string;
 }
 
 interface DisplayApplication extends MembershipApplication {
@@ -68,8 +69,76 @@ export default function MembershipStatusBoard() {
   });
   const [isExpanded, setIsExpanded] = useState(false);
   const { toast } = useToast();
+  const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
+  const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
 
   const selectedMonth = monthOptions[selectedMonthIndex];
+
+  const toggleRowSelection = (id: string) => {
+    setSelectedRows((prev) => {
+      const newSet = new Set(prev);
+      if (newSet.has(id)) {
+        newSet.delete(id);
+      } else {
+        newSet.add(id);
+      }
+      return newSet;
+    });
+  };
+
+  const cycleGroupColor = async () => {
+    const colorCycle = [
+      'text-red-600 font-bold',
+      'text-yellow-600 font-bold',
+      'text-green-600 font-bold',
+      'text-blue-600 font-bold',
+      'text-pink-600 font-bold',
+      '', // 검정(기본)
+    ];
+
+    const currentIndex = colorCycle.indexOf(groupHeaderColor);
+    const nextIndex = (currentIndex + 1) % colorCycle.length;
+    const nextColor = colorCycle[nextIndex];
+    setGroupHeaderColor(nextColor);
+
+    // 선택된 행이 있으면 그룹 색상 저장
+    if (selectedRows.size > 0 && supabase) {
+      try {
+        const updates = Array.from(selectedRows).map(id =>
+          supabase
+            .from('membership_applications')
+            .update({ group_color: nextColor || null })
+            .eq('id', id)
+        );
+
+        await Promise.all(updates);
+
+        // 데이터 다시 불러오기
+        setApplications(prev =>
+          prev.map(app =>
+            selectedRows.has(app.id)
+              ? { ...app, group_color: nextColor || undefined }
+              : app
+          )
+        );
+
+        toast({
+          title: "그룹 색상 저장 완료",
+          description: `${selectedRows.size}명의 멤버에게 그룹 색상이 적용되었습니다.`,
+        });
+
+        // 선택 해제
+        setSelectedRows(new Set());
+      } catch (err) {
+        console.error('Error updating group colors:', err);
+        toast({
+          title: "그룹 색상 저장 실패",
+          description: "다시 시도해주세요.",
+          variant: "destructive",
+        });
+      }
+    }
+  };
 
   const handleAttendance = async (app: DisplayApplication) => {
     if (!supabase) {
@@ -147,7 +216,7 @@ export default function MembershipStatusBoard() {
 
         const { data: monthData, error: monthError } = await supabase
           .from('membership_applications')
-          .select('*')
+          .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date')
           .eq('target_month', selectedMonth.value)
           .in('plan', ['regular_2', 'regular_4'])
           .order('name', { ascending: true });
@@ -281,6 +350,12 @@ export default function MembershipStatusBoard() {
           <Table>
             <TableHeader>
               <TableRow className="bg-gray-50">
+                <TableHead
+                  className={`font-bold ${groupHeaderColor || 'text-gray-900'} text-center w-14 px-0 py-3 whitespace-nowrap cursor-pointer hover:bg-gray-100`}
+                  onClick={cycleGroupColor}
+                >
+                  그룹
+                </TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-1">이름</TableHead>
                 {!isExpanded && (
                   <>
@@ -316,6 +391,7 @@ export default function MembershipStatusBoard() {
               {isLoading ? (
                 Array.from({ length: 5 }).map((_, index) => (
                   <TableRow key={index}>
+                    <TableCell className="px-0 py-3"><Skeleton className="h-4 w-8 mx-auto" /></TableCell>
                     <TableCell className="px-1 py-2"><Skeleton className="h-4 w-16 mx-auto" /></TableCell>
                     {!isExpanded && (
                       <>
@@ -338,48 +414,60 @@ export default function MembershipStatusBoard() {
                 ))
               ) : applications.length === 0 ? (
                 <TableRow>
-                  <TableCell colSpan={isExpanded ? 6 : 6} className="text-center text-gray-500 py-8">
+                  <TableCell colSpan={isExpanded ? 7 : 7} className="text-center text-gray-500 py-8">
                     해당 월에 등록된 멤버가 없습니다.
                   </TableCell>
                 </TableRow>
               ) : (
-                applications.map((app) => (
-                  <TableRow key={app.id} data-testid={`row-member-${app.id}`}>
-                    <TableCell className="text-center font-medium px-1 py-2 whitespace-nowrap">{app.name}</TableCell>
+                applications.map((app) => {
+                  const isSelected = selectedRows.has(app.id);
+                  const colorClass = app.group_color || '';
+                  return (
+                    <TableRow key={app.id} data-testid={`row-member-${app.id}`}>
+                      <TableCell className="text-center px-0 py-3 whitespace-nowrap">
+                        <div className="flex justify-center">
+                          <Checkbox
+                            checked={isSelected}
+                            onCheckedChange={() => toggleRowSelection(app.id)}
+                          />
+                        </div>
+                      </TableCell>
+                      <TableCell className={`text-center font-medium px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.name}</TableCell>
                     {!isExpanded && (
-                      <>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.age}</TableCell>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatHeightForDisplay(app.height_range)}</TableCell>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{formatPositionForDisplay(app.position)}</TableCell>
-                        <TableCell className="text-center font-semibold text-blue-600 px-1 py-2 whitespace-nowrap">{app.remainingCount}회</TableCell>
-                      </>
-                    )}
-                    {isExpanded && (
-                      <>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.uniform_size}</TableCell>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">{app.phone.substring(0, 2)}</TableCell>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                          <span className="font-semibold text-blue-600">{app.planDisplay}</span>
-                        </TableCell>
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                          <span className="font-semibold text-purple-600">{app.used_count || 0}회</span>
-                        </TableCell>
-                      </>
-                    )}
-                    <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                      {isExpanded ? (
-                        <span className="font-semibold text-green-600">{app.cumulativeCount}회차</span>
-                      ) : (
-                        <button
-                          onClick={() => handleAttendance(app)}
-                          className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
-                        >
-                          출석
-                        </button>
+                        <>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.age}</TableCell>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatHeightForDisplay(app.height_range)}</TableCell>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
+                          <TableCell className={`text-center font-semibold px-1 py-2 whitespace-nowrap ${colorClass || 'text-blue-600'}`}>{app.remainingCount}회</TableCell>
+                        </>
                       )}
-                    </TableCell>
-                  </TableRow>
-                ))
+                      {isExpanded && (
+                        <>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.uniform_size}</TableCell>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.phone.substring(0, 2)}</TableCell>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>
+                            <span className={`font-semibold ${colorClass || 'text-blue-600'}`}>{app.planDisplay}</span>
+                          </TableCell>
+                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>
+                            <span className={`font-semibold ${colorClass || 'text-purple-600'}`}>{app.used_count || 0}회</span>
+                          </TableCell>
+                        </>
+                      )}
+                      <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                        {isExpanded ? (
+                          <span className={`font-semibold ${colorClass || 'text-green-600'}`}>{app.cumulativeCount}회차</span>
+                        ) : (
+                          <button
+                            onClick={() => handleAttendance(app)}
+                            className="px-2 py-1 bg-green-600 text-white text-xs rounded hover:bg-green-700 transition-colors"
+                          >
+                            출석
+                          </button>
+                        )}
+                      </TableCell>
+                    </TableRow>
+                  );
+                })
               )}
             </TableBody>
           </Table>
