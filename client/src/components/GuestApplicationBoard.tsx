@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X } from 'lucide-react';
 import { toZonedTime } from 'date-fns-tz';
 import { addDays, getDay } from 'date-fns';
 
@@ -190,6 +190,21 @@ export default function GuestApplicationBoard() {
       }
       return newSet;
     });
+  };
+
+  const deleteApplication = async (id: string) => {
+    if (!supabase) return;
+    
+    const { error } = await supabase
+      .from('guest_applications')
+      .delete()
+      .eq('id', id);
+
+    if (!error) {
+      setApplications(prev => prev.filter(app => app.id !== id));
+    } else {
+      console.error('Error deleting application:', error);
+    }
   };
 
   const updateWeeklySlots = async () => {
@@ -440,7 +455,13 @@ export default function GuestApplicationBoard() {
                       key={app.id}
                       className="flex items-center justify-between bg-yellow-100 rounded p-3 border border-yellow-300"
                     >
-                      <div className="flex-1">
+                      <div className="flex-1 flex items-center gap-2">
+                        <button
+                          onClick={() => deleteApplication(app.id)}
+                          className="text-yellow-700 hover:text-red-600 transition-colors p-1"
+                        >
+                          <X className="h-4 w-4" />
+                        </button>
                         <span className="font-semibold text-yellow-900 text-sm">
                           {applications.filter(a => a.name.includes('(정규)')).length - index}. {app.name}
                         </span>
