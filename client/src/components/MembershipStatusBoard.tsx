@@ -112,15 +112,28 @@ export default function MembershipStatusBoard() {
   const handleTimeEdit = async (id: string, newTime: string) => {
     if (!supabase) return;
     try {
+      // "오후", "오전"이 포함된 한국어 로케일 형식 등을 처리하기 위해 정규식으로 변환 시도
+      let normalizedTime = newTime.replace(/오전/g, 'AM').replace(/오후/g, 'PM');
+      
+      const date = new Date(normalizedTime);
+      if (isNaN(date.getTime())) {
+        toast({
+          title: "형식 오류",
+          description: "올바른 날짜 형식이 아닙니다. (예: 2026-01-30 17:43:27)",
+          variant: "destructive",
+        });
+        return;
+      }
+
       const { error } = await supabase
         .from('membership_applications')
-        .update({ created_at: new Date(newTime).toISOString() })
+        .update({ created_at: date.toISOString() })
         .eq('id', id);
 
       if (error) throw error;
 
       setApplications(prev =>
-        prev.map(app => (app.id === id ? { ...app, created_at: new Date(newTime).toISOString() } : app))
+        prev.map(app => (app.id === id ? { ...app, created_at: date.toISOString() } : app))
       );
       setEditingId(null);
       setEditType(null);
@@ -132,7 +145,7 @@ export default function MembershipStatusBoard() {
       console.error('Error updating time:', err);
       toast({
         title: "등록시간 수정 실패",
-        description: "다시 시도해주세요.",
+        description: "날짜 형식을 확인해주세요. (예: 2026-01-30 17:43:27)",
         variant: "destructive",
       });
     }
@@ -607,7 +620,15 @@ export default function MembershipStatusBoard() {
                               if (!isTimeEditActive) return;
                               setEditingId(app.id);
                               setEditType('time');
-                              setEditValue(new Date(app.created_at).toLocaleString());
+                              // ISO 형식을 사용자가 수정하기 편한 YYYY-MM-DD HH:mm:ss 형식으로 변환
+                              const date = new Date(app.created_at);
+                              const year = date.getFullYear();
+                              const month = String(date.getMonth() + 1).padStart(2, '0');
+                              const day = String(date.getDate()).padStart(2, '0');
+                              const hours = String(date.getHours()).padStart(2, '0');
+                              const minutes = String(date.getMinutes()).padStart(2, '0');
+                              const seconds = String(date.getSeconds()).padStart(2, '0');
+                              setEditValue(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
                             }}
                           >
                             {editingId === app.id && editType === 'time' ? (

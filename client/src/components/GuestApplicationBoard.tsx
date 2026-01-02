@@ -214,15 +214,22 @@ export default function GuestApplicationBoard() {
   const handleTimeUpdate = async (id: string, newTime: string) => {
     if (!supabase) return;
     try {
+      let normalizedTime = newTime.replace(/오전/g, 'AM').replace(/오후/g, 'PM');
+      const date = new Date(normalizedTime);
+      if (isNaN(date.getTime())) {
+        console.error('Invalid date format');
+        return;
+      }
+
       const { error } = await supabase
         .from('guest_applications')
-        .update({ applied_at: new Date(newTime).toISOString() })
+        .update({ applied_at: date.toISOString() })
         .eq('id', id);
 
       if (error) throw error;
 
       setApplications(prev =>
-        prev.map(app => (app.id === id ? { ...app, applied_at: new Date(newTime).toISOString() } : app))
+        prev.map(app => (app.id === id ? { ...app, applied_at: date.toISOString() } : app))
       );
       setEditingId(null);
       setEditType(null);
@@ -591,7 +598,15 @@ export default function GuestApplicationBoard() {
                           if (!isTimeEditActive) return;
                           setEditingId(app.id);
                           setEditType('time');
-                          setEditValue(new Date(app.applied_at_kst || app.applied_at).toLocaleString());
+                          // ISO 형식을 사용자가 수정하기 편한 YYYY-MM-DD HH:mm:ss 형식으로 변환
+                          const date = new Date(app.applied_at_kst || app.applied_at);
+                          const year = date.getFullYear();
+                          const month = String(date.getMonth() + 1).padStart(2, '0');
+                          const day = String(date.getDate()).padStart(2, '0');
+                          const hours = String(date.getHours()).padStart(2, '0');
+                          const minutes = String(date.getMinutes()).padStart(2, '0');
+                          const seconds = String(date.getSeconds()).padStart(2, '0');
+                          setEditValue(`${year}-${month}-${day} ${hours}:${minutes}:${seconds}`);
                         }}
                       >
                         {editingId === app.id && editType === 'time' ? (
