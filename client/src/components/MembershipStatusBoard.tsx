@@ -424,7 +424,7 @@ export default function MembershipStatusBoard() {
                     <TableHead className="font-bold text-gray-900 text-center px-1">출석횟수</TableHead>
                   </>
                 )}
-                <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 추가</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 참가</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
                     <span>{isExpanded ? '누적' : '출석'}</span>
@@ -512,7 +512,7 @@ export default function MembershipStatusBoard() {
                             onClick={() => handleAddAsGuest(app)}
                             className="px-2 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition-colors"
                           >
-                            출석
+                            참가
                           </button>
                         )}
                         {isExpanded && (
