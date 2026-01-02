@@ -72,8 +72,38 @@ export default function MembershipStatusBoard() {
   const { toast } = useToast();
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editName, setEditName] = useState<string>('');
 
   const selectedMonth = monthOptions[selectedMonthIndex];
+
+  const handleNameEdit = async (id: string, newName: string) => {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase
+        .from('membership_applications')
+        .update({ name: newName })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev =>
+        prev.map(app => (app.id === id ? { ...app, name: newName } : app))
+      );
+      setEditingId(null);
+      toast({
+        title: "이름 수정 완료",
+        description: "성공적으로 변경되었습니다.",
+      });
+    } catch (err) {
+      console.error('Error updating name:', err);
+      toast({
+        title: "이름 수정 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const toggleRowSelection = (id: string) => {
     setSelectedRows((prev) => {
@@ -485,7 +515,41 @@ export default function MembershipStatusBoard() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className={`text-center font-medium px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.name}</TableCell>
+                      <TableCell className={`text-center font-medium px-1 py-2 whitespace-nowrap ${colorClass}`}>
+                        {editingId === app.id ? (
+                          <input
+                            type="text"
+                            value={editName}
+                            onChange={(e) => setEditName(e.target.value)}
+                            onBlur={() => {
+                              if (editName !== app.name) {
+                                handleNameEdit(app.id, editName);
+                              } else {
+                                setEditingId(null);
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') {
+                                handleNameEdit(app.id, editName);
+                              } else if (e.key === 'Escape') {
+                                setEditingId(null);
+                              }
+                            }}
+                            autoFocus
+                            className="w-full px-1 py-0.5 border rounded text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        ) : (
+                          <div 
+                            className="cursor-pointer hover:bg-gray-100 rounded px-1"
+                            onClick={() => {
+                              setEditingId(app.id);
+                              setEditName(app.name);
+                            }}
+                          >
+                            {app.name}
+                          </div>
+                        )}
+                      </TableCell>
                     {!isExpanded && (
                         <>
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.age}</TableCell>
