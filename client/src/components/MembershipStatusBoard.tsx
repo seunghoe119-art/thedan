@@ -76,6 +76,7 @@ export default function MembershipStatusBoard() {
   const [editType, setEditType] = useState<'name' | 'time' | null>(null);
   const [editValue, setEditValue] = useState<string>('');
   const [editName, setEditName] = useState<string>('');
+  const [isTimeEditActive, setIsTimeEditActive] = useState(false);
 
   const selectedMonth = monthOptions[selectedMonthIndex];
 
@@ -332,7 +333,7 @@ export default function MembershipStatusBoard() {
           .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date')
           .eq('target_month', selectedMonth.value)
           .in('plan', ['regular_2', 'regular_4'])
-          .order('name', { ascending: true });
+          .order('created_at', { ascending: true });
 
         if (monthError) {
           console.error('Error fetching membership applications:', monthError);
@@ -460,7 +461,14 @@ export default function MembershipStatusBoard() {
         </div>
 
         <div className="flex justify-center mb-6">
-          <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-colors">
+          <button 
+            onClick={() => setIsTimeEditActive(!isTimeEditActive)}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              isTimeEditActive 
+                ? 'bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
             등록시간 변경
           </button>
         </div>
@@ -594,8 +602,9 @@ export default function MembershipStatusBoard() {
                     {!isExpanded && (
                         <>
                           <TableCell 
-                            className={`text-center px-1 py-2 whitespace-nowrap cursor-pointer hover:bg-gray-100 rounded ${colorClass}`}
+                            className={`text-center px-1 py-2 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}
                             onClick={() => {
+                              if (!isTimeEditActive) return;
                               setEditingId(app.id);
                               setEditType('time');
                               setEditValue(new Date(app.created_at).toLocaleString());

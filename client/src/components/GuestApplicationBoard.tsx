@@ -97,6 +97,7 @@ export default function GuestApplicationBoard() {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editType, setEditType] = useState<'name' | 'time' | null>(null);
   const [editValue, setEditValue] = useState<string>('');
+  const [isTimeEditActive, setIsTimeEditActive] = useState(false);
   const [manualColors, setManualColors] = useState<Map<string, string>>(new Map());
   const [totalSlots, setTotalSlots] = useState<number>(18);
   const [inputSlots, setInputSlots] = useState<string>('18');
@@ -478,7 +479,14 @@ export default function GuestApplicationBoard() {
         </div>
 
         <div className="flex justify-center mb-6">
-          <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-colors">
+          <button 
+            onClick={() => setIsTimeEditActive(!isTimeEditActive)}
+            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+              isTimeEditActive 
+                ? 'bg-blue-600 text-white shadow-md' 
+                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+            }`}
+          >
             등록시간 변경
           </button>
         </div>
@@ -578,8 +586,9 @@ export default function GuestApplicationBoard() {
                       </TableCell>
                       <TableCell className={`text-center font-medium px-0 py-3 whitespace-nowrap ${colorClass}`}>{app.name}</TableCell>
                       <TableCell 
-                        className={`text-center px-0 py-3 whitespace-nowrap cursor-pointer hover:bg-gray-100 rounded ${colorClass}`}
+                        className={`text-center px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}
                         onClick={() => {
+                          if (!isTimeEditActive) return;
                           setEditingId(app.id);
                           setEditType('time');
                           setEditValue(new Date(app.applied_at_kst || app.applied_at).toLocaleString());
