@@ -482,7 +482,7 @@ export default function MembershipStatusBoard() {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            등록시간 변경
+            이름/등록시간 변경
           </button>
         </div>
 
@@ -574,7 +574,7 @@ export default function MembershipStatusBoard() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className={`text-center font-medium px-1 py-2 whitespace-nowrap ${colorClass}`}>
+                      <TableCell className={`text-center font-medium px-1 py-2 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}>
                         {editingId === app.id && editType === 'name' ? (
                           <input
                             type="text"
@@ -601,8 +601,9 @@ export default function MembershipStatusBoard() {
                           />
                         ) : (
                           <div 
-                            className="cursor-pointer hover:bg-gray-100 rounded px-1"
+                            className={`${isTimeEditActive ? 'cursor-pointer' : ''} rounded px-1`}
                             onClick={() => {
+                              if (!isTimeEditActive) return;
                               setEditingId(app.id);
                               setEditType('name');
                               setEditValue(app.name);

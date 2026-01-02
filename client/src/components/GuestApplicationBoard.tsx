@@ -211,6 +211,26 @@ export default function GuestApplicationBoard() {
     }
   };
 
+  const handleNameUpdate = async (id: string, newName: string) => {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase
+        .from('guest_applications')
+        .update({ name: newName })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev =>
+        prev.map(app => (app.id === id ? { ...app, name: newName } : app))
+      );
+      setEditingId(null);
+      setEditType(null);
+    } catch (err) {
+      console.error('Error updating name:', err);
+    }
+  };
+
   const handleTimeUpdate = async (id: string, newTime: string) => {
     if (!supabase) return;
     try {
@@ -494,7 +514,7 @@ export default function GuestApplicationBoard() {
                 : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
             }`}
           >
-            등록시간 변경
+            이름/등록시간 변경
           </button>
         </div>
 
@@ -591,7 +611,42 @@ export default function GuestApplicationBoard() {
                           />
                         </div>
                       </TableCell>
-                      <TableCell className={`text-center font-medium px-0 py-3 whitespace-nowrap ${colorClass}`}>{app.name}</TableCell>
+                      <TableCell 
+                        className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}
+                        onClick={() => {
+                          if (!isTimeEditActive) return;
+                          setEditingId(app.id);
+                          setEditType('name');
+                          setEditValue(app.name);
+                        }}
+                      >
+                        {editingId === app.id && editType === 'name' ? (
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={() => {
+                              if (editValue !== app.name) {
+                                handleNameUpdate(app.id, editValue);
+                              } else {
+                                setEditingId(null);
+                                setEditType(null);
+                              }
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter') handleNameUpdate(app.id, editValue);
+                              if (e.key === 'Escape') {
+                                setEditingId(null);
+                                setEditType(null);
+                              }
+                            }}
+                            autoFocus
+                            className="w-full px-1 py-0.5 border rounded text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        ) : (
+                          app.name
+                        )}
+                      </TableCell>
                       <TableCell 
                         className={`text-center px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}
                         onClick={() => {
