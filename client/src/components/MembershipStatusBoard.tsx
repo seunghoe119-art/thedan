@@ -73,6 +73,8 @@ export default function MembershipStatusBoard() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
   const [editingId, setEditingId] = useState<string | null>(null);
+  const [editType, setEditType] = useState<'name' | 'time' | null>(null);
+  const [editValue, setEditValue] = useState<string>('');
   const [editName, setEditName] = useState<string>('');
 
   const selectedMonth = monthOptions[selectedMonthIndex];
@@ -91,6 +93,7 @@ export default function MembershipStatusBoard() {
         prev.map(app => (app.id === id ? { ...app, name: newName } : app))
       );
       setEditingId(null);
+      setEditType(null);
       toast({
         title: "이름 수정 완료",
         description: "성공적으로 변경되었습니다.",
@@ -99,6 +102,35 @@ export default function MembershipStatusBoard() {
       console.error('Error updating name:', err);
       toast({
         title: "이름 수정 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleTimeEdit = async (id: string, newTime: string) => {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase
+        .from('membership_applications')
+        .update({ created_at: new Date(newTime).toISOString() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev =>
+        prev.map(app => (app.id === id ? { ...app, created_at: new Date(newTime).toISOString() } : app))
+      );
+      setEditingId(null);
+      setEditType(null);
+      toast({
+        title: "등록시간 수정 완료",
+        description: "성공적으로 변경되었습니다.",
+      });
+    } catch (err) {
+      console.error('Error updating time:', err);
+      toast({
+        title: "등록시간 수정 실패",
         description: "다시 시도해주세요.",
         variant: "destructive",
       });
@@ -427,6 +459,12 @@ export default function MembershipStatusBoard() {
           </Button>
         </div>
 
+        <div className="flex justify-center mb-6">
+          <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-colors">
+            등록시간 변경
+          </button>
+        </div>
+
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <Table>
             <TableHeader>
@@ -516,23 +554,25 @@ export default function MembershipStatusBoard() {
                         </div>
                       </TableCell>
                       <TableCell className={`text-center font-medium px-1 py-2 whitespace-nowrap ${colorClass}`}>
-                        {editingId === app.id ? (
+                        {editingId === app.id && editType === 'name' ? (
                           <input
                             type="text"
-                            value={editName}
-                            onChange={(e) => setEditName(e.target.value)}
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
                             onBlur={() => {
-                              if (editName !== app.name) {
-                                handleNameEdit(app.id, editName);
+                              if (editValue !== app.name) {
+                                handleNameEdit(app.id, editValue);
                               } else {
                                 setEditingId(null);
+                                setEditType(null);
                               }
                             }}
                             onKeyDown={(e) => {
                               if (e.key === 'Enter') {
-                                handleNameEdit(app.id, editName);
+                                handleNameEdit(app.id, editValue);
                               } else if (e.key === 'Escape') {
                                 setEditingId(null);
+                                setEditType(null);
                               }
                             }}
                             autoFocus
@@ -543,7 +583,8 @@ export default function MembershipStatusBoard() {
                             className="cursor-pointer hover:bg-gray-100 rounded px-1"
                             onClick={() => {
                               setEditingId(app.id);
-                              setEditName(app.name);
+                              setEditType('name');
+                              setEditValue(app.name);
                             }}
                           >
                             {app.name}
@@ -552,7 +593,36 @@ export default function MembershipStatusBoard() {
                       </TableCell>
                     {!isExpanded && (
                         <>
-                          <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{app.age}</TableCell>
+                          <TableCell 
+                            className={`text-center px-1 py-2 whitespace-nowrap cursor-pointer hover:bg-gray-100 rounded ${colorClass}`}
+                            onClick={() => {
+                              setEditingId(app.id);
+                              setEditType('time');
+                              setEditValue(new Date(app.created_at).toLocaleString());
+                            }}
+                          >
+                            {editingId === app.id && editType === 'time' ? (
+                              <input
+                                type="text"
+                                value={editValue}
+                                onChange={(e) => setEditValue(e.target.value)}
+                                onBlur={() => {
+                                  if (editValue) handleTimeEdit(app.id, editValue);
+                                }}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter' && editValue) handleTimeEdit(app.id, editValue);
+                                  if (e.key === 'Escape') {
+                                    setEditingId(null);
+                                    setEditType(null);
+                                  }
+                                }}
+                                autoFocus
+                                className="w-full px-1 py-0.5 border rounded text-center text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            ) : (
+                              app.age
+                            )}
+                          </TableCell>
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatHeightForDisplay(app.height_range)}</TableCell>
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
                           <TableCell className={`text-center font-semibold px-1 py-2 whitespace-nowrap ${colorClass || 'text-blue-600'}`}>{app.remainingCount}회</TableCell>

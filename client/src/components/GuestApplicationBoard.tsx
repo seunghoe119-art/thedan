@@ -94,6 +94,9 @@ export default function GuestApplicationBoard() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [gameDateString, setGameDateString] = useState<string>("");
   const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
+  const [editingId, setEditingId] = useState<string | null>(null);
+  const [editType, setEditType] = useState<'name' | 'time' | null>(null);
+  const [editValue, setEditValue] = useState<string>('');
   const [manualColors, setManualColors] = useState<Map<string, string>>(new Map());
   const [totalSlots, setTotalSlots] = useState<number>(18);
   const [inputSlots, setInputSlots] = useState<string>('18');
@@ -204,6 +207,26 @@ export default function GuestApplicationBoard() {
       setApplications(prev => prev.filter(app => app.id !== id));
     } else {
       console.error('Error deleting application:', error);
+    }
+  };
+
+  const handleTimeUpdate = async (id: string, newTime: string) => {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase
+        .from('guest_applications')
+        .update({ applied_at: new Date(newTime).toISOString() })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev =>
+        prev.map(app => (app.id === id ? { ...app, applied_at: new Date(newTime).toISOString() } : app))
+      );
+      setEditingId(null);
+      setEditType(null);
+    } catch (err) {
+      console.error('Error updating time:', err);
     }
   };
 
@@ -454,6 +477,12 @@ export default function GuestApplicationBoard() {
           </Button>
         </div>
 
+        <div className="flex justify-center mb-6">
+          <button className="px-4 py-2 bg-gray-200 text-gray-700 rounded-lg text-sm font-semibold hover:bg-gray-300 transition-colors">
+            등록시간 변경
+          </button>
+        </div>
+
         {/* 정규 멤버 게스트 목록 표시 */}
         {applications.length > 0 && applications.some(app => app.name.includes('(정규)')) && (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
@@ -548,7 +577,36 @@ export default function GuestApplicationBoard() {
                         </div>
                       </TableCell>
                       <TableCell className={`text-center font-medium px-0 py-3 whitespace-nowrap ${colorClass}`}>{app.name}</TableCell>
-                      <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${colorClass}`}>{app.age}</TableCell>
+                      <TableCell 
+                        className={`text-center px-0 py-3 whitespace-nowrap cursor-pointer hover:bg-gray-100 rounded ${colorClass}`}
+                        onClick={() => {
+                          setEditingId(app.id);
+                          setEditType('time');
+                          setEditValue(new Date(app.applied_at_kst || app.applied_at).toLocaleString());
+                        }}
+                      >
+                        {editingId === app.id && editType === 'time' ? (
+                          <input
+                            type="text"
+                            value={editValue}
+                            onChange={(e) => setEditValue(e.target.value)}
+                            onBlur={() => {
+                              if (editValue) handleTimeUpdate(app.id, editValue);
+                            }}
+                            onKeyDown={(e) => {
+                              if (e.key === 'Enter' && editValue) handleTimeUpdate(app.id, editValue);
+                              if (e.key === 'Escape') {
+                                setEditingId(null);
+                                setEditType(null);
+                              }
+                            }}
+                            autoFocus
+                            className="w-full px-1 py-0.5 border rounded text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                          />
+                        ) : (
+                          app.age
+                        )}
+                      </TableCell>
                       <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${colorClass}`}>{formatHeightForDisplay(app.height)}</TableCell>
                       <TableCell className={`text-center px-0 py-3 whitespace-nowrap ${colorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
                     </TableRow>
