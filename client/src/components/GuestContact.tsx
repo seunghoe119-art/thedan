@@ -140,7 +140,8 @@ export default function GuestContact() {
       .lte('applied_at', currentWeek.endDateUTC);
 
     if (applicationsData) {
-      const visibleCount = applicationsData.filter(app => !app.is_hidden).length;
+      // is_hidden이 false인 신청자만 카운트 (관리자 페이지의 숨김 기능과 연동)
+      const visibleCount = (applicationsData as any[]).filter(app => !app.is_hidden).length;
       setVisibleApplicationCount(visibleCount);
     } else {
       setVisibleApplicationCount(0);
@@ -430,7 +431,7 @@ export default function GuestContact() {
               
               <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
                 <p className="text-lg font-semibold text-blue-900">
-                  {Math.min(8, Math.max(0, totalSlots - visibleApplicationCount))}명 게스트 모집중. ({(() => {
+                  {Math.max(0, totalSlots - visibleApplicationCount)}명 게스트 모집중. ({(() => {
                     const now = new Date();
                     const kstDate = toZonedTime(now, KST_TIMEZONE);
                     const hours = kstDate.getHours();
