@@ -34,7 +34,7 @@ export default function IcnMemberBoard() {
     age: '',
     height_range: '',
     position: '',
-    phone: ''
+    phone: '010-0000-0000'
   });
   const { toast } = useToast();
 
@@ -64,7 +64,7 @@ export default function IcnMemberBoard() {
 
       setMembers(prev => [...prev, data]);
       setIsAddDialogOpen(false);
-      setNewMember({ name: '', age: '', height_range: '', position: '', phone: '' });
+      setNewMember({ name: '', age: '', height_range: '', position: '', phone: '010-0000-0000' });
       toast({ title: "멤버가 추가되었습니다." });
     } catch (err) {
       console.error('Add member error:', err);
@@ -221,13 +221,20 @@ export default function IcnMemberBoard() {
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="age" className="text-right">나이</Label>
-                    <Input 
-                      id="age" 
+                    <Select 
                       value={newMember.age} 
-                      onChange={e => setNewMember(prev => ({ ...prev, age: e.target.value }))}
-                      className="col-span-3" 
-                      placeholder="예: 30"
-                    />
+                      onValueChange={val => setNewMember(prev => ({ ...prev, age: val }))}
+                    >
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="나이 선택" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="20대">20대</SelectItem>
+                        <SelectItem value="30대">30대</SelectItem>
+                        <SelectItem value="40대">40대</SelectItem>
+                        <SelectItem value="47대">47대</SelectItem>
+                      </SelectContent>
+                    </Select>
                   </div>
                   <div className="grid grid-cols-4 items-center gap-4">
                     <Label htmlFor="height" className="text-right">키</Label>
@@ -268,9 +275,8 @@ export default function IcnMemberBoard() {
                     <Input 
                       id="phone" 
                       value={newMember.phone} 
-                      onChange={e => setNewMember(prev => ({ ...prev, phone: e.target.value }))}
-                      className="col-span-3" 
-                      placeholder="010-0000-0000"
+                      disabled
+                      className="col-span-3 bg-gray-100" 
                     />
                   </div>
                 </div>
