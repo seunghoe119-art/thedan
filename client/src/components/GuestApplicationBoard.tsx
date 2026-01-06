@@ -591,10 +591,19 @@ export default function GuestApplicationBoard() {
               ) : (
                 [...applications]
                   .sort((a, b) => {
+                    const aIsHidden = hiddenRows.has(a.id);
+                    const bIsHidden = hiddenRows.has(b.id);
+                    
+                    // 1. 숨김 여부 우선 정렬 (숨겨진 항목이 뒤로)
+                    if (!aIsHidden && bIsHidden) return -1;
+                    if (aIsHidden && !bIsHidden) return 1;
+                    
+                    // 2. ICNF 여부 정렬 (ICNF 항목이 앞으로)
                     const aIsICNF = a.name.includes('(ICNF)');
                     const bIsICNF = b.name.includes('(ICNF)');
                     if (aIsICNF && !bIsICNF) return -1;
                     if (!aIsICNF && bIsICNF) return 1;
+                    
                     return 0;
                   })
                   .map((app) => {
