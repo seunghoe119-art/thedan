@@ -264,9 +264,9 @@ export default function IcnMemberBoard() {
                         <SelectValue placeholder="포지션 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="guard">가드 (G)</SelectItem>
-                        <SelectItem value="forward">포워드 (F)</SelectItem>
-                        <SelectItem value="center">센터 (C)</SelectItem>
+                        <SelectItem value="가드">가드</SelectItem>
+                        <SelectItem value="포워드">포워드</SelectItem>
+                        <SelectItem value="센터">센터</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>
