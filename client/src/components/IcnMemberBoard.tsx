@@ -42,6 +42,35 @@ export default function IcnMemberBoard() {
   const currentMonth = new Date().getMonth() + 1;
   const isFirstHalf = currentMonth >= 1 && currentMonth <= 6;
 
+  const [editingHistory, setEditingHistory] = useState<{ memberId: string, index: number, value: string } | null>(null);
+
+  const handleHistoryUpdate = async (memberId: string, index: number, newValue: string) => {
+    if (!supabase) return;
+    try {
+      const member = members.find(m => m.id === memberId);
+      if (!member || !member.attendance_history) return;
+
+      const updatedHistory = [...member.attendance_history];
+      updatedHistory[index] = newValue;
+
+      const { error } = await supabase
+        .from('icn_members')
+        .update({ attendance_history: updatedHistory })
+        .eq('id', memberId);
+
+      if (error) throw error;
+
+      setMembers(prev => prev.map(m => 
+        m.id === memberId ? { ...m, attendance_history: updatedHistory } : m
+      ));
+      setEditingHistory(null);
+      toast({ title: "이력이 수정되었습니다." });
+    } catch (err) {
+      console.error('Update history error:', err);
+      toast({ title: "이력 수정 실패", variant: "destructive" });
+    }
+  };
+
   const handleAddMember = async () => {
     if (!supabase) return;
     if (!newMember.name) {
@@ -365,8 +394,31 @@ export default function IcnMemberBoard() {
                               {member.attendance_history && member.attendance_history.length > 0 ? (
                                 <ul className="space-y-1">
                                   {member.attendance_history.map((time, idx) => (
-                                    <li key={idx} className="text-sm text-gray-600 py-1 border-b last:border-0">
-                                      {time}
+                                    <li key={idx} className="text-sm text-gray-600 py-1 border-b last:border-0 flex items-center justify-between group">
+                                      {editingHistory?.memberId === member.id && editingHistory?.index === idx ? (
+                                        <input
+                                          type="text"
+                                          value={editingHistory.value}
+                                          onChange={(e) => setEditingHistory(prev => prev ? { ...prev, value: e.target.value } : null)}
+                                          onBlur={() => handleHistoryUpdate(member.id, idx, editingHistory.value)}
+                                          onKeyDown={(e) => {
+                                            if (e.key === 'Enter') handleHistoryUpdate(member.id, idx, editingHistory.value);
+                                            if (e.key === 'Escape') setEditingHistory(null);
+                                          }}
+                                          autoFocus
+                                          className="w-full px-1 py-0.5 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                                        />
+                                      ) : (
+                                        <>
+                                          <span>{time}</span>
+                                          <button
+                                            onClick={() => setEditingHistory({ memberId: member.id, index: idx, value: time })}
+                                            className="text-xs text-blue-500 opacity-0 group-hover:opacity-100 transition-opacity"
+                                          >
+                                            수정
+                                          </button>
+                                        </>
+                                      )}
                                     </li>
                                   ))}
                                 </ul>
