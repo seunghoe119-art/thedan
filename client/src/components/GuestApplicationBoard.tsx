@@ -621,7 +621,7 @@ export default function GuestApplicationBoard() {
                           </div>
                         </TableCell>
                         <TableCell 
-                          className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${isICNF ? 'bg-red-600 text-white font-bold' : colorClass}`}
+                          className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${isICNF && !isHidden ? 'bg-red-600 text-white font-bold' : colorClass}`}
                           onClick={() => {
                             if (!isTimeEditActive) return;
                             setEditingId(app.id);
