@@ -147,10 +147,58 @@ export default function GuestApplicationBoard() {
   }, [selectedWeekOffset]);
 
   const toggleRowVisibility = async (id: string) => {
-    const isCurrentlyHidden = hiddenRows.has(id);
-    const newHiddenState = !isCurrentlyHidden;
+    const isNowHidden = !hiddenRows.has(id);
+    const app = applications.find(a => a.id === id);
+    
+    // ICNF 멤버인 경우 icn_members 테이블의 카운트와 이력 조정
+    if (app && app.name.includes('(ICNF)') && supabase) {
+      try {
+        const cleanName = app.name.replace('(ICNF)', '');
+        const { data: member } = await supabase
+          .from('icn_members')
+          .select('*')
+          .eq('name', cleanName)
+          .single();
+          
+        if (member) {
+          const gameDayKST = new Date(new Date(app.applied_at).getTime() + (9 * 60 * 60 * 1000));
+          const formattedDate = gameDayKST.toISOString().substring(0, 10);
+          
+          let updatedHistory = member.attendance_history || [];
+          let firstHalfCount = member.first_half_count || 0;
+          let secondHalfCount = member.second_half_count || 0;
+          
+          const month = gameDayKST.getMonth() + 1;
+          const isFirstHalf = month >= 1 && month <= 6;
+          
+          if (isNowHidden) {
+            // 숨김 처리 시: 이력에서 제거 및 카운트 감소
+            updatedHistory = updatedHistory.filter((d: string) => d !== formattedDate);
+            if (isFirstHalf) firstHalfCount = Math.max(0, firstHalfCount - 1);
+            else secondHalfCount = Math.max(0, secondHalfCount - 1);
+          } else {
+            // 숨김 해제 시: 이력에 추가 및 카운트 증가 (중복 방지)
+            if (!updatedHistory.includes(formattedDate)) {
+              updatedHistory = [formattedDate, ...updatedHistory];
+              if (isFirstHalf) firstHalfCount += 1;
+              else secondHalfCount += 1;
+            }
+          }
+          
+          await supabase
+            .from('icn_members')
+            .update({
+              attendance_history: updatedHistory,
+              first_half_count: firstHalfCount,
+              second_half_count: secondHalfCount
+            })
+            .eq('id', member.id);
+        }
+      } catch (err) {
+        console.error('Error updating ICN member attendance on visibility toggle:', err);
+      }
+    }
 
-    // Update local state immediately for better UX
     setHiddenRows((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(id)) {
@@ -165,21 +213,11 @@ export default function GuestApplicationBoard() {
     if (supabase) {
       const { error } = await supabase
         .from('guest_applications')
-        .update({ is_hidden: newHiddenState })
+        .update({ is_hidden: isNowHidden })
         .eq('id', id);
 
       if (error) {
         console.error('Error updating hidden state:', error);
-        // Revert local state if update failed
-        setHiddenRows((prev) => {
-          const newSet = new Set(prev);
-          if (isCurrentlyHidden) {
-            newSet.add(id);
-          } else {
-            newSet.delete(id);
-          }
-          return newSet;
-        });
       }
     }
   };
