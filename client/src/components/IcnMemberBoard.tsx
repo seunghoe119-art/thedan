@@ -85,8 +85,12 @@ export default function IcnMemberBoard() {
     
     try {
       const nowUTC = new Date();
-      const kstTime = new Date(nowUTC.getTime() + (9 * 60 * 60 * 1000));
-      const formattedTime = kstTime.toISOString().replace('T', ' ').substring(0, 19);
+      // Get next Friday date (the game day)
+      const day = nowUTC.getUTCDay(); // 0 is Sunday, 5 is Friday
+      const daysUntilFriday = (5 - day + 7) % 7;
+      const nextFriday = new Date(nowUTC.getTime() + (daysUntilFriday * 24 * 60 * 60 * 1000));
+      const gameDayKST = new Date(nextFriday.getTime() + (9 * 60 * 60 * 1000));
+      const formattedDate = gameDayKST.toISOString().substring(0, 10);
 
       const { error } = await supabase
         .from('guest_applications')
@@ -118,7 +122,7 @@ export default function IcnMemberBoard() {
         .single();
 
       const history = currentMember?.attendance_history || [];
-      const updatedHistory = [...history, formattedTime];
+      const updatedHistory = [formattedDate, ...history];
 
       const countField = isFirstHalf ? 'first_half_count' : 'second_half_count';
       const newCount = isFirstHalf 
@@ -350,7 +354,7 @@ export default function IcnMemberBoard() {
                             <DialogTitle>{member.name} 멤버 상세 정보</DialogTitle>
                           </DialogHeader>
                           <div className="py-4">
-                            <h4 className="font-bold mb-2">참석 이력 (KST)</h4>
+                            <h4 className="font-bold mb-2">참석 이력 (게임일 기준)</h4>
                             <div className="max-h-60 overflow-y-auto border rounded p-2 bg-gray-50">
                               {member.attendance_history && member.attendance_history.length > 0 ? (
                                 <ul className="space-y-1">
