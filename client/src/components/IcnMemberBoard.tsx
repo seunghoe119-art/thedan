@@ -88,7 +88,7 @@ export default function IcnMemberBoard() {
       const { error } = await supabase
         .from('guest_applications')
         .insert({
-          name: `${member.name}(정규)`,
+          name: `${member.name}(ICNF)`,
           age: member.age || '',
           position: member.position || '',
           height: member.height_range || '',
