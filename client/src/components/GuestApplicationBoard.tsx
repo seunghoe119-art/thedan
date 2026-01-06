@@ -173,12 +173,12 @@ export default function GuestApplicationBoard() {
           
           if (isNowHidden) {
             // 숨김 처리 시: 이력에서 제거 및 카운트 감소
-            updatedHistory = updatedHistory.filter((d: string) => d !== formattedDate);
+            updatedHistory = updatedHistory.filter((d: string) => d.split(' ')[0] !== formattedDate);
             if (isFirstHalf) firstHalfCount = Math.max(0, firstHalfCount - 1);
             else secondHalfCount = Math.max(0, secondHalfCount - 1);
           } else {
             // 숨김 해제 시: 이력에 추가 및 카운트 증가 (중복 방지)
-            if (!updatedHistory.includes(formattedDate)) {
+            if (!updatedHistory.some((d: string) => d.split(' ')[0] === formattedDate)) {
               updatedHistory = [formattedDate, ...updatedHistory];
               if (isFirstHalf) firstHalfCount += 1;
               else secondHalfCount += 1;

@@ -85,12 +85,18 @@ export default function IcnMemberBoard() {
     
     try {
       const nowUTC = new Date();
-      // Get next Friday date (the game day)
-      const day = nowUTC.getUTCDay(); // 0 is Sunday, 5 is Friday
-      const daysUntilFriday = (5 - day + 7) % 7;
-      const nextFriday = new Date(nowUTC.getTime() + (daysUntilFriday * 24 * 60 * 60 * 1000));
-      const gameDayKST = new Date(nextFriday.getTime() + (9 * 60 * 60 * 1000));
-      const formattedDate = gameDayKST.toISOString().substring(0, 10);
+      // Get next Friday date (the game day) in KST
+      const nowKST = new Date(nowUTC.getTime() + (9 * 60 * 60 * 1000));
+      const day = nowKST.getDay(); // 0: Sun, 5: Fri
+      let daysUntilFriday = (5 - day + 7) % 7;
+      
+      // If today is Friday and it's past 9 PM (deadline), move to next week
+      if (day === 5 && nowKST.getHours() >= 21) {
+        daysUntilFriday = 7;
+      }
+      
+      const nextFridayKST = new Date(nowKST.getTime() + (daysUntilFriday * 24 * 60 * 60 * 1000));
+      const formattedDate = nextFridayKST.toISOString().substring(0, 10);
 
       const { error } = await supabase
         .from('guest_applications')
