@@ -3,9 +3,13 @@ import { supabase } from '@/lib/supabaseClient';
 import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
-import { ChevronRight } from 'lucide-react';
+import { ChevronRight, UserPlus, X } from 'lucide-react';
 import { formatHeightForDisplay, formatPositionForDisplay } from '@/lib/gameWeekUtils';
 import { useToast } from '@/hooks/use-toast';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Input } from '@/components/ui/input';
+import { Label } from '@/components/ui/label';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 
 interface IcnMember {
   id: string;
@@ -24,10 +28,49 @@ interface IcnMember {
 export default function IcnMemberBoard() {
   const [members, setMembers] = useState<IcnMember[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newMember, setNewMember] = useState({
+    name: '',
+    age: '',
+    height_range: '',
+    position: '',
+    phone: ''
+  });
   const { toast } = useToast();
 
   const currentMonth = new Date().getMonth() + 1;
   const isFirstHalf = currentMonth >= 1 && currentMonth <= 6;
+
+  const handleAddMember = async () => {
+    if (!supabase) return;
+    if (!newMember.name) {
+      toast({ title: "이름을 입력해주세요.", variant: "destructive" });
+      return;
+    }
+
+    try {
+      const { data, error } = await supabase
+        .from('icn_members')
+        .insert({
+          ...newMember,
+          is_active: true,
+          first_half_count: 0,
+          second_half_count: 0
+        })
+        .select()
+        .single();
+
+      if (error) throw error;
+
+      setMembers(prev => [...prev, data]);
+      setIsAddDialogOpen(false);
+      setNewMember({ name: '', age: '', height_range: '', position: '', phone: '' });
+      toast({ title: "멤버가 추가되었습니다." });
+    } catch (err) {
+      console.error('Add member error:', err);
+      toast({ title: "멤버 추가 실패", variant: "destructive" });
+    }
+  };
 
   const handleAddAsGuest = async (member: IcnMember) => {
     if (!supabase) {
@@ -146,7 +189,7 @@ export default function IcnMemberBoard() {
           <p className="text-gray-600">
             ICN 고정 멤버 명단입니다. (Supabase 연동)
           </p>
-          <div className="mt-4">
+          <div className="mt-4 flex flex-wrap justify-center gap-4">
             <a
               href="/guest-status"
               className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md"
@@ -154,6 +197,89 @@ export default function IcnMemberBoard() {
               금주 게스트 명단 보기
               <ChevronRight className="h-5 w-5" />
             </a>
+            
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="bg-orange-500 hover:bg-orange-600 text-white font-semibold h-[52px] px-6">
+                  <UserPlus className="mr-2 h-5 w-5" />
+                  신규 멤버 등록
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px]">
+                <DialogHeader>
+                  <DialogTitle>ICN 신규 멤버 등록</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">이름</Label>
+                    <Input 
+                      id="name" 
+                      value={newMember.name} 
+                      onChange={e => setNewMember(prev => ({ ...prev, name: e.target.value }))}
+                      className="col-span-3" 
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="age" className="text-right">나이</Label>
+                    <Input 
+                      id="age" 
+                      value={newMember.age} 
+                      onChange={e => setNewMember(prev => ({ ...prev, age: e.target.value }))}
+                      className="col-span-3" 
+                      placeholder="예: 30"
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="height" className="text-right">키</Label>
+                    <Select 
+                      value={newMember.height_range} 
+                      onValueChange={val => setNewMember(prev => ({ ...prev, height_range: val }))}
+                    >
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="키 선택" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="under_170">170cm 미만</SelectItem>
+                        <SelectItem value="170_175">170~175cm</SelectItem>
+                        <SelectItem value="175_180">175~180cm</SelectItem>
+                        <SelectItem value="180_185">180~185cm</SelectItem>
+                        <SelectItem value="over_185">185cm 이상</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="position" className="text-right">포지션</Label>
+                    <Select 
+                      value={newMember.position} 
+                      onValueChange={val => setNewMember(prev => ({ ...prev, position: val }))}
+                    >
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue placeholder="포지션 선택" />
+                      </SelectTrigger>
+                      <SelectContent>
+                        <SelectItem value="guard">가드 (G)</SelectItem>
+                        <SelectItem value="forward">포워드 (F)</SelectItem>
+                        <SelectItem value="center">센터 (C)</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="phone" className="text-right">연락처</Label>
+                    <Input 
+                      id="phone" 
+                      value={newMember.phone} 
+                      onChange={e => setNewMember(prev => ({ ...prev, phone: e.target.value }))}
+                      className="col-span-3" 
+                      placeholder="010-0000-0000"
+                    />
+                  </div>
+                </div>
+                <div className="flex justify-end gap-3">
+                  <Button variant="outline" onClick={() => setIsAddDialogOpen(false)}>취소</Button>
+                  <Button onClick={handleAddMember} className="bg-blue-600 hover:bg-blue-700">등록하기</Button>
+                </div>
+              </DialogContent>
+            </Dialog>
           </div>
         </div>
 
