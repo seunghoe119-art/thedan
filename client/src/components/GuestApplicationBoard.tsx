@@ -589,64 +589,73 @@ export default function GuestApplicationBoard() {
                   </TableCell>
                 </TableRow>
               ) : (
-                applications.map((app) => {
-                  const isHidden = hiddenRows.has(app.id);
-                  const isSelected = selectedRows.has(app.id);
-                  const colorClass = isHidden ? 'text-white' : (app.groupColor || '');
-                  return (
-                    <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
-                      <TableCell className="text-center px-0 py-3 whitespace-nowrap">
-                        <div className="flex justify-center">
-                          <Checkbox
-                            checked={isHidden}
-                            onCheckedChange={() => toggleRowVisibility(app.id)}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell className="text-center px-0 py-3 whitespace-nowrap">
-                        <div className="flex justify-center">
-                          <Checkbox
-                            checked={isSelected}
-                            onCheckedChange={() => toggleRowSelection(app.id)}
-                          />
-                        </div>
-                      </TableCell>
-                      <TableCell 
-                        className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}
-                        onClick={() => {
-                          if (!isTimeEditActive) return;
-                          setEditingId(app.id);
-                          setEditType('name');
-                          setEditValue(app.name);
-                        }}
-                      >
-                        {editingId === app.id && editType === 'name' ? (
-                          <input
-                            type="text"
-                            value={editValue}
-                            onChange={(e) => setEditValue(e.target.value)}
-                            onBlur={() => {
-                              if (editValue !== app.name) {
-                                handleNameUpdate(app.id, editValue);
-                              } else {
-                                setEditingId(null);
-                                setEditType(null);
-                              }
-                            }}
-                            onKeyDown={(e) => {
-                              if (e.key === 'Enter') handleNameUpdate(app.id, editValue);
-                              if (e.key === 'Escape') {
-                                setEditingId(null);
-                                setEditType(null);
-                              }
-                            }}
-                            autoFocus
-                            className="w-full px-1 py-0.5 border rounded text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
-                          />
-                        ) : (
-                          app.name
-                        )}
-                      </TableCell>
+                [...applications]
+                  .sort((a, b) => {
+                    const aIsICNF = a.name.includes('(ICNF)');
+                    const bIsICNF = b.name.includes('(ICNF)');
+                    if (aIsICNF && !bIsICNF) return -1;
+                    if (!aIsICNF && bIsICNF) return 1;
+                    return 0;
+                  })
+                  .map((app) => {
+                    const isHidden = hiddenRows.has(app.id);
+                    const isSelected = selectedRows.has(app.id);
+                    const isICNF = app.name.includes('(ICNF)');
+                    const colorClass = isHidden ? 'text-white' : (app.groupColor || '');
+                    return (
+                      <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
+                        <TableCell className="text-center px-0 py-3 whitespace-nowrap">
+                          <div className="flex justify-center">
+                            <Checkbox
+                              checked={isHidden}
+                              onCheckedChange={() => toggleRowVisibility(app.id)}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell className="text-center px-0 py-3 whitespace-nowrap">
+                          <div className="flex justify-center">
+                            <Checkbox
+                              checked={isSelected}
+                              onCheckedChange={() => toggleRowSelection(app.id)}
+                            />
+                          </div>
+                        </TableCell>
+                        <TableCell 
+                          className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${isICNF ? 'bg-red-600 text-white font-bold' : colorClass}`}
+                          onClick={() => {
+                            if (!isTimeEditActive) return;
+                            setEditingId(app.id);
+                            setEditType('name');
+                            setEditValue(app.name);
+                          }}
+                        >
+                          {editingId === app.id && editType === 'name' ? (
+                            <input
+                              type="text"
+                              value={editValue}
+                              onChange={(e) => setEditValue(e.target.value)}
+                              onBlur={() => {
+                                if (editValue !== app.name) {
+                                  handleNameUpdate(app.id, editValue);
+                                } else {
+                                  setEditingId(null);
+                                  setEditType(null);
+                                }
+                              }}
+                              onKeyDown={(e) => {
+                                if (e.key === 'Enter') handleNameUpdate(app.id, editValue);
+                                if (e.key === 'Escape') {
+                                  setEditingId(null);
+                                  setEditType(null);
+                                }
+                              }}
+                              autoFocus
+                              className="w-full px-1 py-0.5 border rounded text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                            />
+                          ) : (
+                            app.name
+                          )}
+                        </TableCell>
                       <TableCell 
                         className={`text-center px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${colorClass}`}
                         onClick={() => {
