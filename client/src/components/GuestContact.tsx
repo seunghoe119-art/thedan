@@ -470,7 +470,7 @@ export default function GuestContact() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
                 <Label 
-                  className="text-white cursor-pointer select-none"
+                  className="text-white cursor-default select-none"
                   onClick={handleAgeLabelClick}
                 >
                   나이
