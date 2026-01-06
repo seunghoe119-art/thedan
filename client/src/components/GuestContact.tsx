@@ -43,6 +43,18 @@ export default function GuestContact() {
   const [totalSlots, setTotalSlots] = useState<number>(8);
   const [visibleApplicationCount, setVisibleApplicationCount] = useState<number>(0);
 
+  const [ageClickCount, setAgeClickCount] = useState(0);
+  const [showRecruitmentInfo, setShowRecruitmentInfo] = useState(false);
+
+  const handleAgeLabelClick = () => {
+    const newCount = ageClickCount + 1;
+    setAgeClickCount(newCount);
+    if (newCount === 10) {
+      setShowRecruitmentInfo(!showRecruitmentInfo);
+      setAgeClickCount(0);
+    }
+  };
+
   const KST_TIMEZONE = 'Asia/Seoul';
 
   // 현재 주차의 금요일 날짜를 계산하는 함수
@@ -442,11 +454,27 @@ export default function GuestContact() {
                   })()})
                 </p>
               </div>
+
+              {showRecruitmentInfo && (
+                <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4 text-center animate-in slide-in-from-top duration-300">
+                  <p className="text-sm md:text-base font-medium text-blue-800 leading-relaxed">
+                    목요일 18시까지, 정규회원의 참석을 확인 후<br />
+                    재모집 예정입니다.<br />
+                    참가 신청서를 오픈 카카오톡에 보내주시면<br />
+                    순차적으로 연락드리겠습니다.
+                  </p>
+                </div>
+              )}
             </div>
             
             <form onSubmit={handleSubmit} className="space-y-6">
               <div>
-                <Label className="text-white">나이</Label>
+                <Label 
+                  className="text-white cursor-pointer select-none"
+                  onClick={handleAgeLabelClick}
+                >
+                  나이
+                </Label>
                 <select 
                   className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
                   value={formData.age}
