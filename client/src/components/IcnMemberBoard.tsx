@@ -22,6 +22,7 @@ interface IcnMember {
   is_active: boolean;
   first_half_count: number;
   second_half_count: number;
+  attendance_history?: string[];
   created_at: string;
 }
 
@@ -84,6 +85,8 @@ export default function IcnMemberBoard() {
     
     try {
       const nowUTC = new Date();
+      const kstTime = new Date(nowUTC.getTime() + (9 * 60 * 60 * 1000));
+      const formattedTime = kstTime.toISOString().replace('T', ' ').substring(0, 19);
 
       const { error } = await supabase
         .from('guest_applications')
@@ -107,6 +110,16 @@ export default function IcnMemberBoard() {
         return;
       }
 
+      // Update attendance history for the member
+      const { data: currentMember } = await supabase
+        .from('icn_members')
+        .select('attendance_history')
+        .eq('id', member.id)
+        .single();
+
+      const history = currentMember?.attendance_history || [];
+      const updatedHistory = [...history, formattedTime];
+
       const countField = isFirstHalf ? 'first_half_count' : 'second_half_count';
       const newCount = isFirstHalf 
         ? (member.first_half_count || 0) + 1 
@@ -114,7 +127,10 @@ export default function IcnMemberBoard() {
 
       const { error: updateError } = await supabase
         .from('icn_members')
-        .update({ [countField]: newCount })
+        .update({ 
+          [countField]: newCount,
+          attendance_history: updatedHistory 
+        })
         .eq('id', member.id);
 
       if (updateError) {
@@ -123,7 +139,7 @@ export default function IcnMemberBoard() {
         setMembers(prev => 
           prev.map(m => 
             m.id === member.id 
-              ? { ...m, [countField]: newCount }
+              ? { ...m, [countField]: newCount, attendance_history: updatedHistory }
               : m
           )
         );
@@ -325,7 +341,32 @@ export default function IcnMemberBoard() {
                 members.map((member) => (
                   <TableRow key={member.id} data-testid={`row-icn-member-${member.id}`}>
                     <TableCell className="text-center font-medium px-2 py-3 whitespace-nowrap text-red-600">
-                      {member.name}
+                      <Dialog>
+                        <DialogTrigger asChild>
+                          <span className="cursor-pointer hover:underline">{member.name}</span>
+                        </DialogTrigger>
+                        <DialogContent>
+                          <DialogHeader>
+                            <DialogTitle>{member.name} 멤버 상세 정보</DialogTitle>
+                          </DialogHeader>
+                          <div className="py-4">
+                            <h4 className="font-bold mb-2">참석 이력 (KST)</h4>
+                            <div className="max-h-60 overflow-y-auto border rounded p-2 bg-gray-50">
+                              {member.attendance_history && member.attendance_history.length > 0 ? (
+                                <ul className="space-y-1">
+                                  {member.attendance_history.map((time, idx) => (
+                                    <li key={idx} className="text-sm text-gray-600 py-1 border-b last:border-0">
+                                      {time}
+                                    </li>
+                                  ))}
+                                </ul>
+                              ) : (
+                                <p className="text-sm text-gray-400 text-center py-4">참석 이력이 없습니다.</p>
+                              )}
+                            </div>
+                          </div>
+                        </DialogContent>
+                      </Dialog>
                     </TableCell>
                     <TableCell className="text-center px-2 py-3 whitespace-nowrap">
                       {member.age || '-'}
