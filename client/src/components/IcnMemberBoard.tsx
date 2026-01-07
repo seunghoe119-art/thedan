@@ -116,7 +116,12 @@ export default function IcnMemberBoard() {
       const nowUTC = new Date();
       // Get next Friday date (the game day) in KST
       const nowKST = new Date(nowUTC.getTime() + (9 * 60 * 60 * 1000));
-      const day = nowKST.getDay(); // 0: Sun, 5: Fri
+      const day = nowKST.getDay(); // 0: Sun, 1: Mon, ..., 5: Fri, 6: Sat
+      
+      // Calculate days until the next Friday
+      // If today is Fri(5), daysUntilFriday is 0
+      // If today is Sat(6), daysUntilFriday is 6
+      // If today is Sun(0), daysUntilFriday is 5
       let daysUntilFriday = (5 - day + 7) % 7;
       
       // If today is Friday and it's past 9 PM (deadline), move to next week
@@ -125,7 +130,11 @@ export default function IcnMemberBoard() {
       }
       
       const nextFridayKST = new Date(nowKST.getTime() + (daysUntilFriday * 24 * 60 * 60 * 1000));
-      const formattedDate = nextFridayKST.toISOString().substring(0, 10);
+      // Use KST date components to avoid ISOString UTC shift
+      const yyyy = nextFridayKST.getFullYear();
+      const mm = String(nextFridayKST.getMonth() + 1).padStart(2, '0');
+      const dd = String(nextFridayKST.getDate()).padStart(2, '0');
+      const formattedDate = `${yyyy}-${mm}-${dd}`;
 
       const { error } = await supabase
         .from('guest_applications')
