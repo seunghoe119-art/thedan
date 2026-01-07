@@ -123,17 +123,20 @@ export default function JoinUs() {
 
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // 전화번호 마스킹 함수: 010-12xx-xxxx 형태로 변환
+  // 전화번호 마스킹 함수: 010-1200-0000 형태로 변환 (중복 방지를 위해 뒷자리를 0으로 채우되 겹칠 수 있음)
   const maskPhoneNumber = (phone: string): string => {
     // 숫자만 추출
     const numbers = phone.replace(/[^0-9]/g, '');
     
-    if (numbers.length !== 11) {
-      return phone; // 형식이 맞지 않으면 원본 반환
+    if (numbers.length < 5) {
+      return phone;
     }
     
-    // 010-12xx-xxxx 형태로 마스킹
-    const masked = numbers.slice(0, 5) + '000000';
+    // 010-12xx-xxxx 형태로 마스킹. 중복 허용을 위해 실제로는 전체 번호를 저장하거나 고유하게 만들어야 함.
+    // 하지만 사용자가 "중복 가능하게" 해달라고 했으므로, DB 유니크 제약 조건을 제거하는 것이 핵심임.
+    // 여기서는 마스킹 정책을 유지하되, DB 제약 조건이 사라지면 같은 마스킹 번호도 여러 번 저장 가능함.
+    const prefix = numbers.slice(0, 5);
+    const masked = prefix.padEnd(11, '0');
     return masked.slice(0, 3) + '-' + masked.slice(3, 7) + '-' + masked.slice(7);
   };
 
