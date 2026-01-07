@@ -44,6 +44,31 @@ export default function IcnMemberBoard() {
 
   const [editingHistory, setEditingHistory] = useState<{ memberId: string, index: number, value: string } | null>(null);
 
+  const [editingCount, setEditingCount] = useState<{ memberId: string, type: 'first' | 'second', value: string } | null>(null);
+
+  const handleCountUpdate = async (memberId: string, type: 'first' | 'second', newValue: string) => {
+    if (!supabase) return;
+    const numValue = parseInt(newValue) || 0;
+    try {
+      const field = type === 'first' ? 'first_half_count' : 'second_half_count';
+      const { error } = await supabase
+        .from('icn_members')
+        .update({ [field]: numValue })
+        .eq('id', memberId);
+
+      if (error) throw error;
+
+      setMembers(prev => prev.map(m => 
+        m.id === memberId ? { ...m, [field]: numValue } : m
+      ));
+      setEditingCount(null);
+      toast({ title: "횟수가 수정되었습니다." });
+    } catch (err) {
+      console.error('Update count error:', err);
+      toast({ title: "횟수 수정 실패", variant: "destructive" });
+    }
+  };
+
   const handleHistoryUpdate = async (memberId: string, index: number, newValue: string) => {
     if (!supabase) return;
     try {
@@ -448,11 +473,43 @@ export default function IcnMemberBoard() {
                     <TableCell className="text-center px-2 py-3 whitespace-nowrap">
                       {formatPositionForDisplay(member.position || '')}
                     </TableCell>
-                    <TableCell className="text-center px-2 py-3 whitespace-nowrap font-semibold">
-                      {member.first_half_count || 0}회
+                    <TableCell className="text-center px-2 py-3 whitespace-nowrap font-semibold cursor-pointer hover:text-blue-500 transition-colors" onClick={() => setEditingCount({ memberId: member.id, type: 'first', value: String(member.first_half_count || 0) })}>
+                      {editingCount?.memberId === member.id && editingCount?.type === 'first' ? (
+                        <input
+                          type="number"
+                          value={editingCount.value}
+                          onChange={(e) => setEditingCount(prev => prev ? { ...prev, value: e.target.value } : null)}
+                          onBlur={() => handleCountUpdate(member.id, 'first', editingCount.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleCountUpdate(member.id, 'first', editingCount.value);
+                            if (e.key === 'Escape') setEditingCount(null);
+                          }}
+                          autoFocus
+                          className="w-16 px-1 py-0.5 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-center"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      ) : (
+                        <>{member.first_half_count || 0}회</>
+                      )}
                     </TableCell>
-                    <TableCell className="text-center px-2 py-3 whitespace-nowrap font-semibold">
-                      {member.second_half_count || 0}회
+                    <TableCell className="text-center px-2 py-3 whitespace-nowrap font-semibold cursor-pointer hover:text-blue-500 transition-colors" onClick={() => setEditingCount({ memberId: member.id, type: 'second', value: String(member.second_half_count || 0) })}>
+                      {editingCount?.memberId === member.id && editingCount?.type === 'second' ? (
+                        <input
+                          type="number"
+                          value={editingCount.value}
+                          onChange={(e) => setEditingCount(prev => prev ? { ...prev, value: e.target.value } : null)}
+                          onBlur={() => handleCountUpdate(member.id, 'second', editingCount.value)}
+                          onKeyDown={(e) => {
+                            if (e.key === 'Enter') handleCountUpdate(member.id, 'second', editingCount.value);
+                            if (e.key === 'Escape') setEditingCount(null);
+                          }}
+                          autoFocus
+                          className="w-16 px-1 py-0.5 border rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-center"
+                          onClick={(e) => e.stopPropagation()}
+                        />
+                      ) : (
+                        <>{member.second_half_count || 0}회</>
+                      )}
                     </TableCell>
                     <TableCell className="text-center px-2 py-3">
                       <Button
