@@ -13,6 +13,10 @@ import slide2 from "@assets/v2_1766127165052.png";
 import slide3 from "@assets/v3_1766127165052.png";
 import slide4 from "@assets/v4_1766127165052.png";
 import slide5 from "@assets/v5_1766127182488.png";
+import ball1 from "/ball1.png";
+import park1 from "/park1.png";
+import rest1 from "/rest1.jpg";
+import shower1 from "/shower1.png";
 
 const pptSlides = [mainFee, ppt1, ppt2, ppt3, ppt4];
 const slides = [slide1, slide2, slide3, slide4, slide5];
@@ -165,6 +169,22 @@ export default function Schedule() {
             <div className="bg-accent/10 border border-accent rounded-xl p-6 mt-8">
               <h4 className="font-bold text-lg mb-2">최상급 코트 시설과 부대시설</h4>
               <p className="text-gray-300">최신식 건물로, 악취 및 모기등 해충 없음.</p>
+            </div>
+
+            {/* Additional Facility Images */}
+            <div className="grid grid-cols-2 gap-4 mt-8">
+              <div className="relative overflow-hidden rounded-xl shadow-lg aspect-video">
+                <img src={ball1} alt="Facility Ball" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+              </div>
+              <div className="relative overflow-hidden rounded-xl shadow-lg aspect-video">
+                <img src={park1} alt="Facility Parking" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+              </div>
+              <div className="relative overflow-hidden rounded-xl shadow-lg aspect-video">
+                <img src={rest1} alt="Facility Restroom" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+              </div>
+              <div className="relative overflow-hidden rounded-xl shadow-lg aspect-video">
+                <img src={shower1} alt="Facility Shower" className="w-full h-full object-cover transition-transform duration-500 hover:scale-105" />
+              </div>
             </div>
 
 
