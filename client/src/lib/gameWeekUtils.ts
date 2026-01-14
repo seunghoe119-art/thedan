@@ -102,6 +102,7 @@ export function formatHeightForDisplay(height: string): string {
   if (!height) return '';
   
   // Specific mapped values for ICN members and general display
+  // Always prioritize showing 173, 178, 183, 188 as requested
   const icnMap: { [key: string]: string } = {
     '173': '173cm',
     '178': '178cm',
@@ -111,7 +112,11 @@ export function formatHeightForDisplay(height: string): string {
     '175-180': '178cm',
     '180-185': '183cm',
     '185-190': '188cm',
-    '185이상': '188cm'
+    '185이상': '188cm',
+    '170': '173cm', // 기존 5단위 데이터도 요청하신 숫자로 표시
+    '175': '178cm',
+    '180': '183cm',
+    '185': '188cm'
   };
 
   if (icnMap[height]) return icnMap[height];
