@@ -101,12 +101,17 @@ export function formatPhoneForDisplay(phone: string): string {
 export function formatHeightForDisplay(height: string): string {
   if (!height) return '';
   
-  // Specific mapped values for ICN members
+  // Specific mapped values for ICN members and general display
   const icnMap: { [key: string]: string } = {
-    '173': '170-175cm',
-    '178': '175-180cm',
-    '183': '180-185cm',
-    '188': '185cm 이상'
+    '173': '173cm',
+    '178': '178cm',
+    '183': '183cm',
+    '188': '188cm',
+    '170-175': '173cm',
+    '175-180': '178cm',
+    '180-185': '183cm',
+    '185-190': '188cm',
+    '185이상': '188cm'
   };
 
   if (icnMap[height]) return icnMap[height];
@@ -117,10 +122,6 @@ export function formatHeightForDisplay(height: string): string {
     '175~180': '178cm',
     '180~185': '183cm',
     '185~190': '188cm',
-    '170-175': '173cm',
-    '175-180': '178cm',
-    '180-185': '183cm',
-    '185-190': '188cm',
   };
   
   // Check if it's a mapped range
