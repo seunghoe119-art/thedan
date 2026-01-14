@@ -101,9 +101,12 @@ export function formatPhoneForDisplay(phone: string): string {
 export function formatHeightForDisplay(height: string): string {
   if (!height) return '';
   
-  // Specific mapped values for ICN members and general display
-  // Always prioritize showing 173, 178, 183, 188 as requested
-  const icnMap: { [key: string]: string } = {
+  // 강제로 요청하신 숫자로 변환 (170->173, 175->178, 180->183, 185->188)
+  const forcedMap: { [key: string]: string } = {
+    '170': '173cm',
+    '175': '178cm',
+    '180': '183cm',
+    '185': '188cm',
     '173': '173cm',
     '178': '178cm',
     '183': '183cm',
@@ -112,14 +115,10 @@ export function formatHeightForDisplay(height: string): string {
     '175-180': '178cm',
     '180-185': '183cm',
     '185-190': '188cm',
-    '185이상': '188cm',
-    '170': '173cm', // 기존 5단위 데이터도 요청하신 숫자로 표시
-    '175': '178cm',
-    '180': '183cm',
-    '185': '188cm'
+    '185이상': '188cm'
   };
 
-  if (icnMap[height]) return icnMap[height];
+  if (forcedMap[height]) return forcedMap[height];
 
   // Map specific ranges to display values (both ~ and - formats)
   const heightMap: { [key: string]: string } = {
@@ -128,12 +127,16 @@ export function formatHeightForDisplay(height: string): string {
     '180~185': '183cm',
     '185~190': '188cm',
   };
-  
+
   // Check if it's a mapped range
   if (heightMap[height]) {
     return heightMap[height];
   }
-  
+
+  // 숫자만 있는 경우 강제 변환 로직 추가 적용
+  const numericHeight = height.replace(/[^0-9]/g, '');
+  if (forcedMap[numericHeight]) return forcedMap[numericHeight];
+
   // Otherwise use the original logic
   const match = height.match(/(\d+)~?(\d+)?/);
   if (match) {
@@ -142,8 +145,13 @@ export function formatHeightForDisplay(height: string): string {
       const min = parseInt(match[1]);
       const max = parseInt(match[2]);
       const average = Math.round((min + max) / 2);
+      // 평균값이 5단위인 경우에도 변환
+      const avgStr = String(average);
+      if (forcedMap[avgStr]) return forcedMap[avgStr];
       return `${average}cm`;
     }
+    const valStr = match[1];
+    if (forcedMap[valStr]) return forcedMap[valStr];
     return `${match[1]}cm`;
   }
   return height;
