@@ -335,10 +335,10 @@ export default function IcnMemberBoard() {
                         <SelectValue placeholder="키 선택" />
                       </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="170-175">170-175cm</SelectItem>
-                        <SelectItem value="175-180">175-180cm</SelectItem>
-                        <SelectItem value="180-185">180-185cm</SelectItem>
-                        <SelectItem value="185이상">185cm 이상</SelectItem>
+                        <SelectItem value="173">170-175cm</SelectItem>
+                        <SelectItem value="178">175-180cm</SelectItem>
+                        <SelectItem value="183">180-185cm</SelectItem>
+                        <SelectItem value="188">185cm 이상</SelectItem>
                       </SelectContent>
                     </Select>
                   </div>

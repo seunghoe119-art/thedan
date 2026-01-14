@@ -101,6 +101,16 @@ export function formatPhoneForDisplay(phone: string): string {
 export function formatHeightForDisplay(height: string): string {
   if (!height) return '';
   
+  // Specific mapped values for ICN members
+  const icnMap: { [key: string]: string } = {
+    '173': '170-175cm',
+    '178': '175-180cm',
+    '183': '180-185cm',
+    '188': '185cm 이상'
+  };
+
+  if (icnMap[height]) return icnMap[height];
+
   // Map specific ranges to display values (both ~ and - formats)
   const heightMap: { [key: string]: string } = {
     '170~175': '173cm',
