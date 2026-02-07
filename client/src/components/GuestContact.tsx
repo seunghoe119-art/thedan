@@ -46,12 +46,36 @@ export default function GuestContact() {
   const [ageClickCount, setAgeClickCount] = useState(0);
   const [showRecruitmentInfo, setShowRecruitmentInfo] = useState(false);
 
-  const handleAgeLabelClick = () => {
+  useEffect(() => {
+    const fetchRecruitmentInfoStatus = async () => {
+      if (!supabase) return;
+      const { data, error } = await supabase
+        .from('guest_recruitment_status')
+        .select('show_info')
+        .eq('id', '00000000-0000-0000-0000-000000000001')
+        .single();
+      
+      if (!error && data) {
+        setShowRecruitmentInfo(data.show_info);
+      }
+    };
+    fetchRecruitmentInfoStatus();
+  }, []);
+
+  const handleAgeLabelClick = async () => {
     const newCount = ageClickCount + 1;
     setAgeClickCount(newCount);
     if (newCount === 10) {
-      setShowRecruitmentInfo(!showRecruitmentInfo);
+      const newStatus = !showRecruitmentInfo;
+      setShowRecruitmentInfo(newStatus);
       setAgeClickCount(0);
+
+      if (supabase) {
+        await supabase
+          .from('guest_recruitment_status')
+          .update({ show_info: newStatus })
+          .eq('id', '00000000-0000-0000-0000-000000000001');
+      }
     }
   };
 
