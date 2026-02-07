@@ -771,7 +771,7 @@ export default function GuestApplicationBoard() {
                 onClick={() => setIsTimeEditActive(!isTimeEditActive)}
                 className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
                   isTimeEditActive 
-                    ? 'bg-blue-600 text-white shadow-md' 
+                    ? 'bg-red-600 text-white shadow-md hover:bg-red-700' 
                     : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
                 }`}
               >
