@@ -563,19 +563,6 @@ export default function GuestApplicationBoard() {
           </Button>
         </div>
 
-        <div className="flex justify-center mb-6">
-          <button 
-            onClick={() => setIsTimeEditActive(!isTimeEditActive)}
-            className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
-              isTimeEditActive 
-                ? 'bg-blue-600 text-white shadow-md' 
-                : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
-            }`}
-          >
-            이름/등록시간 변경
-          </button>
-        </div>
-
         {/* 정규 멤버 게스트 목록 표시 */}
         {applications.length > 0 && applications.some(app => app.name.includes('(정규)')) && (
           <div className="bg-white rounded-2xl shadow-lg overflow-hidden mb-6">
@@ -779,6 +766,18 @@ export default function GuestApplicationBoard() {
 
         {!isLoading && (
           <div className="mt-6 space-y-4">
+            <div className="flex justify-center">
+              <button 
+                onClick={() => setIsTimeEditActive(!isTimeEditActive)}
+                className={`px-4 py-2 rounded-lg text-sm font-semibold transition-colors ${
+                  isTimeEditActive 
+                    ? 'bg-blue-600 text-white shadow-md' 
+                    : 'bg-gray-200 text-gray-700 hover:bg-gray-300'
+                }`}
+              >
+                이름/등록시간 변경
+              </button>
+            </div>
             <div className="flex items-center justify-center gap-4">
               <div className="text-center text-sm text-gray-500">
                 총 {applications.filter(app => !hiddenRows.has(app.id)).length}명 신청
