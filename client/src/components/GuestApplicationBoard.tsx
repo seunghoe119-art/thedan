@@ -146,10 +146,19 @@ export default function GuestApplicationBoard() {
     setGameDateString(getCurrentWeekFridayDate(selectedWeekOffset));
   }, [selectedWeekOffset]);
 
+  const [lastUnhiddenId, setLastUnhiddenId] = useState<string | null>(null);
+
   const toggleRowVisibility = async (id: string) => {
     const isNowHidden = !hiddenRows.has(id);
     const app = applications.find(a => a.id === id);
     
+    if (isNowHidden) {
+      setLastUnhiddenId(null);
+    } else {
+      setLastUnhiddenId(id);
+      setTimeout(() => setLastUnhiddenId(null), 3000);
+    }
+
     // ICNF 멤버인 경우 icn_members 테이블의 카운트와 이력 조정
     if (app && app.name.includes('(ICNF)') && supabase) {
       try {
@@ -441,10 +450,14 @@ export default function GuestApplicationBoard() {
           const groupedData = groupByParty(data || []);
 
           // Sort: non-hidden first, then hidden at the bottom
+          // When unhidden, it will naturally move to its original chronological position among non-hidden rows.
+          // The user specifically wants unhidden items to stay at the bottom OR be easily identifiable.
+          // We will use the lastUnhiddenId to highlight it.
           const sortedData = groupedData.sort((a, b) => {
             const aHidden = a.is_hidden ? 1 : 0;
             const bHidden = b.is_hidden ? 1 : 0;
-            return aHidden - bHidden;
+            if (aHidden !== bHidden) return aHidden - bHidden;
+            return new Date(a.applied_at).getTime() - new Date(b.applied_at).getTime();
           });
 
           setApplications(sortedData);
@@ -656,8 +669,13 @@ export default function GuestApplicationBoard() {
                     const isSelected = selectedRows.has(app.id);
                     const isICNF = app.name.includes('(ICNF)');
                     const colorClass = isHidden ? 'text-white' : (app.groupColor || '');
+                    const isJustUnhidden = lastUnhiddenId === app.id;
                     return (
-                      <TableRow key={app.id} data-testid={`row-guest-${app.id}`}>
+                      <TableRow 
+                        key={app.id} 
+                        data-testid={`row-guest-${app.id}`}
+                        className={`transition-all duration-500 ${isJustUnhidden ? 'bg-blue-100 animate-pulse' : ''}`}
+                      >
                         <TableCell className="text-center px-0 py-3 whitespace-nowrap">
                           <div className="flex justify-center">
                             <Checkbox
