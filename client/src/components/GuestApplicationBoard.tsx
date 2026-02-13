@@ -154,6 +154,32 @@ export default function GuestApplicationBoard() {
   }, [selectedWeekOffset]);
 
   const [lastUnhiddenId, setLastUnhiddenId] = useState<string | null>(null);
+  const [calcValues, setCalcValues] = useState({
+    icnfCount: 0,
+    icnfPrice: 5000,
+    regCount: 0,
+    regPrice: 5000,
+    guestCount: 0,
+    guestPrice: 8000,
+    friendCount: 0,
+    friendPrice: 0
+  });
+
+  useEffect(() => {
+    const activeApps = applications.filter(app => !hiddenRows.has(app.id));
+    setCalcValues(prev => ({
+      ...prev,
+      icnfCount: activeApps.filter(app => app.name.includes('(ICNF)')).length,
+      regCount: activeApps.filter(app => app.name.includes('(정규)')).length,
+      guestCount: activeApps.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !app.name.includes('(지인)')).length,
+      friendCount: activeApps.filter(app => app.name.includes('(지인)')).length
+    }));
+  }, [applications, hiddenRows]);
+
+  const handleCalcChange = (field: keyof typeof calcValues, value: string) => {
+    const numValue = parseInt(value) || 0;
+    setCalcValues(prev => ({ ...prev, [field]: numValue }));
+  };
 
   const toggleRowVisibility = async (id: string) => {
     const isNowHidden = !hiddenRows.has(id);
@@ -835,26 +861,98 @@ export default function GuestApplicationBoard() {
                       </div>
                       
                       {/* ICNF 멤버 계산 */}
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-800">ICNF 총 {applications.filter(app => app.name.includes('(ICNF)') && !hiddenRows.has(app.id)).length}명 * 5,000원</span>
-                        <span className="font-semibold text-gray-900">
-                          {(applications.filter(app => app.name.includes('(ICNF)') && !hiddenRows.has(app.id)).length * 5000).toLocaleString()}원
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
+                          <span>ICNF 총</span>
+                          <input 
+                            type="number" 
+                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.icnfCount}
+                            onChange={(e) => handleCalcChange('icnfCount', e.target.value)}
+                          />
+                          <span>명 *</span>
+                          <input 
+                            type="number" 
+                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.icnfPrice}
+                            onChange={(e) => handleCalcChange('icnfPrice', e.target.value)}
+                          />
+                          <span>원</span>
+                        </div>
+                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
+                          {(calcValues.icnfCount * calcValues.icnfPrice).toLocaleString()}원
                         </span>
                       </div>
 
                       {/* 정규 멤버 게스트 계산 */}
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-800">정규 총 {applications.filter(app => app.name.includes('(정규)') && !hiddenRows.has(app.id)).length}명 * 5,000원</span>
-                        <span className="font-semibold text-gray-900">
-                          {(applications.filter(app => app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 5000).toLocaleString()}원
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
+                          <span>정규 총</span>
+                          <input 
+                            type="number" 
+                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.regCount}
+                            onChange={(e) => handleCalcChange('regCount', e.target.value)}
+                          />
+                          <span>명 *</span>
+                          <input 
+                            type="number" 
+                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.regPrice}
+                            onChange={(e) => handleCalcChange('regPrice', e.target.value)}
+                          />
+                          <span>원</span>
+                        </div>
+                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
+                          {(calcValues.regCount * calcValues.regPrice).toLocaleString()}원
                         </span>
                       </div>
 
                       {/* 일반 게스트 계산 */}
-                      <div className="flex justify-between items-center">
-                        <span className="text-gray-800">일반게스트 {applications.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !hiddenRows.has(app.id)).length}명 * 8,000원</span>
-                        <span className="font-semibold text-gray-900">
-                          {(applications.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 8000).toLocaleString()}원
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
+                          <span>일반 총</span>
+                          <input 
+                            type="number" 
+                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.guestCount}
+                            onChange={(e) => handleCalcChange('guestCount', e.target.value)}
+                          />
+                          <span>명 *</span>
+                          <input 
+                            type="number" 
+                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.guestPrice}
+                            onChange={(e) => handleCalcChange('guestPrice', e.target.value)}
+                          />
+                          <span>원</span>
+                        </div>
+                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
+                          {(calcValues.guestCount * calcValues.guestPrice).toLocaleString()}원
+                        </span>
+                      </div>
+
+                      {/* 지인 게스트 계산 */}
+                      <div className="flex justify-between items-center gap-2">
+                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
+                          <span>지인 총</span>
+                          <input 
+                            type="number" 
+                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.friendCount}
+                            onChange={(e) => handleCalcChange('friendCount', e.target.value)}
+                          />
+                          <span>명 *</span>
+                          <input 
+                            type="number" 
+                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
+                            value={calcValues.friendPrice}
+                            onChange={(e) => handleCalcChange('friendPrice', e.target.value)}
+                          />
+                          <span>원</span>
+                        </div>
+                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
+                          {(calcValues.friendCount * calcValues.friendPrice).toLocaleString()}원
                         </span>
                       </div>
                     </div>
@@ -864,9 +962,10 @@ export default function GuestApplicationBoard() {
                         <span className="text-lg font-bold text-gray-900">Total = </span>
                         <span className="text-lg font-black text-blue-600">
                           {(
-                            (applications.filter(app => app.name.includes('(ICNF)') && !hiddenRows.has(app.id)).length * 5000) +
-                            (applications.filter(app => app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 5000) +
-                            (applications.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 8000)
+                            (calcValues.icnfCount * calcValues.icnfPrice) +
+                            (calcValues.regCount * calcValues.regPrice) +
+                            (calcValues.guestCount * calcValues.guestPrice) +
+                            (calcValues.friendCount * calcValues.friendPrice)
                           ).toLocaleString()}원
                         </span>
                       </div>
