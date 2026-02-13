@@ -70,17 +70,6 @@ export default function GuestContact() {
       setShowRecruitmentInfo(newStatus);
       setAgeClickCount(0);
 
-      // 모집 안내 정보가 '표시 안함(false)' 상태가 될 때 (=다시 신청을 받고 있다면) 마감 상태 해제
-      if (!newStatus && isClosed) {
-        setIsClosed(false);
-        if (supabase) {
-          await supabase
-            .from('guest_recruitment_status')
-            .update({ is_closed: false })
-            .eq('id', '00000000-0000-0000-0000-000000000001');
-        }
-      }
-
       if (supabase) {
         await supabase
           .from('guest_recruitment_status')
@@ -360,8 +349,18 @@ export default function GuestContact() {
         console.error("Clipboard error:", clipboardErr);
       }
 
+      // 이름 뒤에 붙을 접미사 결정
+      // 1. 게스트 마감(isClosed) 상태일 때 -> (마감후신청)
+      // 2. 모집 안내 정보(showRecruitmentInfo) 활성화 상태일 때 -> (임시마감후신청)
+      let suffix = "";
+      if (isClosed) {
+        suffix = "(마감후신청)";
+      } else if (showRecruitmentInfo) {
+        suffix = "(임시마감후신청)";
+      }
+
       // Save main applicant to Supabase (전화번호 마스킹 적용)
-      const mainName = isClosed ? `${formData.name}(마감후신청)` : formData.name;
+      const mainName = `${formData.name}${suffix}`;
       const { error: mainError } = await supabase
         .from('guest_applications')
         .insert({
@@ -379,7 +378,7 @@ export default function GuestContact() {
       // Save additional guests to Supabase (전화번호 마스킹 적용)
       for (const guest of additionalGuests) {
         if (guest.name && guest.age && guest.position && guest.height) {
-          const guestName = isClosed ? `${guest.name}(마감후신청)` : guest.name;
+          const guestName = `${guest.name}${suffix}`;
           const { error: guestError } = await supabase
             .from('guest_applications')
             .insert({
