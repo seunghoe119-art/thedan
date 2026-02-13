@@ -5,9 +5,16 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight, X } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calculator } from 'lucide-react';
 import { toZonedTime } from 'date-fns-tz';
 import { addDays, getDay } from 'date-fns';
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 // 2초 이내 신청자를 같은 일행으로 그룹화
 function groupByParty(applications: GuestApplication[]): GroupedApplication[] {
@@ -803,6 +810,28 @@ export default function GuestApplicationBoard() {
               <p className="text-lg font-semibold text-blue-900">
                 {Math.max(0, totalSlots - applications.filter(app => !hiddenRows.has(app.id)).length)}명 게스트 모집중.
               </p>
+            </div>
+
+            <div className="flex justify-center pt-2">
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2 bg-white hover:bg-gray-50 border-gray-300 shadow-sm"
+                  >
+                    <Calculator className="h-4 w-4 text-blue-600" />
+                    입금 계산기
+                  </Button>
+                </DialogTrigger>
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold">입금 금액 추정기</DialogTitle>
+                  </DialogHeader>
+                  <div className="py-6 text-center text-gray-500">
+                    금액 계산을 위한 내역이 곧 추가될 예정입니다.
+                  </div>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         )}
