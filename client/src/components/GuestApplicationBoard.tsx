@@ -826,9 +826,51 @@ export default function GuestApplicationBoard() {
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
                     <DialogTitle className="text-xl font-bold">입금 금액 추정기</DialogTitle>
+                    <p className="text-sm text-gray-500 font-medium">{gameDateString}(금)</p>
                   </DialogHeader>
-                  <div className="py-6 text-center text-gray-500">
-                    금액 계산을 위한 내역이 곧 추가될 예정입니다.
+                  <div className="py-6 space-y-4">
+                    <div className="space-y-3">
+                      <div className="flex justify-between items-center text-sm">
+                        <span className="text-gray-600">멤버구성</span>
+                      </div>
+                      
+                      {/* ICNF 멤버 계산 */}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-800">ICNF 총 {applications.filter(app => app.name.includes('(ICNF)') && !hiddenRows.has(app.id)).length}명 * 5,000원</span>
+                        <span className="font-semibold text-gray-900">
+                          {(applications.filter(app => app.name.includes('(ICNF)') && !hiddenRows.has(app.id)).length * 5000).toLocaleString()}원
+                        </span>
+                      </div>
+
+                      {/* 정규 멤버 게스트 계산 */}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-800">정규 총 {applications.filter(app => app.name.includes('(정규)') && !hiddenRows.has(app.id)).length}명 * 5,000원</span>
+                        <span className="font-semibold text-gray-900">
+                          {(applications.filter(app => app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 5000).toLocaleString()}원
+                        </span>
+                      </div>
+
+                      {/* 일반 게스트 계산 */}
+                      <div className="flex justify-between items-center">
+                        <span className="text-gray-800">일반게스트 {applications.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !hiddenRows.has(app.id)).length}명 * 8,000원</span>
+                        <span className="font-semibold text-gray-900">
+                          {(applications.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 8000).toLocaleString()}원
+                        </span>
+                      </div>
+                    </div>
+
+                    <div className="pt-4 border-t border-gray-200">
+                      <div className="flex justify-between items-center">
+                        <span className="text-lg font-bold text-gray-900">Total = </span>
+                        <span className="text-lg font-black text-blue-600">
+                          {(
+                            (applications.filter(app => app.name.includes('(ICNF)') && !hiddenRows.has(app.id)).length * 5000) +
+                            (applications.filter(app => app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 5000) +
+                            (applications.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !hiddenRows.has(app.id)).length * 8000)
+                          ).toLocaleString()}원
+                        </span>
+                      </div>
+                    </div>
                   </div>
                 </DialogContent>
               </Dialog>
