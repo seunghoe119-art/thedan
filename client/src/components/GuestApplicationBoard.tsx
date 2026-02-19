@@ -383,6 +383,8 @@ export default function GuestApplicationBoard() {
     const currentIndex = colorCycle.indexOf(groupHeaderColor);
     const nextIndex = (currentIndex + 1) % colorCycle.length;
     const nextColor = colorCycle[nextIndex];
+    
+    // UI 우선 반영
     setGroupHeaderColor(nextColor);
 
     // 선택된 행이 있으면 그 행들의 applied_at을 변경
@@ -392,20 +394,14 @@ export default function GuestApplicationBoard() {
 
       let targetTime: string;
       if (nextColor === '') {
-        // 검정색(기본)으로 변경할 때는 현재 시간을 KST로 변환하여 적용 (일행 해제)
-        // 다른 사용자들과 겹치지 않게 하기 위해 각각 다른 시간을 줄 수도 있지만, 
-        // 여기서는 일단 현재 시간을 기준으로 각각 업데이트하여 그룹에서 분리되도록 함
         targetTime = new Date().toISOString();
       } else {
-        // 색상이 있는 그룹으로 묶을 때는 첫 번째 선택된 항목의 시간을 기준으로 사용
         targetTime = selectedApps[0].applied_at;
       }
 
-      // Supabase에서 모든 선택된 행들의 applied_at을 업데이트
       if (supabase) {
         try {
           const updates = selectedApps.map((app, index) => {
-            // 검정색일 때는 각각 1초씩 차이를 두어 그룹화되지 않게 함 (2초 이내 기준 회피)
             const finalTime = nextColor === '' 
               ? new Date(new Date(targetTime).getTime() + (index * 5000)).toISOString() 
               : targetTime;
