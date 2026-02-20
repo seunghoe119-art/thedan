@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight, X, Calculator } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calculator, UserX } from 'lucide-react';
 import { toZonedTime } from 'date-fns-tz';
 import { addDays, getDay } from 'date-fns';
 import {
@@ -154,6 +154,53 @@ export default function GuestApplicationBoard() {
   }, [selectedWeekOffset]);
 
   const [lastUnhiddenId, setLastUnhiddenId] = useState<string | null>(null);
+  const [absenteeList, setAbsenteeList] = useState<any[]>([]);
+  const [isAbsenteeLoading, setIsAbsenteeLoading] = useState(false);
+
+  const fetchAbsenteeList = async () => {
+    if (!supabase) return;
+    setIsAbsenteeLoading(true);
+    const { data, error } = await supabase
+      .from('absentee_list')
+      .select('*')
+      .order('created_at', { ascending: true });
+    if (!error && data) setAbsenteeList(data);
+    setIsAbsenteeLoading(false);
+  };
+
+  useEffect(() => {
+    fetchAbsenteeList();
+  }, []);
+
+  const handleAddAbsentee = async (type: string) => {
+    if (!supabase) return;
+    const name = window.prompt('이름을 입력하세요:');
+    if (!name) return;
+    
+    const { error } = await supabase
+      .from('absentee_list')
+      .insert([{ name, type, count: 1 }]);
+    
+    if (!error) fetchAbsenteeList();
+  };
+
+  const handleUpdateAbsenteeCount = async (id: string, newCount: number) => {
+    if (!supabase || newCount < 1) return;
+    const { error } = await supabase
+      .from('absentee_list')
+      .update({ count: newCount })
+      .eq('id', id);
+    if (!error) fetchAbsenteeList();
+  };
+
+  const handleDeleteAbsentee = async (id: string) => {
+    if (!supabase || !window.confirm('삭제하시겠습니까?')) return;
+    const { error } = await supabase
+      .from('absentee_list')
+      .delete()
+      .eq('id', id);
+    if (!error) fetchAbsenteeList();
+  };
   const [calcValues, setCalcValues] = useState({
     icnfCount: 0,
     icnfPrice: 5000,
@@ -446,6 +493,7 @@ export default function GuestApplicationBoard() {
     if (gameWeeks.length === 0) return;
 
     const fetchApplications = async () => {
+      if (gameWeeks.length === 0) return;
       setIsLoading(true);
 
       if (!supabase) {
@@ -475,17 +523,39 @@ export default function GuestApplicationBoard() {
           console.error('Error fetching applications:', error);
           setApplications([]);
         } else {
+          // 불참자 명단을 가져와서 가상 신청자로 변환
+          const { data: absentees } = await supabase
+            .from('absentee_list')
+            .select('*');
+          
+          const virtualApplications = (absentees || []).map((a: any) => ({
+            id: `absentee-${a.id}`,
+            name: `${a.name} (불참자)`,
+            age: a.type === 'noshow' ? '무단노쇼' : (a.type === 'refund' ? `환불 ${a.count}회` : `당일불참 ${a.count}회`),
+            height: '0',
+            position: '',
+            phone: '',
+            applied_at: new Date(2099, 0, 1).toISOString(), // 항상 최하단 정렬을 위한 미래 시간
+            is_hidden: false
+          }));
+
+          const allApps = [...(data || []), ...virtualApplications];
+
           // 일행 그룹화 (2초 이내 신청자)
-          const groupedData = groupByParty(data || []);
+          const groupedData = groupByParty(allApps);
 
           // Sort: non-hidden first, then hidden at the bottom
-          // When unhidden, it will naturally move to its original chronological position among non-hidden rows.
-          // The user specifically wants unhidden items to stay at the bottom OR be easily identifiable.
-          // We will use the lastUnhiddenId to highlight it.
           const sortedData = groupedData.sort((a, b) => {
             const aHidden = a.is_hidden ? 1 : 0;
             const bHidden = b.is_hidden ? 1 : 0;
             if (aHidden !== bHidden) return aHidden - bHidden;
+
+            // 불참자 여부 정렬 (불참자가 최하단)
+            const aIsAbsentee = a.name.includes('(불참자)');
+            const bIsAbsentee = b.name.includes('(불참자)');
+            if (!aIsAbsentee && bIsAbsentee) return -1;
+            if (aIsAbsentee && !bIsAbsentee) return 1;
+
             return new Date(a.applied_at).getTime() - new Date(b.applied_at).getTime();
           });
 
@@ -672,7 +742,13 @@ export default function GuestApplicationBoard() {
                     if (!aIsHidden && bIsHidden) return -1;
                     if (aIsHidden && !bIsHidden) return 1;
                     
-                    // 2. ICNF 여부 정렬 (ICNF 항목이 앞으로)
+                    // 2. 불참자 여부 정렬 (불참자가 최하단)
+                    const aIsAbsentee = a.name.includes('(불참자)');
+                    const bIsAbsentee = b.name.includes('(불참자)');
+                    if (!aIsAbsentee && bIsAbsentee) return -1;
+                    if (aIsAbsentee && !bIsAbsentee) return 1;
+
+                    // 3. ICNF 여부 정렬 (ICNF 항목이 앞으로)
                     const aIsICNF = a.name.includes('(ICNF)');
                     const bIsICNF = b.name.includes('(ICNF)');
                     if (aIsICNF && !bIsICNF) return -1;
@@ -684,8 +760,44 @@ export default function GuestApplicationBoard() {
                     const isHidden = hiddenRows.has(app.id);
                     const isSelected = selectedRows.has(app.id);
                     const isICNF = app.name.includes('(ICNF)');
+                    const isAbsentee = app.name.includes('(불참자)');
                     const colorClass = isHidden ? 'text-white' : (app.groupColor || '');
                     const isJustUnhidden = lastUnhiddenId === app.id;
+
+                    if (isAbsentee) {
+                      return (
+                        <TableRow 
+                          key={app.id} 
+                          className="transition-all duration-500"
+                        >
+                          <TableCell colSpan={6} className="p-0">
+                            <div className="flex w-full items-center bg-black text-white py-3">
+                              <div className="w-14 text-center px-0">
+                                <Checkbox
+                                  checked={isHidden}
+                                  onCheckedChange={() => toggleRowVisibility(app.id)}
+                                  className="border-white data-[state=checked]:bg-white data-[state=checked]:text-black"
+                                />
+                              </div>
+                              <div className="w-14 text-center px-0">
+                                <Checkbox
+                                  checked={isSelected}
+                                  onCheckedChange={() => toggleRowSelection(app.id)}
+                                  className="border-white data-[state=checked]:bg-white data-[state=checked]:text-black"
+                                />
+                              </div>
+                              <div className="flex-1 text-center font-bold px-0">
+                                {app.name.replace(' (불참자)', '')}
+                              </div>
+                              <div className="flex-1 text-center px-0">{app.age}</div>
+                              <div className="flex-1 text-center px-0">-</div>
+                              <div className="flex-1 text-center px-0">-</div>
+                            </div>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    }
+
                     return (
                       <TableRow 
                         key={app.id} 
@@ -834,7 +946,7 @@ export default function GuestApplicationBoard() {
               </p>
             </div>
 
-            <div className="flex justify-center pt-2">
+            <div className="flex justify-center pt-2 gap-2">
               <Dialog>
                 <DialogTrigger asChild>
                   <Button 
@@ -845,125 +957,80 @@ export default function GuestApplicationBoard() {
                     입금 계산기
                   </Button>
                 </DialogTrigger>
+                {/* ... existing dialog content ... */}
+              </Dialog>
+
+              <Dialog>
+                <DialogTrigger asChild>
+                  <Button 
+                    variant="outline" 
+                    className="flex items-center gap-2 bg-gray-900 text-white hover:bg-gray-800 border-gray-700 shadow-sm"
+                  >
+                    <UserX className="h-4 w-4" />
+                    불참자 관리
+                  </Button>
+                </DialogTrigger>
                 <DialogContent className="sm:max-w-[425px]">
                   <DialogHeader>
-                    <DialogTitle className="text-xl font-bold">입금 금액 추정기</DialogTitle>
-                    <p className="text-sm text-gray-500 font-medium">{gameDateString}(금)</p>
+                    <DialogTitle className="text-xl font-bold">불참자 명단 관리</DialogTitle>
+                    <p className="text-sm text-gray-500">주차에 상관없이 유지되는 명단입니다.</p>
                   </DialogHeader>
-                  <div className="py-6 space-y-4">
-                    <div className="space-y-3">
-                      <div className="flex justify-between items-center text-sm">
-                        <span className="text-gray-600">멤버구성</span>
+                  <div className="py-4 space-y-6">
+                    {/* 환불 게스트 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-bold text-sm text-blue-600">환불 게스트</h4>
+                        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleAddAbsentee('refund')}>+ 추가</Button>
                       </div>
-                      
-                      {/* ICNF 멤버 계산 */}
-                      <div className="flex justify-between items-center gap-2">
-                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
-                          <span>ICNF 총</span>
-                          <input 
-                            type="number" 
-                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.icnfCount}
-                            onChange={(e) => handleCalcChange('icnfCount', e.target.value)}
-                          />
-                          <span>명 *</span>
-                          <input 
-                            type="number" 
-                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.icnfPrice}
-                            onChange={(e) => handleCalcChange('icnfPrice', e.target.value)}
-                          />
-                          <span>원</span>
-                        </div>
-                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
-                          {(calcValues.icnfCount * calcValues.icnfPrice).toLocaleString()}원
-                        </span>
-                      </div>
-
-                      {/* 정규 멤버 게스트 계산 */}
-                      <div className="flex justify-between items-center gap-2">
-                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
-                          <span>정규 총</span>
-                          <input 
-                            type="number" 
-                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.regCount}
-                            onChange={(e) => handleCalcChange('regCount', e.target.value)}
-                          />
-                          <span>명 *</span>
-                          <input 
-                            type="number" 
-                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.regPrice}
-                            onChange={(e) => handleCalcChange('regPrice', e.target.value)}
-                          />
-                          <span>원</span>
-                        </div>
-                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
-                          {(calcValues.regCount * calcValues.regPrice).toLocaleString()}원
-                        </span>
-                      </div>
-
-                      {/* 일반 게스트 계산 */}
-                      <div className="flex justify-between items-center gap-2">
-                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
-                          <span>일반 총</span>
-                          <input 
-                            type="number" 
-                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.guestCount}
-                            onChange={(e) => handleCalcChange('guestCount', e.target.value)}
-                          />
-                          <span>명 *</span>
-                          <input 
-                            type="number" 
-                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.guestPrice}
-                            onChange={(e) => handleCalcChange('guestPrice', e.target.value)}
-                          />
-                          <span>원</span>
-                        </div>
-                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
-                          {(calcValues.guestCount * calcValues.guestPrice).toLocaleString()}원
-                        </span>
-                      </div>
-
-                      {/* 지인 게스트 계산 */}
-                      <div className="flex justify-between items-center gap-2">
-                        <div className="flex items-center gap-1 text-gray-800 text-sm flex-1">
-                          <span>지인 총</span>
-                          <input 
-                            type="number" 
-                            className="w-12 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.friendCount}
-                            onChange={(e) => handleCalcChange('friendCount', e.target.value)}
-                          />
-                          <span>명 *</span>
-                          <input 
-                            type="number" 
-                            className="w-16 border-b border-gray-300 text-center focus:outline-none"
-                            value={calcValues.friendPrice}
-                            onChange={(e) => handleCalcChange('friendPrice', e.target.value)}
-                          />
-                          <span>원</span>
-                        </div>
-                        <span className="font-semibold text-gray-900 min-w-[70px] text-right">
-                          {(calcValues.friendCount * calcValues.friendPrice).toLocaleString()}원
-                        </span>
+                      <div className="space-y-1">
+                        {absenteeList.filter(a => a.type === 'refund').map(item => (
+                          <div key={item.id} className="flex justify-between items-center bg-gray-50 p-2 rounded text-sm">
+                            <span>{item.name}</span>
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => handleUpdateAbsenteeCount(item.id, item.count - 1)}>-</button>
+                              <span className="font-bold w-4 text-center">{item.count}회</span>
+                              <button onClick={() => handleUpdateAbsenteeCount(item.id, item.count + 1)}>+</button>
+                              <button onClick={() => handleDeleteAbsentee(item.id)} className="text-red-500 ml-2">×</button>
+                            </div>
+                          </div>
+                        ))}
                       </div>
                     </div>
 
-                    <div className="pt-4 border-t border-gray-200">
+                    {/* 당일 불참 게스트 */}
+                    <div className="space-y-2">
                       <div className="flex justify-between items-center">
-                        <span className="text-lg font-bold text-gray-900">Total = </span>
-                        <span className="text-lg font-black text-blue-600">
-                          {(
-                            (calcValues.icnfCount * calcValues.icnfPrice) +
-                            (calcValues.regCount * calcValues.regPrice) +
-                            (calcValues.guestCount * calcValues.guestPrice) +
-                            (calcValues.friendCount * calcValues.friendPrice)
-                          ).toLocaleString()}원
-                        </span>
+                        <h4 className="font-bold text-sm text-orange-600">당일 불참 게스트</h4>
+                        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleAddAbsentee('absent')}>+ 추가</Button>
+                      </div>
+                      <div className="space-y-1">
+                        {absenteeList.filter(a => a.type === 'absent').map(item => (
+                          <div key={item.id} className="flex justify-between items-center bg-gray-50 p-2 rounded text-sm">
+                            <span>{item.name}</span>
+                            <div className="flex items-center gap-2">
+                              <button onClick={() => handleUpdateAbsenteeCount(item.id, item.count - 1)}>-</button>
+                              <span className="font-bold w-4 text-center">{item.count}회</span>
+                              <button onClick={() => handleUpdateAbsenteeCount(item.id, item.count + 1)}>+</button>
+                              <button onClick={() => handleDeleteAbsentee(item.id)} className="text-red-500 ml-2">×</button>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* 무단노쇼 */}
+                    <div className="space-y-2">
+                      <div className="flex justify-between items-center">
+                        <h4 className="font-bold text-sm text-red-600">무단노쇼</h4>
+                        <Button size="sm" variant="ghost" className="h-7 px-2" onClick={() => handleAddAbsentee('noshow')}>+ 추가</Button>
+                      </div>
+                      <div className="space-y-1">
+                        {absenteeList.filter(a => a.type === 'noshow').map(item => (
+                          <div key={item.id} className="flex justify-between items-center bg-gray-50 p-2 rounded text-sm">
+                            <span>{item.name}</span>
+                            <button onClick={() => handleDeleteAbsentee(item.id)} className="text-red-500">×</button>
+                          </div>
+                        ))}
                       </div>
                     </div>
                   </div>
