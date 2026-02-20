@@ -77,7 +77,8 @@ interface GuestApplication {
   phone: string;
   applied_at: string;
   applied_at_kst?: string;
-  is_hidden?: boolean;
+  is_hidden: boolean;
+  type?: 'refund' | 'absent' | 'noshow';
 }
 
 interface GroupedApplication extends GuestApplication {
@@ -447,13 +448,14 @@ export default function GuestApplicationBoard() {
       }
 
       if (supabase) {
+        const client = supabase;
         try {
           const updates = selectedApps.map((app, index) => {
             const finalTime = nextColor === '' 
               ? new Date(new Date(targetTime).getTime() + (index * 5000)).toISOString() 
               : targetTime;
               
-            return supabase
+            return client
               .from('guest_applications')
               .update({ applied_at: finalTime })
               .eq('id', app.id);
@@ -511,6 +513,7 @@ export default function GuestApplicationBoard() {
       setCurrentWeekStartDate(selectedWeek.startDateUTC);
 
       try {
+        if (!supabase) return;
         // Fetch applications
         const { data, error } = await supabase
           .from('guest_applications')
@@ -531,22 +534,21 @@ export default function GuestApplicationBoard() {
           const virtualApplications = (absentees || [])
             .filter((a: any) => {
               // 해당 주차에 동일한 이름의 신청자가 있고, 숨김 처리가 되지 않은 경우에만 표시
-              // 또한 해당 신청자가 '정규'나 'ICNF'가 아닌 일반 게스트인 경우에만 불참자 처리 (선택 사항)
-              return (data || []).some(app => app.name === a.name && !app.is_hidden);
+              return (data || []).some((app: any) => app.name === a.name && !app.is_hidden);
             })
             .map((a: any) => {
               // 원본 신청 데이터를 찾아서 필요한 정보(groupColor 등)를 가져옴
-              const originalApp = (data || []).find(app => app.name === a.name && !app.is_hidden);
+              const originalApp = (data || []).find((app: any) => app.name === a.name && !app.is_hidden);
               
               return {
                 id: `absentee-${a.id}`,
                 name: `${a.name} (불참자)`,
                 age: a.type === 'noshow' ? '무단노쇼' : (a.type === 'refund' ? `환불 ${a.count}회` : `당일불참 ${a.count}회`),
                 type: a.type,
-                height: originalApp?.height || '0',
-                position: originalApp?.position || '',
-                phone: originalApp?.phone || '',
-                groupColor: originalApp?.groupColor,
+                height: (originalApp as any)?.height || '0',
+                position: (originalApp as any)?.position || '',
+                phone: (originalApp as any)?.phone || '',
+                groupColor: (originalApp as any)?.groupColor,
                 applied_at: new Date(2099, 0, 1).toISOString(), // 항상 최하단 정렬을 위한 미래 시간
                 is_hidden: false
               };

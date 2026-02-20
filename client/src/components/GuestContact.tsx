@@ -292,6 +292,7 @@ export default function GuestContact() {
       toast({
         title: "복사 완료!",
         description: "메시지가 클립보드에 복사되었습니다.",
+        duration: 9999999,
       });
     } catch (err) {
       toast({
@@ -344,6 +345,7 @@ export default function GuestContact() {
         toast({
           title: "메시지 복사 완료!",
           description: "신청 메시지가 클립보드에 복사되었습니다.",
+          duration: 9999999,
         });
       } catch (clipboardErr) {
         console.error("Clipboard error:", clipboardErr);
@@ -762,6 +764,15 @@ export default function GuestContact() {
                     alt="게스트 신청 예시" 
                     className="w-full h-auto"
                   />
+                </div>
+              </div>
+              <div className="mt-8 pt-8 border-t border-gray-800 text-center space-y-4">
+                <div className="bg-blue-900/30 border border-blue-500/30 rounded-xl p-6">
+                  <p className="text-blue-200 text-sm md:text-base leading-relaxed whitespace-pre-wrap">
+                    오픈 카카오톡방 링크로 이동이 안되셨을시,{"\n"}
+                    010-6467-8743으로{"\n"}
+                    멘트 복사후 연락 부탁드리겠습니다
+                  </p>
                 </div>
               </div>
             </form>
