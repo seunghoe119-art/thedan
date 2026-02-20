@@ -532,6 +532,7 @@ export default function GuestApplicationBoard() {
             id: `absentee-${a.id}`,
             name: `${a.name} (불참자)`,
             age: a.type === 'noshow' ? '무단노쇼' : (a.type === 'refund' ? `환불 ${a.count}회` : `당일불참 ${a.count}회`),
+            type: a.type,
             height: '0',
             position: '',
             phone: '',
@@ -765,13 +766,27 @@ export default function GuestApplicationBoard() {
                     const isJustUnhidden = lastUnhiddenId === app.id;
 
                     if (isAbsentee) {
+                      let bgColor = 'bg-black';
+                      let textColor = 'text-white';
+                      
+                      if (app.type === 'refund') {
+                        bgColor = 'bg-gray-400';
+                        textColor = 'text-white';
+                      } else if (app.type === 'absent') {
+                        bgColor = 'bg-black';
+                        textColor = 'text-white';
+                      } else if (app.type === 'noshow') {
+                        bgColor = 'bg-black';
+                        textColor = 'text-red-500';
+                      }
+
                       return (
                         <TableRow 
                           key={app.id} 
                           className="transition-all duration-500"
                         >
                           <TableCell colSpan={6} className="p-0">
-                            <div className="flex w-full items-center bg-black text-white py-3">
+                            <div className={`flex w-full items-center ${bgColor} ${textColor} py-3`}>
                               <div className="w-14 text-center px-0">
                                 <Checkbox
                                   checked={isHidden}
