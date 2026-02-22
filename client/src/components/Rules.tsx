@@ -5,7 +5,7 @@ export default function Rules() {
         <div className="text-center mb-16 relative pb-6">
           <h2 className="text-5xl md:text-6xl font-black text-black mb-6">Club Guidelines</h2>
           <p className="absolute bottom-0 right-0 text-xs text-gray-400">
-            기준 25.12.17
+            기준 25.12.18
           </p>
         </div>
 
@@ -15,12 +15,12 @@ export default function Rules() {
             <div className="space-y-4">
               <div className="border-l-4 border-green-500 pl-4">
                 <h4 className="font-bold">정규 회원 - 가입비 없음</h4>
-                <p className="text-gray-600">₩5,000 / 참여 횟수</p>
+                <p className="text-gray-600">₩6,000 / 참여 횟수</p>
                 <p className="text-xs text-gray-500 mt-1">*정규회원이 많아 대관비 부족시 ₩1,000원 익월 청구</p>
               </div>
               <div className="border-l-4 border-blue-500 pl-4">
                 <h4 className="font-bold">매월 회 선택가능</h4>
-                <p className="text-gray-600">₩10,000 / 2회 참여, 월 <br />₩20,000 / 4회 참여, 월</p>
+                <p className="text-gray-600">₩12,000 / 2회 참여, 월 <br />₩24,000 / 4회 참여, 월</p>
               </div>
               <div className="border-l-4 border-accent pl-4">
                 <h4 className="font-bold">선택횟수보다 더 많이 참여한 경우, 게스트비로 청구</h4>
