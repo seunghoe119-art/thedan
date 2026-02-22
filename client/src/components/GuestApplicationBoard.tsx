@@ -986,7 +986,125 @@ export default function GuestApplicationBoard() {
                     입금 계산기
                   </Button>
                 </DialogTrigger>
-                {/* ... existing dialog content ... */}
+                <DialogContent className="sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle className="text-xl font-bold">입금 계산기</DialogTitle>
+                    <p className="text-sm text-gray-500">현재 주차의 신청 현황을 바탕으로 계산합니다.</p>
+                  </DialogHeader>
+                  <div className="py-4 space-y-4">
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">ICNF 인원</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={calcValues.icnfCount}
+                            onChange={(e) => handleCalcChange('icnfCount', e.target.value)}
+                            className="w-full px-3 py-2 border rounded-md"
+                          />
+                          <span className="text-sm text-gray-500">명</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">ICNF 회비</label>
+                        <input
+                          type="number"
+                          step="1000"
+                          value={calcValues.icnfPrice}
+                          onChange={(e) => handleCalcChange('icnfPrice', e.target.value)}
+                          className="w-full px-3 py-2 border rounded-md"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">정규 인원</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={calcValues.regCount}
+                            onChange={(e) => handleCalcChange('regCount', e.target.value)}
+                            className="w-full px-3 py-2 border rounded-md"
+                          />
+                          <span className="text-sm text-gray-500">명</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">정규 회비</label>
+                        <input
+                          type="number"
+                          step="1000"
+                          value={calcValues.regPrice}
+                          onChange={(e) => handleCalcChange('regPrice', e.target.value)}
+                          className="w-full px-3 py-2 border rounded-md"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">게스트 인원</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={calcValues.guestCount}
+                            onChange={(e) => handleCalcChange('guestCount', e.target.value)}
+                            className="w-full px-3 py-2 border rounded-md"
+                          />
+                          <span className="text-sm text-gray-500">명</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">게스트 회비</label>
+                        <input
+                          type="number"
+                          step="1000"
+                          value={calcValues.guestPrice}
+                          onChange={(e) => handleCalcChange('guestPrice', e.target.value)}
+                          className="w-full px-3 py-2 border rounded-md"
+                        />
+                      </div>
+
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">지인 인원</label>
+                        <div className="flex items-center gap-2">
+                          <input
+                            type="number"
+                            value={calcValues.friendCount}
+                            onChange={(e) => handleCalcChange('friendCount', e.target.value)}
+                            className="w-full px-3 py-2 border rounded-md"
+                          />
+                          <span className="text-sm text-gray-500">명</span>
+                        </div>
+                      </div>
+                      <div className="space-y-2">
+                        <label className="text-sm font-medium text-gray-700">지인 회비</label>
+                        <input
+                          type="number"
+                          step="1000"
+                          value={calcValues.friendPrice}
+                          onChange={(e) => handleCalcChange('friendPrice', e.target.value)}
+                          className="w-full px-3 py-2 border rounded-md"
+                        />
+                      </div>
+                    </div>
+
+                    <div className="mt-6 p-4 bg-gray-900 rounded-xl text-white">
+                      <div className="flex justify-between items-center mb-2">
+                        <span className="text-gray-400">총 인원</span>
+                        <span className="font-bold">{calcValues.icnfCount + calcValues.regCount + calcValues.guestCount + calcValues.friendCount}명</span>
+                      </div>
+                      <div className="flex justify-between items-center text-xl">
+                        <span className="font-bold">예상 입금액</span>
+                        <span className="font-bold text-blue-400">
+                          ₩{(
+                            (calcValues.icnfCount * calcValues.icnfPrice) +
+                            (calcValues.regCount * calcValues.regPrice) +
+                            (calcValues.guestCount * calcValues.guestPrice) +
+                            (calcValues.friendCount * calcValues.friendPrice)
+                          ).toLocaleString()}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+                </DialogContent>
               </Dialog>
 
               <Dialog>
