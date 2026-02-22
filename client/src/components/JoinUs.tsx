@@ -305,7 +305,7 @@ export default function JoinUs() {
                     게임이 진행되어 대관비 부족시<br />
                     ₩1,000원 익월 청구
                   </p>
-                  <p className="text-2xl font-bold text-white">₩5,000/참여 횟수</p>
+                  <p className="text-2xl font-bold text-white">₩6,000/참여 횟수</p>
                 </div>
 
                 <div 
@@ -502,7 +502,7 @@ export default function JoinUs() {
                       required
                       data-testid="radio-membership-regular"
                     />
-                    <span className="ml-3">정규 회원 (₩10,000/월2회)</span>
+                    <span className="ml-3">정규 회원 (₩12,000/월2회)</span>
                   </label>
                   <label className="flex items-center">
                     <input 
@@ -514,7 +514,7 @@ export default function JoinUs() {
                       required
                       data-testid="radio-membership-dormant"
                     />
-                    <span className="ml-3">정규 회원 (₩20,000/월4회)</span>
+                    <span className="ml-3">정규 회원 (₩24,000/월4회)</span>
                   </label>
                   <label className="flex items-center">
                     <input 
