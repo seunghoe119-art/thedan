@@ -45,6 +45,8 @@ export default function GuestContact() {
 
   const [ageClickCount, setAgeClickCount] = useState(0);
   const [showRecruitmentInfo, setShowRecruitmentInfo] = useState(false);
+  const [positionClickCount, setPositionClickCount] = useState(0);
+  const [showClosedNotice, setShowClosedNotice] = useState(false);
 
   useEffect(() => {
     const fetchRecruitmentInfoStatus = async () => {
@@ -76,6 +78,15 @@ export default function GuestContact() {
           .update({ show_info: newStatus })
           .eq('id', '00000000-0000-0000-0000-000000000001');
       }
+    }
+  };
+
+  const handlePositionLabelClick = () => {
+    const newCount = positionClickCount + 1;
+    setPositionClickCount(newCount);
+    if (newCount === 10) {
+      setShowClosedNotice(!showClosedNotice);
+      setPositionClickCount(0);
     }
   };
 
@@ -529,7 +540,12 @@ export default function GuestContact() {
               </div>
 
               <div>
-                <Label className="text-white">포지션</Label>
+                <Label 
+                  className="text-white cursor-pointer select-none"
+                  onClick={handlePositionLabelClick}
+                >
+                  포지션
+                </Label>
                 <select 
                   className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
                   value={formData.position}
@@ -543,6 +559,16 @@ export default function GuestContact() {
                   <option value="baseline">밑선라인 4,5번</option>
                 </select>
               </div>
+
+              {showClosedNotice && (
+                <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 animate-in fade-in zoom-in duration-300">
+                  <p className="text-blue-900 text-center font-medium leading-relaxed whitespace-pre-wrap">
+                    정규회원을 제외한 금주 40대 게스트 인원이 마감되었습니다.{"\n"}
+                    연락처포함 정보를 오픈카카오톡에 올려주시면{"\n"}
+                    저녁18시 불참자가 생겼을시 연락드리겠습니다.
+                  </p>
+                </div>
+              )}
 
               <div>
                 <Label className="text-white">키</Label>
