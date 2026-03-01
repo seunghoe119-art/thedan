@@ -500,7 +500,7 @@ export default function MembershipStatusBoard() {
                   </>
                 )}
                 <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 참가</TableHead>
-                <TableHead className="font-bold text-gray-900 text-center px-1">삭제</TableHead>
+                {isExpanded && <TableHead className="font-bold text-gray-900 text-center px-1">삭제</TableHead>}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
                     <span>{isExpanded ? '누적' : '출석'}</span>
@@ -671,36 +671,38 @@ export default function MembershipStatusBoard() {
                           <span className="text-gray-400 text-xs">-</span>
                         )}
                       </TableCell>
-                      <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                        <AlertDialog>
-                          <AlertDialogTrigger asChild>
-                            <Button
-                              variant="ghost"
-                              size="sm"
-                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                            >
-                              <Trash2 className="h-4 w-4" />
-                            </Button>
-                          </AlertDialogTrigger>
-                          <AlertDialogContent>
-                            <AlertDialogHeader>
-                              <AlertDialogTitle>정말 삭제할까요?</AlertDialogTitle>
-                              <AlertDialogDescription>
-                                {app.name}님의 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다.
-                              </AlertDialogDescription>
-                            </AlertDialogHeader>
-                            <AlertDialogFooter>
-                              <AlertDialogCancel>취소</AlertDialogCancel>
-                              <AlertDialogAction 
-                                onClick={() => handleDelete(app.id)}
-                                className="bg-red-500 hover:bg-red-600"
+                      {isExpanded && (
+                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
                               >
-                                삭제
-                              </AlertDialogAction>
-                            </AlertDialogFooter>
-                          </AlertDialogContent>
-                        </AlertDialog>
-                      </TableCell>
+                                <Trash2 className="h-4 w-4" />
+                              </Button>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>정말 삭제할까요?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  {app.name}님의 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>취소</AlertDialogCancel>
+                                <AlertDialogAction 
+                                  onClick={() => handleDelete(app.id)}
+                                  className="bg-red-500 hover:bg-red-600"
+                                >
+                                  삭제
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </TableCell>
+                      )}
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
                         {isExpanded ? (
                           <span className={`font-semibold ${colorClass || 'text-green-600'}`}>{app.cumulativeCount}회차</span>
