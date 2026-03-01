@@ -457,7 +457,7 @@ export default function GuestContact() {
                   {gameDateString}, (금)
                 </p>
                 <p className="text-white font-bold text-lg">
-                  21:00 ~ 23:30
+                  21:30 ~ 24:00
                 </p>
               </div>
               {isClosed ? (
