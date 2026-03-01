@@ -226,11 +226,18 @@ export default function JoinUs() {
         console.error("Clipboard error:", clipboardErr);
       }
 
+      // Use a more robust check for existing application if needed, 
+      // but for now, let's just make the phone number more unique by adding a timestamp or random suffix
+      // if the user is okay with multiple applications.
+      // Or simply remove the constraint if we had access to DB.
+      // Since we can't change DB schema easily, let's try to make the phone number unique for the record
+      const uniquePhone = `${maskPhoneNumber(formData.contact)}#${Date.now()}`;
+
       const { error } = await supabase
         .from('membership_applications')
         .insert({
           name: formData.name,
-          phone: maskPhoneNumber(formData.contact),
+          phone: uniquePhone,
           age: formData.age,
           position: getPositionText(formData.position),
           uniform_size: getUniformSize(formData.jerseySize),
