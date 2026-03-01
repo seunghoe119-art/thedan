@@ -693,9 +693,8 @@ export default function MembershipStatusBoard() {
                               <AlertDialogFooter>
                                 <AlertDialogCancel>취소</AlertDialogCancel>
                                 <AlertDialogAction 
-                                  onClick={async (e) => {
-                                    e.preventDefault();
-                                    await handleDelete(app.id);
+                                  onClick={(e) => {
+                                    handleDelete(app.id);
                                   }}
                                   className="bg-red-500 hover:bg-red-600"
                                 >

@@ -226,18 +226,16 @@ export default function JoinUs() {
         console.error("Clipboard error:", clipboardErr);
       }
 
-      // Use a more robust check for existing application if needed, 
-      // but for now, let's just make the phone number more unique by adding a timestamp or random suffix
-      // if the user is okay with multiple applications.
-      // Or simply remove the constraint if we had access to DB.
-      // Since we can't change DB schema easily, let's try to make the phone number unique for the record
-      const uniquePhone = `${maskPhoneNumber(formData.contact)}#${Date.now()}`;
+      // 중복 방지를 위해 원본 번호를 그대로 사용하되, DB 제약 조건 문제를 피하기 위해
+      // phone_check 제약 조건(13자리: 010-0000-0000)을 준수하는 마스킹 번호를 생성합니다.
+      // Date.now()를 사용하면 번호 형식이 깨져서 DB 에러가 발생할 수 있습니다.
+      const maskedPhone = maskPhoneNumber(formData.contact);
 
       const { error } = await supabase
         .from('membership_applications')
         .insert({
           name: formData.name,
-          phone: uniquePhone,
+          phone: maskedPhone,
           age: formData.age,
           position: getPositionText(formData.position),
           uniform_size: getUniformSize(formData.jerseySize),
