@@ -4,7 +4,7 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Trash2, UserX, ChevronLeft, ChevronRight } from 'lucide-react';
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -330,25 +330,25 @@ export default function MembershipStatusBoard() {
     }
   };
 
-  const handleDelete = async (id: string) => {
+  const handleHide = async (id: string) => {
     if (!supabase) return;
     try {
       const { error } = await supabase
         .from('membership_applications')
-        .delete()
+        .update({ is_hidden: true })
         .eq('id', id);
 
       if (error) throw error;
 
       setApplications(prev => prev.filter(app => app.id !== id));
       toast({
-        title: "삭제 완료",
-        description: "성공적으로 삭제되었습니다.",
+        title: "숨김 완료",
+        description: "성공적으로 숨김 처리되었습니다.",
       });
     } catch (err) {
-      console.error('Error deleting member:', err);
+      console.error('Error hiding member:', err);
       toast({
-        title: "삭제 실패",
+        title: "숨김 실패",
         description: "다시 시도해주세요.",
         variant: "destructive",
       });
@@ -370,8 +370,9 @@ export default function MembershipStatusBoard() {
 
         const { data: monthData, error: monthError } = await supabase
           .from('membership_applications')
-          .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date')
+          .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date, is_hidden')
           .eq('target_month', selectedMonth.value)
+          .eq('is_hidden', false)
           .in('plan', ['regular_2', 'regular_4'])
           .order('created_at', { ascending: true });
 
@@ -548,7 +549,7 @@ export default function MembershipStatusBoard() {
                   </>
                 )}
                 <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 참가</TableHead>
-                {isExpanded && <TableHead className="font-bold text-gray-900 text-center px-1">삭제</TableHead>}
+                {isExpanded && <TableHead className="font-bold text-gray-900 text-center px-1">수정</TableHead>}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
                     <span>{isExpanded ? '누적' : '출석'}</span>
@@ -719,41 +720,41 @@ export default function MembershipStatusBoard() {
                           <span className="text-gray-400 text-xs">-</span>
                         )}
                       </TableCell>
-                      {isExpanded && (
-                        <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                          <AlertDialog>
-                            <AlertDialogTrigger asChild>
-                              <Button
-                                variant="ghost"
-                                size="sm"
-                                className="text-red-500 hover:text-red-700 hover:bg-red-50"
-                              >
-                                <Trash2 className="h-4 w-4" />
-                              </Button>
-                            </AlertDialogTrigger>
-                            <AlertDialogContent>
-                              <AlertDialogHeader>
-                                <AlertDialogTitle>정말 삭제할까요?</AlertDialogTitle>
-                                <AlertDialogDescription>
-                                  {app.name}님의 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다.
-                                </AlertDialogDescription>
-                              </AlertDialogHeader>
-                              <AlertDialogFooter>
-                                <AlertDialogCancel>취소</AlertDialogCancel>
-                                <AlertDialogAction 
-                                  onClick={async (e) => {
-                                    // 기본 동작을 방지하지 않고 handleDelete가 완료될 때까지 기다립니다.
-                                    await handleDelete(app.id);
-                                  }}
-                                  className="bg-red-500 hover:bg-red-600"
+                        {isExpanded && (
+                          <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                            <AlertDialog>
+                              <AlertDialogTrigger asChild>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  className="text-red-500 hover:text-red-700 hover:bg-red-50"
                                 >
-                                  삭제
-                                </AlertDialogAction>
-                              </AlertDialogFooter>
-                            </AlertDialogContent>
-                          </AlertDialog>
-                        </TableCell>
-                      )}
+                                  <UserX className="h-4 w-4" />
+                                </Button>
+                              </AlertDialogTrigger>
+                              <AlertDialogContent>
+                                <AlertDialogHeader>
+                                  <AlertDialogTitle>정말 숨길까요?</AlertDialogTitle>
+                                  <AlertDialogDescription>
+                                    {app.name}님의 데이터를 목록에서 숨깁니다.
+                                  </AlertDialogDescription>
+                                </AlertDialogHeader>
+                                <AlertDialogFooter>
+                                  <AlertDialogCancel>취소</AlertDialogCancel>
+                                  <AlertDialogAction 
+                                    onClick={async (e) => {
+                                      // 기본 동작을 방지하지 않고 handleHide가 완료될 때까지 기다립니다.
+                                      await handleHide(app.id);
+                                    }}
+                                    className="bg-red-500 hover:bg-red-600"
+                                  >
+                                    숨김
+                                  </AlertDialogAction>
+                                </AlertDialogFooter>
+                              </AlertDialogContent>
+                            </AlertDialog>
+                          </TableCell>
+                        )}
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
                         {isExpanded ? (
                           <span className={`font-semibold ${colorClass || 'text-green-600'}`}>{app.cumulativeCount}회차</span>
