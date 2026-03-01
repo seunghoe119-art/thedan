@@ -411,7 +411,7 @@ export default function MembershipStatusBoard() {
           });
         }
 
-        const displayApps: DisplayApplication[] = monthData
+        const displayApps: DisplayApplication[] = (monthData || [])
           .filter(app => !app.is_hidden)
           .map(app => {
             const totalCount = app.plan === 'regular_4' ? 4 : 2;
