@@ -279,7 +279,55 @@ export default function MembershipStatusBoard() {
   };
 
   const handleAttendance = async (app: DisplayApplication) => {
-    // ... existing attendance code ...
+    if (!supabase) return;
+
+    try {
+      const totalCount = app.plan === 'regular_4' ? 4 : 2;
+      const newUsedCount = (app.used_count || 0) + 1;
+
+      if (newUsedCount > totalCount) {
+        toast({
+          title: "출석 횟수 초과",
+          description: "이번 달 정규 출석 횟수를 모두 사용하셨습니다.",
+          variant: "destructive",
+        });
+        return;
+      }
+
+      const now = new Date();
+      const kstDate = new Date(now.getTime() + (9 * 60 * 60 * 1000));
+      const dateString = kstDate.toISOString().split('T')[0];
+
+      const { error } = await supabase
+        .from('membership_applications')
+        .update({
+          used_count: newUsedCount,
+          last_game_date: dateString
+        })
+        .eq('id', app.id);
+
+      if (error) throw error;
+
+      setApplications(prev =>
+        prev.map(a =>
+          a.id === app.id
+            ? { ...a, used_count: newUsedCount, remainingCount: Math.max(0, totalCount - newUsedCount) }
+            : a
+        )
+      );
+
+      toast({
+        title: "출석 체크 완료",
+        description: `${app.name}님의 출석이 기록되었습니다. (남은 횟수: ${totalCount - newUsedCount}회)`,
+      });
+    } catch (err) {
+      console.error('Error updating attendance:', err);
+      toast({
+        title: "출석 체크 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
   };
 
   const handleDelete = async (id: string) => {
@@ -693,8 +741,9 @@ export default function MembershipStatusBoard() {
                               <AlertDialogFooter>
                                 <AlertDialogCancel>취소</AlertDialogCancel>
                                 <AlertDialogAction 
-                                  onClick={(e) => {
-                                    handleDelete(app.id);
+                                  onClick={async (e) => {
+                                    // 기본 동작을 방지하지 않고 handleDelete가 완료될 때까지 기다립니다.
+                                    await handleDelete(app.id);
                                   }}
                                   className="bg-red-500 hover:bg-red-600"
                                 >

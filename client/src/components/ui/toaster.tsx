@@ -10,11 +10,11 @@ import {
 import { useEffect, useState } from "react"
 
 export function Toaster() {
-  const { toasts, dismiss } = useToast()
+  const { toasts } = useToast()
 
   return (
     <ToastProvider>
-      {toasts.map(function ({ id, title, description, action, ...props }) {
+      {toasts.map(function ({ id, title, description, action, duration, ...props }) {
         return (
           <ToastWithTimer 
             key={id} 
@@ -22,8 +22,8 @@ export function Toaster() {
             title={title}
             description={description}
             action={action}
-            dismiss={dismiss}
-            {...props}
+            duration={duration}
+            {...props} 
           />
         )
       })}
@@ -32,37 +32,54 @@ export function Toaster() {
   )
 }
 
-function ToastWithTimer({ id, title, description, action, dismiss, ...props }: any) {
-  const [countdown, setCountdown] = useState(3)
+function ToastWithTimer({ id, title, description, action, duration, ...props }: any) {
+  const [timeLeft, setTimeLeft] = useState<number | null>(null);
 
   useEffect(() => {
-    const timer = setInterval(() => {
-      setCountdown((prev) => {
-        if (prev <= 1) {
-          clearInterval(timer)
-          dismiss(id)
-          return 0
-        }
-        return prev - 1
-      })
-    }, 1000)
+    if (duration && typeof duration === 'number' && duration < 1000000) {
+      setTimeLeft(Math.ceil(duration / 1000));
+      const startTime = Date.now();
+      
+      const interval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, Math.ceil((duration - elapsed) / 1000));
+        setTimeLeft(remaining);
+        if (remaining <= 0) clearInterval(interval);
+      }, 1000);
 
-    return () => clearInterval(timer)
-  }, [id, dismiss])
+      return () => clearInterval(interval);
+    } else if (!duration) {
+      // Default duration for shadcn toast is usually 5000ms
+      const defaultDuration = 5000;
+      setTimeLeft(Math.ceil(defaultDuration / 1000));
+      const startTime = Date.now();
+      
+      const interval = setInterval(() => {
+        const elapsed = Date.now() - startTime;
+        const remaining = Math.max(0, Math.ceil((defaultDuration - elapsed) / 1000));
+        setTimeLeft(remaining);
+        if (remaining <= 0) clearInterval(interval);
+      }, 1000);
+
+      return () => clearInterval(interval);
+    }
+  }, [duration]);
 
   return (
     <Toast {...props}>
-      <div className="grid gap-1 flex-1">
+      <div className="grid gap-1">
         {title && <ToastTitle>{title}</ToastTitle>}
         {description && (
-          <ToastDescription>{description}</ToastDescription>
+          <ToastDescription>
+            {description}
+            {timeLeft !== null && timeLeft > 0 && (
+              <span className="ml-2 text-xs opacity-70">({timeLeft}초 후 닫힘)</span>
+            )}
+          </ToastDescription>
         )}
-      </div>
-      <div className="text-sm font-semibold text-gray-600 ml-4">
-        {countdown}s
       </div>
       {action}
       <ToastClose />
     </Toast>
-  )
+  );
 }

@@ -226,9 +226,8 @@ export default function JoinUs() {
         console.error("Clipboard error:", clipboardErr);
       }
 
-      // 중복 방지를 위해 원본 번호를 그대로 사용하되, DB 제약 조건 문제를 피하기 위해
-      // phone_check 제약 조건(13자리: 010-0000-0000)을 준수하는 마스킹 번호를 생성합니다.
-      // Date.now()를 사용하면 번호 형식이 깨져서 DB 에러가 발생할 수 있습니다.
+      // 중복 방지를 위해 번호를 마스킹하되, DB의 13자리 제약조건을 준수합니다.
+      // 010-1200-0000 형식을 유지합니다.
       const maskedPhone = maskPhoneNumber(formData.contact);
 
       const { error } = await supabase
