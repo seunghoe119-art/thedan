@@ -539,39 +539,39 @@ export default function GuestContact() {
                 </select>
               </div>
 
-              <div>
-                <Label 
-                  className="text-white cursor-pointer select-none"
-                  onClick={handlePositionLabelClick}
-                >
-                  포지션
-                </Label>
-                <select 
-                  className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
-                  value={formData.position}
-                  onChange={(e) => setFormData({ ...formData, position: e.target.value })}
-                  required
-                  data-testid="guest-select-position"
-                >
-                  <option value="">포지션 선택</option>
-                  <option value="leading">리딩 가드 1,2번</option>
-                  <option value="small">스몰포워드 2,3번</option>
-                  <option value="baseline">밑선라인 4,5번</option>
-                </select>
-              </div>
-
               {showClosedNotice && (
                 <div className="bg-blue-50 border border-blue-200 rounded-xl p-6 animate-in fade-in zoom-in duration-300">
-                  <p className="text-blue-900 text-center font-medium leading-relaxed whitespace-pre-wrap">
-                    정규회원을 제외한 금주 40대 게스트 인원이 마감되었습니다.{"\n"}
-                    연락처포함 정보를 오픈카카오톡에 올려주시면{"\n"}
-                    저녁18시 불참자가 생겼을시 연락드리겠습니다.
+                  <p className="text-blue-900 text-center font-bold leading-relaxed whitespace-pre-wrap">
+                    정규 회원을 제외한 금주 40대 게스트 인원이 마감되었습니다.{"\n"}
+                    연락처를 포함한 정보를 오픈 카카오톡에 올려주시면,{"\n"}
+                    저녁 18시 불참자가 생겼을 시 연락드리겠습니다.
                   </p>
                 </div>
               )}
 
               <div>
-                <Label className="text-white">키</Label>
+                  <Label 
+                    className="text-white cursor-pointer select-none"
+                    onClick={handlePositionLabelClick}
+                  >
+                    포지션
+                  </Label>
+                  <select 
+                    className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
+                    value={formData.position}
+                    onChange={(e) => setFormData({ ...formData, position: e.target.value })}
+                    required
+                    data-testid="guest-select-position"
+                  >
+                    <option value="">포지션 선택</option>
+                    <option value="leading">리딩 가드 1,2번</option>
+                    <option value="small">스몰포워드 2,3번</option>
+                    <option value="baseline">밑선라인 4,5번</option>
+                  </select>
+                </div>
+
+                <div>
+                  <Label className="text-white">키</Label>
                 <select 
                   className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
                   value={formData.height}
