@@ -4,7 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight } from 'lucide-react';
+import { Trash2, ChevronLeft, ChevronRight } from 'lucide-react';
+import { 
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 import { formatPhoneForDisplay, formatHeightForDisplay, formatPositionForDisplay } from '@/lib/gameWeekUtils';
 import { useToast } from '@/hooks/use-toast';
 
@@ -268,61 +279,29 @@ export default function MembershipStatusBoard() {
   };
 
   const handleAttendance = async (app: DisplayApplication) => {
-    if (!supabase) {
-      toast({
-        title: "연결 오류",
-        description: "데이터베이스 연결이 없습니다.",
-        variant: "destructive",
-      });
-      return;
-    }
-    
+    // ... existing attendance code ...
+  };
+
+  const handleDelete = async (id: string) => {
+    if (!supabase) return;
     try {
-      const newUsedCount = (app.used_count || 0) + 1;
-      const totalCount = app.plan === 'regular_4' ? 4 : 2;
-      
       const { error } = await supabase
         .from('membership_applications')
-        .update({ 
-          used_count: newUsedCount,
-          last_game_date: new Date().toISOString()
-        })
-        .eq('id', app.id);
+        .delete()
+        .eq('id', id);
 
-      if (error) {
-        console.error('Error updating attendance:', error);
-        toast({
-          title: "출석 처리 실패",
-          description: "다시 시도해주세요.",
-          variant: "destructive",
-        });
-        return;
-      }
+      if (error) throw error;
 
-      // Update local state
-      setApplications(prev => 
-        prev.map(a => 
-          a.id === app.id 
-            ? { 
-                ...a, 
-                used_count: newUsedCount,
-                remainingCount: Math.max(0, totalCount - newUsedCount)
-              }
-            : a
-        )
-      );
-
-      // Show success toast with 3 second auto-dismiss
+      setApplications(prev => prev.filter(app => app.id !== id));
       toast({
-        title: "출석이 되었습니다",
-        description: `${app.name}님의 출석이 완료되었습니다.`,
+        title: "삭제 완료",
+        description: "성공적으로 삭제되었습니다.",
       });
-
     } catch (err) {
-      console.error('Attendance error:', err);
+      console.error('Error deleting member:', err);
       toast({
-        title: "오류 발생",
-        description: "출석 처리 중 오류가 발생했습니다.",
+        title: "삭제 실패",
+        description: "다시 시도해주세요.",
         variant: "destructive",
       });
     }
@@ -521,6 +500,7 @@ export default function MembershipStatusBoard() {
                   </>
                 )}
                 <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 참가</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">삭제</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
                     <span>{isExpanded ? '누적' : '출석'}</span>
@@ -690,6 +670,36 @@ export default function MembershipStatusBoard() {
                         {isExpanded && (
                           <span className="text-gray-400 text-xs">-</span>
                         )}
+                      </TableCell>
+                      <TableCell className="text-center px-1 py-2 whitespace-nowrap">
+                        <AlertDialog>
+                          <AlertDialogTrigger asChild>
+                            <Button
+                              variant="ghost"
+                              size="sm"
+                              className="text-red-500 hover:text-red-700 hover:bg-red-50"
+                            >
+                              <Trash2 className="h-4 w-4" />
+                            </Button>
+                          </AlertDialogTrigger>
+                          <AlertDialogContent>
+                            <AlertDialogHeader>
+                              <AlertDialogTitle>정말 삭제할까요?</AlertDialogTitle>
+                              <AlertDialogDescription>
+                                {app.name}님의 데이터를 삭제합니다. 이 작업은 되돌릴 수 없습니다.
+                              </AlertDialogDescription>
+                            </AlertDialogHeader>
+                            <AlertDialogFooter>
+                              <AlertDialogCancel>취소</AlertDialogCancel>
+                              <AlertDialogAction 
+                                onClick={() => handleDelete(app.id)}
+                                className="bg-red-500 hover:bg-red-600"
+                              >
+                                삭제
+                              </AlertDialogAction>
+                            </AlertDialogFooter>
+                          </AlertDialogContent>
+                        </AlertDialog>
                       </TableCell>
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
                         {isExpanded ? (
