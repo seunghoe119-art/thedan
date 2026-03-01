@@ -331,13 +331,28 @@ export default function MembershipStatusBoard() {
   };
 
   const handleHide = async (id: string) => {
-    // membership_applications 테이블에 is_hidden 컬럼이 없어서 클라이언트 측에서만 필터링하도록 수정하거나,
-    // DB 스키마 업데이트가 필요합니다. 현재는 기능이 동작하지 않으므로 안내 메시지를 띄웁니다.
-    toast({
-      title: "기능 제한",
-      description: "DB에 is_hidden 컬럼이 없어 숨김 기능을 사용할 수 없습니다. 관리자에게 문의하세요.",
-      variant: "destructive",
-    });
+    if (!supabase) return;
+    try {
+      const { error } = await supabase
+        .from('membership_applications')
+        .update({ is_hidden: true })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev => prev.filter(app => app.id !== id));
+      toast({
+        title: "숨김 완료",
+        description: "성공적으로 숨김 처리되었습니다.",
+      });
+    } catch (err) {
+      console.error('Error hiding member:', err);
+      toast({
+        title: "숨김 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
   };
 
   useEffect(() => {
@@ -355,7 +370,7 @@ export default function MembershipStatusBoard() {
 
         const { data: monthData, error: monthError } = await supabase
           .from('membership_applications')
-          .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date')
+          .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date, is_hidden')
           .eq('target_month', selectedMonth.value)
           .in('plan', ['regular_2', 'regular_4'])
           .order('created_at', { ascending: true });
@@ -397,6 +412,7 @@ export default function MembershipStatusBoard() {
         }
 
         const displayApps: DisplayApplication[] = (monthData || [])
+          .filter(app => !app.is_hidden)
           .map(app => {
             const totalCount = app.plan === 'regular_4' ? 4 : 2;
             const usedCount = app.used_count || 0;
