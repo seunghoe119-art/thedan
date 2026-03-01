@@ -372,7 +372,6 @@ export default function MembershipStatusBoard() {
           .from('membership_applications')
           .select('id, name, phone, age, position, height_range, uniform_size, plan, target_month, used_count, group_color, payment_status, created_at, last_game_date, is_hidden')
           .eq('target_month', selectedMonth.value)
-          .eq('is_hidden', false)
           .in('plan', ['regular_2', 'regular_4'])
           .order('created_at', { ascending: true });
 
@@ -412,18 +411,20 @@ export default function MembershipStatusBoard() {
           });
         }
 
-        const displayApps: DisplayApplication[] = monthData.map(app => {
-          const totalCount = app.plan === 'regular_4' ? 4 : 2;
-          const usedCount = app.used_count || 0;
-          const remainingCount = Math.max(0, totalCount - usedCount);
-          
-          return {
-            ...app,
-            cumulativeCount: phoneCounts[app.phone] || 1,
-            planDisplay: getPlanDisplay(app.plan),
-            remainingCount,
-          };
-        });
+        const displayApps: DisplayApplication[] = monthData
+          .filter(app => !app.is_hidden)
+          .map(app => {
+            const totalCount = app.plan === 'regular_4' ? 4 : 2;
+            const usedCount = app.used_count || 0;
+            const remainingCount = Math.max(0, totalCount - usedCount);
+            
+            return {
+              ...app,
+              cumulativeCount: phoneCounts[app.phone] || 1,
+              planDisplay: getPlanDisplay(app.plan),
+              remainingCount,
+            };
+          });
 
         setApplications(displayApps);
       } catch (err) {
