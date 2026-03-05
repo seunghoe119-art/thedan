@@ -100,15 +100,6 @@ export default function MembershipStatusBoard() {
   const [editName, setEditName] = useState<string>('');
   const [isTimeEditActive, setIsTimeEditActive] = useState(false);
 
-  const selectedMonth = monthOptions[selectedMonthIndex];
-
-  const [isNextRegDialogOpen, setIsNextRegDialogOpen] = useState(false);
-  const [nextRegMember, setNextRegMember] = useState<DisplayApplication | null>(null);
-  const [nextRegParams, setNextRegData] = useState({
-    targetMonth: '',
-    plan: 'regular_2'
-  });
-
   const handleNextMonthRegistration = async () => {
     if (!supabase || !nextRegMember || !nextRegParams.targetMonth) return;
 
@@ -146,6 +137,17 @@ export default function MembershipStatusBoard() {
       });
     }
   };
+
+  const selectedMonth = monthOptions[selectedMonthIndex];
+
+  const [isNextRegDialogOpen, setIsNextRegDialogOpen] = useState(false);
+  const [nextRegMember, setNextRegMember] = useState<DisplayApplication | null>(null);
+  const [nextRegParams, setNextRegData] = useState({
+    targetMonth: '',
+    plan: 'regular_2'
+  });
+
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newMember, setNewMember] = useState({
     name: '',
     phone: '',
