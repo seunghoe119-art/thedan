@@ -316,6 +316,7 @@ export default function GuestContact() {
 
   const [heightClickCount, setHeightClickCount] = useState(0);
   const [showFeeNotice, setShowFeeNotice] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
   const handleHeightLabelClick = () => {
     const newCount = heightClickCount + 1;
