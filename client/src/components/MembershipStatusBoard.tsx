@@ -95,7 +95,7 @@ export default function MembershipStatusBoard() {
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [groupHeaderColor, setGroupHeaderColor] = useState<string>('');
   const [editingId, setEditingId] = useState<string | null>(null);
-  const [editType, setEditType] = useState<'name' | 'time' | null>(null);
+  const [editType, setEditType] = useState<'name' | 'time' | 'count' | null>(null);
   const [editValue, setEditValue] = useState<string>('');
   const [editName, setEditName] = useState<string>('');
   const [editCount, setEditCount] = useState<number>(0);
@@ -221,24 +221,37 @@ export default function MembershipStatusBoard() {
     }
   };
 
-  const handleCountEdit = async (id: string, newCount: number) => {
+  const handleCountEdit = async (id: string, newRemainingCount: number) => {
     if (!supabase) return;
+    
+    const app = applications.find(a => a.id === id);
+    if (!app) return;
+    
+    if (newRemainingCount === app.remainingCount) {
+      setEditingId(null);
+      setEditType(null);
+      return;
+    }
+    
+    const totalCount = app.plan === 'regular_4' ? 4 : 2;
+    const newUsedCount = Math.max(0, totalCount - newRemainingCount);
+    
     try {
       const { error } = await supabase
         .from('membership_applications')
-        .update({ used_count: newCount })
+        .update({ used_count: newUsedCount })
         .eq('id', id);
 
       if (error) throw error;
 
       setApplications(prev =>
-        prev.map(app => (app.id === id ? { ...app, used_count: newCount, remainingCount: (app.plan === 'regular_4' ? 4 : 2) - newCount } : app))
+        prev.map(a => (a.id === id ? { ...a, used_count: newUsedCount, remainingCount: newRemainingCount } : a))
       );
       setEditingId(null);
       setEditType(null);
       toast({
-        title: "출석 횟수 수정 완료",
-        description: "성공적으로 변경되었습니다.",
+        title: "남은 횟수 수정 완료",
+        description: `${app.name}님: 남은 횟수 ${newRemainingCount}회로 변경되었습니다.`,
       });
     } catch (err) {
       console.error('Error updating count:', err);
@@ -989,21 +1002,27 @@ export default function MembershipStatusBoard() {
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatHeightForDisplay(app.height_range)}</TableCell>
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
                           <TableCell className={`text-center font-semibold px-1 py-2 whitespace-nowrap ${colorClass || 'text-blue-600'}`}>
-                            {editingId === app.id && editType === 'time' && isTimeEditActive ? (
+                            {editingId === app.id && editType === 'count' ? (
                               <input
                                 type="number"
+                                min="0"
+                                max={app.plan === 'regular_4' ? 4 : 2}
                                 value={editCount}
                                 onChange={(e) => setEditCount(parseInt(e.target.value) || 0)}
-                                onBlur={() => handleCountEdit(app.id, editCount)}
+                                onBlur={() => {
+                                  setTimeout(() => handleCountEdit(app.id, editCount), 150);
+                                }}
                                 onKeyDown={(e) => {
-                                  if (e.key === 'Enter') handleCountEdit(app.id, editCount);
+                                  if (e.key === 'Enter') {
+                                    (e.target as HTMLInputElement).blur();
+                                  }
                                   if (e.key === 'Escape') {
                                     setEditingId(null);
                                     setEditType(null);
                                   }
                                 }}
                                 autoFocus
-                                className="w-12 px-1 py-0.5 border rounded text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                                className="w-14 px-1 py-0.5 border rounded text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                               />
                             ) : (
                               <div 
@@ -1011,8 +1030,8 @@ export default function MembershipStatusBoard() {
                                 onClick={() => {
                                   if (!isTimeEditActive) return;
                                   setEditingId(app.id);
-                                  setEditType('time');
-                                  setEditCount(app.used_count || 0);
+                                  setEditType('count');
+                                  setEditCount(app.remainingCount);
                                 }}
                               >
                                 {app.remainingCount}회
