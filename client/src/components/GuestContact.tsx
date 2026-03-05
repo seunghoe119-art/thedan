@@ -319,6 +319,27 @@ export default function GuestContact() {
   const [feeNoticeTime, setFeeNoticeTime] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
+  useEffect(() => {
+    async function checkExistingLog() {
+      if (!supabase) return;
+      try {
+        const { data, error } = await supabase
+          .from('fee_notice_logs')
+          .select('display_time')
+          .order('triggered_at', { ascending: false })
+          .limit(1);
+        
+        if (!error && data && data.length > 0) {
+          setFeeNoticeTime(data[0].display_time);
+          setShowFeeNotice(true);
+        }
+      } catch (err) {
+        console.error('Error fetching fee notice log:', err);
+      }
+    }
+    checkExistingLog();
+  }, []);
+
   const handleHeightLabelClick = async () => {
     const newCount = heightClickCount + 1;
     if (newCount >= 10) {
@@ -342,9 +363,11 @@ export default function GuestContact() {
       setFeeNoticeTime(fullDateStr);
       setHeightClickCount(0);
 
-      // Save to Supabase
       if (supabase) {
         try {
+          // Delete old logs first to keep only the latest one if desired, 
+          // or just insert and we fetch the latest in useEffect.
+          // To ensure it persists and we always see the "latest" across all users:
           await supabase
             .from('fee_notice_logs')
             .insert([{ 
