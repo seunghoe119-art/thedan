@@ -316,13 +316,37 @@ export default function GuestContact() {
 
   const [heightClickCount, setHeightClickCount] = useState(0);
   const [showFeeNotice, setShowFeeNotice] = useState(false);
+  const [feeNoticeTime, setFeeNoticeTime] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const handleHeightLabelClick = () => {
+  const handleHeightLabelClick = async () => {
     const newCount = heightClickCount + 1;
     if (newCount >= 10) {
+      const now = new Date();
+      const kstDate = toZonedTime(now, KST_TIMEZONE);
+      const hours = kstDate.getHours();
+      const minutes = kstDate.getMinutes().toString().padStart(2, '0');
+      const ampm = hours >= 12 ? 'pm' : 'am';
+      const displayHours = hours % 12 || 12;
+      const timeStr = `${displayHours}:${minutes}${ampm}`;
+      
       setShowFeeNotice(true);
+      setFeeNoticeTime(timeStr);
       setHeightClickCount(0);
+
+      // Save to Supabase
+      if (supabase) {
+        try {
+          await supabase
+            .from('fee_notice_logs')
+            .insert([{ 
+              triggered_at: now.toISOString(),
+              display_time: timeStr
+            }]);
+        } catch (err) {
+          console.error('Error logging fee notice:', err);
+        }
+      }
     } else {
       setHeightClickCount(newCount);
     }
@@ -519,7 +543,7 @@ export default function GuestContact() {
               {showFeeNotice && (
                 <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center animate-in zoom-in duration-300">
                   <p className="text-lg font-bold text-yellow-900">
-                    게스트비 8,000원
+                    게스트비 8,000원 ({feeNoticeTime})
                   </p>
                 </div>
               )}
