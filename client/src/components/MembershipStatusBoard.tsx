@@ -100,6 +100,8 @@ export default function MembershipStatusBoard() {
   const [editName, setEditName] = useState<string>('');
   const [isTimeEditActive, setIsTimeEditActive] = useState(false);
 
+  const selectedMonth = monthOptions[selectedMonthIndex];
+
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
   const [newMember, setNewMember] = useState({
     name: '',
