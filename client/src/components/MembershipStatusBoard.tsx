@@ -140,6 +140,9 @@ export default function MembershipStatusBoard() {
 
   const selectedMonth = monthOptions[selectedMonthIndex];
 
+  const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
+  const [historyMember, setHistoryMember] = useState<DisplayApplication | null>(null);
+
   const [isNextRegDialogOpen, setIsNextRegDialogOpen] = useState(false);
   const [nextRegMember, setNextRegMember] = useState<DisplayApplication | null>(null);
   const [nextRegParams, setNextRegData] = useState({
@@ -703,6 +706,35 @@ export default function MembershipStatusBoard() {
           </button>
         </div>
 
+        <Dialog open={isHistoryDialogOpen} onOpenChange={setIsHistoryDialogOpen}>
+          <DialogContent className="sm:max-w-[425px] bg-white">
+            <DialogHeader>
+              <DialogTitle>{historyMember?.name} 멤버 상세 정보</DialogTitle>
+            </DialogHeader>
+            <div className="py-4">
+              <h4 className="text-sm font-bold mb-3">참석 이력 (게임일 기준)</h4>
+              <div className="bg-gray-50 border border-gray-100 rounded-lg p-3 space-y-2 max-h-[300px] overflow-y-auto">
+                {historyMember?.last_game_date ? (
+                  <div className="py-2 px-3 bg-white border border-gray-200 rounded text-gray-700">
+                    {historyMember.last_game_date}
+                  </div>
+                ) : (
+                  <div className="text-gray-400 text-center py-4 text-sm">참석 이력이 없습니다.</div>
+                )}
+                <div className="mt-4 pt-4 border-t border-gray-200">
+                  <p className="text-xs text-gray-500">신청일: {historyMember?.created_at ? new Intl.DateTimeFormat('ko-KR', { 
+                    year: 'numeric', 
+                    month: 'long', 
+                    day: 'numeric',
+                    hour: '2-digit',
+                    minute: '2-digit'
+                  }).format(new Date(historyMember.created_at)) : ''}</p>
+                </div>
+              </div>
+            </div>
+          </DialogContent>
+        </Dialog>
+
         <Dialog open={isNextRegDialogOpen} onOpenChange={setIsNextRegDialogOpen}>
           <DialogContent className="sm:max-w-[425px] bg-white">
             <DialogHeader>
@@ -874,16 +906,8 @@ export default function MembershipStatusBoard() {
                                 setEditType('name');
                                 setEditValue(app.name);
                               } else {
-                                toast({
-                                  title: `${app.name}님 신청 정보`,
-                                  description: `신청일: ${new Intl.DateTimeFormat('ko-KR', { 
-                                    year: 'numeric', 
-                                    month: 'long', 
-                                    day: 'numeric',
-                                    hour: '2-digit',
-                                    minute: '2-digit'
-                                  }).format(new Date(app.created_at))}`,
-                                });
+                                setHistoryMember(app);
+                                setIsHistoryDialogOpen(true);
                               }
                             }}
                           >
