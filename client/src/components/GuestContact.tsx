@@ -315,6 +315,7 @@ export default function GuestContact() {
   };
 
   const [heightClickCount, setHeightClickCount] = useState(0);
+  const [showFeeNotice, setShowFeeNotice] = useState(false);
   const [feeNoticeType, setFeeNoticeType] = useState<number>(0); // 0: off, 1: 8k, 2: 9k, 3: 10k, 4: 5k
   const [feeNoticeTime, setFeeNoticeTime] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
