@@ -320,62 +320,88 @@ export default function GuestContact() {
   const [isSubmitting, setIsSubmitting] = useState(false);
 
   useEffect(() => {
-    async function checkExistingLog() {
+    async function loadFeeNoticeState() {
       if (!supabase) return;
       try {
         const { data, error } = await supabase
           .from('fee_notice_logs')
-          .select('display_time')
+          .select('display_time, is_active')
           .order('triggered_at', { ascending: false })
           .limit(1);
         
-        if (!error && data && data.length > 0) {
+        if (error) {
+          console.error('Error fetching fee notice:', error);
+          return;
+        }
+        
+        if (data && data.length > 0 && data[0].is_active) {
           setFeeNoticeTime(data[0].display_time);
           setShowFeeNotice(true);
+        } else {
+          setShowFeeNotice(false);
         }
       } catch (err) {
         console.error('Error fetching fee notice log:', err);
       }
     }
-    checkExistingLog();
+    loadFeeNoticeState();
   }, []);
 
   const handleHeightLabelClick = async () => {
     const newCount = heightClickCount + 1;
     if (newCount >= 10) {
-      const now = new Date();
-      const kstDate = toZonedTime(now, KST_TIMEZONE);
-      
-      const year = kstDate.getFullYear();
-      const month = String(kstDate.getMonth() + 1).padStart(2, '0');
-      const day = String(kstDate.getDate()).padStart(2, '0');
-      const dayName = ['일', '월', '화', '수', '목', '금', '토'][kstDate.getDay()];
-      
-      const hours = kstDate.getHours();
-      const minutes = kstDate.getMinutes().toString().padStart(2, '0');
-      const ampm = hours >= 12 ? 'pm' : 'am';
-      const displayHours = hours % 12 || 12;
-      
-      const timeStr = `${displayHours}:${minutes}${ampm}`;
-      const fullDateStr = `${year}-${month}-${day}(${dayName}) ${timeStr}`;
-      
-      setShowFeeNotice(true);
-      setFeeNoticeTime(fullDateStr);
       setHeightClickCount(0);
+      
+      if (showFeeNotice) {
+        setShowFeeNotice(false);
+        setFeeNoticeTime('');
+        
+        if (supabase) {
+          try {
+            const now = new Date();
+            await supabase
+              .from('fee_notice_logs')
+              .insert([{
+                triggered_at: now.toISOString(),
+                display_time: '',
+                is_active: false
+              }]);
+          } catch (err) {
+            console.error('Error saving fee notice off:', err);
+          }
+        }
+      } else {
+        const now = new Date();
+        const kstDate = toZonedTime(now, KST_TIMEZONE);
+        
+        const year = kstDate.getFullYear();
+        const month = String(kstDate.getMonth() + 1).padStart(2, '0');
+        const day = String(kstDate.getDate()).padStart(2, '0');
+        const dayName = ['일', '월', '화', '수', '목', '금', '토'][kstDate.getDay()];
+        
+        const hours = kstDate.getHours();
+        const minutes = kstDate.getMinutes().toString().padStart(2, '0');
+        const ampm = hours >= 12 ? 'pm' : 'am';
+        const displayHours = hours % 12 || 12;
+        
+        const timeStr = `${displayHours}:${minutes}${ampm}`;
+        const fullDateStr = `${year}-${month}-${day}(${dayName}) ${timeStr}`;
+        
+        setShowFeeNotice(true);
+        setFeeNoticeTime(fullDateStr);
 
-      if (supabase) {
-        try {
-          // Delete old logs first to keep only the latest one if desired, 
-          // or just insert and we fetch the latest in useEffect.
-          // To ensure it persists and we always see the "latest" across all users:
-          await supabase
-            .from('fee_notice_logs')
-            .insert([{ 
-              triggered_at: now.toISOString(),
-              display_time: fullDateStr
-            }]);
-        } catch (err) {
-          console.error('Error logging fee notice:', err);
+        if (supabase) {
+          try {
+            await supabase
+              .from('fee_notice_logs')
+              .insert([{
+                triggered_at: now.toISOString(),
+                display_time: fullDateStr,
+                is_active: true
+              }]);
+          } catch (err) {
+            console.error('Error saving fee notice on:', err);
+          }
         }
       }
     } else {
