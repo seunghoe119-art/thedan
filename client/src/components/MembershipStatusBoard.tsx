@@ -102,7 +102,50 @@ export default function MembershipStatusBoard() {
 
   const selectedMonth = monthOptions[selectedMonthIndex];
 
-  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [isNextRegDialogOpen, setIsNextRegDialogOpen] = useState(false);
+  const [nextRegMember, setNextRegMember] = useState<DisplayApplication | null>(null);
+  const [nextRegParams, setNextRegData] = useState({
+    targetMonth: '',
+    plan: 'regular_2'
+  });
+
+  const handleNextMonthRegistration = async () => {
+    if (!supabase || !nextRegMember || !nextRegParams.targetMonth) return;
+
+    try {
+      const { error } = await supabase
+        .from('membership_applications')
+        .insert([{
+          name: nextRegMember.name,
+          phone: nextRegMember.phone,
+          age: nextRegMember.age,
+          position: nextRegMember.position,
+          height_range: nextRegMember.height_range,
+          uniform_size: nextRegMember.uniform_size,
+          plan: nextRegParams.plan,
+          target_month: nextRegParams.targetMonth,
+          payment_status: 'pending',
+          is_hidden: false,
+          used_count: 0
+        }]);
+
+      if (error) throw error;
+
+      toast({
+        title: "등록 완료",
+        description: `${nextRegMember.name}님의 ${nextRegParams.targetMonth.split('-')[1]}월 등록이 완료되었습니다.`,
+      });
+
+      setIsNextRegDialogOpen(false);
+    } catch (err) {
+      console.error('Error in next month registration:', err);
+      toast({
+        title: "등록 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
+  };
   const [newMember, setNewMember] = useState({
     name: '',
     phone: '',
@@ -658,6 +701,54 @@ export default function MembershipStatusBoard() {
           </button>
         </div>
 
+        <Dialog open={isNextRegDialogOpen} onOpenChange={setIsNextRegDialogOpen}>
+          <DialogContent className="sm:max-w-[425px] bg-white">
+            <DialogHeader>
+              <DialogTitle>{nextRegMember?.name}님 다음 달 등록</DialogTitle>
+            </DialogHeader>
+            <div className="grid gap-4 py-4">
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">대상 월</Label>
+                <div className="col-span-3">
+                  <Select 
+                    value={nextRegParams.targetMonth} 
+                    onValueChange={(v) => setNextRegData({...nextRegParams, targetMonth: v})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="월 선택" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      {monthOptions.slice(selectedMonthIndex + 1, selectedMonthIndex + 4).map(opt => (
+                        <SelectItem key={opt.value} value={opt.value}>{opt.label}</SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+              <div className="grid grid-cols-4 items-center gap-4">
+                <Label className="text-right">참여 횟수</Label>
+                <div className="col-span-3">
+                  <Select 
+                    value={nextRegParams.plan} 
+                    onValueChange={(v) => setNextRegData({...nextRegParams, plan: v})}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="횟수 선택" />
+                    </SelectTrigger>
+                    <SelectContent className="bg-white">
+                      <SelectItem value="regular_2">2회 (₩12,000)</SelectItem>
+                      <SelectItem value="regular_4">4회 (₩24,000)</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </div>
+              </div>
+            </div>
+            <DialogFooter>
+              <Button onClick={handleNextMonthRegistration} className="bg-blue-600 hover:bg-blue-700 text-white border-0">자동 등록하기</Button>
+            </DialogFooter>
+          </DialogContent>
+        </Dialog>
+
         <div className="bg-white rounded-2xl shadow-lg overflow-hidden">
           <Table>
             <TableHeader>
@@ -685,7 +776,7 @@ export default function MembershipStatusBoard() {
                     <TableHead className="font-bold text-gray-900 text-center px-1">출석횟수</TableHead>
                   </>
                 )}
-                <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 참가</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">회원다음등록</TableHead>
                 {isExpanded && <TableHead className="font-bold text-gray-900 text-center px-1">수정</TableHead>}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
@@ -847,10 +938,17 @@ export default function MembershipStatusBoard() {
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
                         {!isExpanded && (
                           <button
-                            onClick={() => handleAddAsGuest(app)}
-                            className="px-2 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition-colors"
+                            onClick={() => {
+                              setNextRegMember(app);
+                              setNextRegData({
+                                targetMonth: monthOptions[selectedMonthIndex + 1]?.value || '',
+                                plan: app.plan
+                              });
+                              setIsNextRegDialogOpen(true);
+                            }}
+                            className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"
                           >
-                            참가
+                            등록
                           </button>
                         )}
                         {isExpanded && (
