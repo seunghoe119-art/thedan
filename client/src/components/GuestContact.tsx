@@ -315,7 +315,7 @@ export default function GuestContact() {
   };
 
   const [heightClickCount, setHeightClickCount] = useState(0);
-  const [showFeeNotice, setShowFeeNotice] = useState(false);
+  const [feeNoticeType, setFeeNoticeType] = useState<number>(0); // 0: off, 1: 8k, 2: 9k, 3: 10k, 4: 5k
   const [feeNoticeTime, setFeeNoticeTime] = useState('');
   const [isSubmitting, setIsSubmitting] = useState(false);
 
@@ -325,7 +325,7 @@ export default function GuestContact() {
       try {
         const { data, error } = await supabase
           .from('fee_notice_logs')
-          .select('display_time, is_active')
+          .select('display_time, is_active, fee_amount')
           .order('triggered_at', { ascending: false })
           .limit(1);
         
@@ -336,9 +336,15 @@ export default function GuestContact() {
         
         if (data && data.length > 0 && data[0].is_active) {
           setFeeNoticeTime(data[0].display_time);
+          const amount = data[0].fee_amount || 8000;
+          if (amount === 8000) setFeeNoticeType(1);
+          else if (amount === 9000) setFeeNoticeType(2);
+          else if (amount === 10000) setFeeNoticeType(3);
+          else if (amount === 5000) setFeeNoticeType(4);
           setShowFeeNotice(true);
         } else {
           setShowFeeNotice(false);
+          setFeeNoticeType(0);
         }
       } catch (err) {
         console.error('Error fetching fee notice log:', err);
@@ -352,7 +358,10 @@ export default function GuestContact() {
     if (newCount >= 10) {
       setHeightClickCount(0);
       
-      if (showFeeNotice) {
+      let nextType = (feeNoticeType + 1) % 5;
+      setFeeNoticeType(nextType);
+
+      if (nextType === 0) {
         setShowFeeNotice(false);
         setFeeNoticeTime('');
         
@@ -364,7 +373,8 @@ export default function GuestContact() {
               .insert([{
                 triggered_at: now.toISOString(),
                 display_time: '',
-                is_active: false
+                is_active: false,
+                fee_amount: 0
               }]);
           } catch (err) {
             console.error('Error saving fee notice off:', err);
@@ -387,6 +397,9 @@ export default function GuestContact() {
         const timeStr = `${displayHours}:${minutes}${ampm}`;
         const fullDateStr = `${year}-${month}-${day}(${dayName}) ${timeStr}`;
         
+        const amounts = [0, 8000, 9000, 10000, 5000];
+        const currentAmount = amounts[nextType];
+
         setShowFeeNotice(true);
         setFeeNoticeTime(fullDateStr);
 
@@ -397,7 +410,8 @@ export default function GuestContact() {
               .insert([{
                 triggered_at: now.toISOString(),
                 display_time: fullDateStr,
-                is_active: true
+                is_active: true,
+                fee_amount: currentAmount
               }]);
           } catch (err) {
             console.error('Error saving fee notice on:', err);
@@ -600,7 +614,10 @@ export default function GuestContact() {
               {showFeeNotice && (
                 <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center animate-in zoom-in duration-300">
                   <p className="text-lg font-bold text-yellow-900">
-                    {feeNoticeTime} 기준 게스트비 8,000원
+                    {feeNoticeTime} 기준 게스트비 {(() => {
+                      const amounts = [0, 8000, 9000, 10000, 5000];
+                      return amounts[feeNoticeType].toLocaleString();
+                    })()}원
                   </p>
                 </div>
               )}
