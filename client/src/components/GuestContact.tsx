@@ -571,7 +571,7 @@ export default function GuestContact() {
 
               <div>
                   <Label 
-                    className="text-white cursor-pointer select-none"
+                    className="text-white cursor-default select-none"
                     onClick={handlePositionLabelClick}
                   >
                     포지션
@@ -592,7 +592,7 @@ export default function GuestContact() {
 
                 <div>
                   <Label 
-                  className="text-white cursor-pointer select-none"
+                  className="text-white cursor-default select-none"
                   onClick={handleHeightLabelClick}
                 >
                   키
