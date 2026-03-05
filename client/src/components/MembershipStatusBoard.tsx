@@ -98,6 +98,7 @@ export default function MembershipStatusBoard() {
   const [editType, setEditType] = useState<'name' | 'time' | null>(null);
   const [editValue, setEditValue] = useState<string>('');
   const [editName, setEditName] = useState<string>('');
+  const [editCount, setEditCount] = useState<number>(0);
   const [isTimeEditActive, setIsTimeEditActive] = useState(false);
 
   const handleNextMonthRegistration = async () => {
@@ -214,6 +215,35 @@ export default function MembershipStatusBoard() {
       console.error('Error adding member:', err);
       toast({
         title: "멤버 추가 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
+  };
+
+  const handleCountEdit = async (id: string, newCount: number) => {
+    if (!supabase) return;
+    try {
+      const { error } = await supabase
+        .from('membership_applications')
+        .update({ used_count: newCount })
+        .eq('id', id);
+
+      if (error) throw error;
+
+      setApplications(prev =>
+        prev.map(app => (app.id === id ? { ...app, used_count: newCount, remainingCount: (app.plan === 'regular_4' ? 4 : 2) - newCount } : app))
+      );
+      setEditingId(null);
+      setEditType(null);
+      toast({
+        title: "출석 횟수 수정 완료",
+        description: "성공적으로 변경되었습니다.",
+      });
+    } catch (err) {
+      console.error('Error updating count:', err);
+      toast({
+        title: "수정 실패",
         description: "다시 시도해주세요.",
         variant: "destructive",
       });
@@ -958,7 +988,37 @@ export default function MembershipStatusBoard() {
                           </TableCell>
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatHeightForDisplay(app.height_range)}</TableCell>
                           <TableCell className={`text-center px-1 py-2 whitespace-nowrap ${colorClass}`}>{formatPositionForDisplay(app.position)}</TableCell>
-                          <TableCell className={`text-center font-semibold px-1 py-2 whitespace-nowrap ${colorClass || 'text-blue-600'}`}>{app.remainingCount}회</TableCell>
+                          <TableCell className={`text-center font-semibold px-1 py-2 whitespace-nowrap ${colorClass || 'text-blue-600'}`}>
+                            {editingId === app.id && editType === 'time' && isTimeEditActive ? (
+                              <input
+                                type="number"
+                                value={editCount}
+                                onChange={(e) => setEditCount(parseInt(e.target.value) || 0)}
+                                onBlur={() => handleCountEdit(app.id, editCount)}
+                                onKeyDown={(e) => {
+                                  if (e.key === 'Enter') handleCountEdit(app.id, editCount);
+                                  if (e.key === 'Escape') {
+                                    setEditingId(null);
+                                    setEditType(null);
+                                  }
+                                }}
+                                autoFocus
+                                className="w-12 px-1 py-0.5 border rounded text-center text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                              />
+                            ) : (
+                              <div 
+                                className={`${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded px-1' : ''}`}
+                                onClick={() => {
+                                  if (!isTimeEditActive) return;
+                                  setEditingId(app.id);
+                                  setEditType('time');
+                                  setEditCount(app.used_count || 0);
+                                }}
+                              >
+                                {app.remainingCount}회
+                              </div>
+                            )}
+                          </TableCell>
                         </>
                       )}
                       {isExpanded && (
