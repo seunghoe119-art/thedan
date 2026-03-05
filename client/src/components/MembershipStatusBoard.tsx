@@ -853,7 +853,7 @@ export default function MembershipStatusBoard() {
                     <TableHead className="font-bold text-gray-900 text-center px-1">출석횟수</TableHead>
                   </>
                 )}
-                <TableHead className="font-bold text-gray-900 text-center px-1">회원다음등록</TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-1">게스트로 참가</TableHead>
                 {isExpanded && <TableHead className="font-bold text-gray-900 text-center px-1">수정</TableHead>}
                 <TableHead className="font-bold text-gray-900 text-center px-1">
                   <div className="flex items-center justify-between">
@@ -1053,19 +1053,28 @@ export default function MembershipStatusBoard() {
                         </>
                       )}
                       <TableCell className="text-center px-1 py-2 whitespace-nowrap">
-                        <button
-                          onClick={() => {
-                            setNextRegMember(app);
-                            setNextRegData({
-                              targetMonth: monthOptions[selectedMonthIndex + 1]?.value || '',
-                              plan: app.plan
-                            });
-                            setIsNextRegDialogOpen(true);
-                          }}
-                          className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"
-                        >
-                          등록
-                        </button>
+                        {!isExpanded ? (
+                          <button
+                            onClick={() => handleAddAsGuest(app)}
+                            className="px-2 py-1 bg-yellow-600 text-white text-xs rounded hover:bg-yellow-700 transition-colors"
+                          >
+                            참가
+                          </button>
+                        ) : (
+                          <button
+                            onClick={() => {
+                              setNextRegMember(app);
+                              setNextRegData({
+                                targetMonth: monthOptions[selectedMonthIndex + 1]?.value || '',
+                                plan: app.plan
+                              });
+                              setIsNextRegDialogOpen(true);
+                            }}
+                            className="px-2 py-1 bg-blue-600 text-white text-xs rounded hover:bg-blue-700 transition-colors"
+                          >
+                            등록
+                          </button>
+                        )}
                       </TableCell>
                         {isExpanded && (
                           <TableCell className="text-center px-1 py-2 whitespace-nowrap">
