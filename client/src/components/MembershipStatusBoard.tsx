@@ -869,10 +869,22 @@ export default function MembershipStatusBoard() {
                           <div 
                             className={`${isTimeEditActive ? 'cursor-pointer' : ''} rounded px-1`}
                             onClick={() => {
-                              if (!isTimeEditActive) return;
-                              setEditingId(app.id);
-                              setEditType('name');
-                              setEditValue(app.name);
+                              if (isTimeEditActive) {
+                                setEditingId(app.id);
+                                setEditType('name');
+                                setEditValue(app.name);
+                              } else {
+                                toast({
+                                  title: `${app.name}님 신청 정보`,
+                                  description: `신청일: ${new Intl.DateTimeFormat('ko-KR', { 
+                                    year: 'numeric', 
+                                    month: 'long', 
+                                    day: 'numeric',
+                                    hour: '2-digit',
+                                    minute: '2-digit'
+                                  }).format(new Date(app.created_at))}`,
+                                });
+                              }
                             }}
                           >
                             {app.name}
