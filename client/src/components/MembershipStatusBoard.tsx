@@ -4,7 +4,18 @@ import { Button } from '@/components/ui/button';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import { Skeleton } from '@/components/ui/skeleton';
 import { Checkbox } from '@/components/ui/checkbox';
-import { Trash2, UserX, ChevronLeft, ChevronRight } from 'lucide-react';
+import { Trash2, UserX, ChevronLeft, ChevronRight, UserPlus } from 'lucide-react';
+import { 
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+  DialogFooter,
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { 
   AlertDialog,
   AlertDialogAction,
@@ -89,7 +100,75 @@ export default function MembershipStatusBoard() {
   const [editName, setEditName] = useState<string>('');
   const [isTimeEditActive, setIsTimeEditActive] = useState(false);
 
-  const selectedMonth = monthOptions[selectedMonthIndex];
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const [newMember, setNewMember] = useState({
+    name: '',
+    phone: '',
+    age: '20대',
+    position: 'leading',
+    height_range: '175-180',
+    uniform_size: '3XL',
+    plan: 'regular_2'
+  });
+
+  const handleAddMember = async () => {
+    if (!supabase || !newMember.name || !newMember.phone) return;
+    
+    try {
+      // 010-0000-0000 포맷팅
+      let phone = newMember.phone.replace(/[^0-9]/g, '');
+      if (phone.length === 11) {
+        phone = `${phone.slice(0, 3)}-${phone.slice(3, 7)}-${phone.slice(7)}`;
+      }
+      
+      // 중복 방지 접미사 추가 (JoinUs.tsx 로직과 동일)
+      const uniqueSuffix = String(Date.now()).slice(-2);
+      const finalPhone = phone.length === 13 ? phone.slice(0, 11) + uniqueSuffix : phone;
+
+      const { data, error } = await supabase
+        .from('membership_applications')
+        .insert([{
+          ...newMember,
+          phone: finalPhone,
+          target_month: selectedMonth.value,
+          payment_status: 'pending',
+          is_hidden: false,
+          used_count: 0
+        }])
+        .select();
+
+      if (error) throw error;
+
+      toast({
+        title: "멤버 추가 완료",
+        description: `${newMember.name}님이 등록되었습니다.`,
+      });
+      
+      setIsAddDialogOpen(false);
+      setNewMember({
+        name: '',
+        phone: '',
+        age: '20대',
+        position: 'leading',
+        height_range: '175-180',
+        uniform_size: '3XL',
+        plan: 'regular_2'
+      });
+      
+      // 목록 새로고침을 위해 useEffect 트리거 (selectedMonth 재설정)
+      const currentIndex = selectedMonthIndex;
+      setSelectedMonthIndex(-1);
+      setTimeout(() => setSelectedMonthIndex(currentIndex), 10);
+
+    } catch (err) {
+      console.error('Error adding member:', err);
+      toast({
+        title: "멤버 추가 실패",
+        description: "다시 시도해주세요.",
+        variant: "destructive",
+      });
+    }
+  };
 
   const handleNameEdit = async (id: string, newName: string) => {
     if (!supabase) return;
@@ -449,6 +528,61 @@ export default function MembershipStatusBoard() {
             {selectedMonth?.label || ''} 등록 멤버 명단입니다. (Supabase 연동)
           </p>
           <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+              <DialogTrigger asChild>
+                <Button className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md border-0">
+                  <UserPlus className="h-5 w-5" />
+                  멤버 직접 추가
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[425px] bg-white">
+                <DialogHeader>
+                  <DialogTitle>새 멤버 등록 ({selectedMonth?.label})</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="name" className="text-right">이름</Label>
+                    <Input id="name" value={newMember.name} onChange={(e) => setNewMember({...newMember, name: e.target.value})} className="col-span-3" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label htmlFor="phone" className="text-right">연락처</Label>
+                    <Input id="phone" placeholder="01012345678" value={newMember.phone} onChange={(e) => setNewMember({...newMember, phone: e.target.value})} className="col-span-3" />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">플랜</Label>
+                    <div className="col-span-3">
+                      <Select value={newMember.plan} onValueChange={(v) => setNewMember({...newMember, plan: v})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="플랜 선택" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="regular_2">정규 2회</SelectItem>
+                          <SelectItem value="regular_4">정규 4회</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">포지션</Label>
+                    <div className="col-span-3">
+                      <Select value={newMember.position} onValueChange={(v) => setNewMember({...newMember, position: v})}>
+                        <SelectTrigger>
+                          <SelectValue placeholder="포지션 선택" />
+                        </SelectTrigger>
+                        <SelectContent className="bg-white">
+                          <SelectItem value="leading">리딩 가드 1,2번</SelectItem>
+                          <SelectItem value="small">스몰포워드 2,3번</SelectItem>
+                          <SelectItem value="baseline">밑선라인 4,5번</SelectItem>
+                        </SelectContent>
+                      </Select>
+                    </div>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button onClick={handleAddMember} className="bg-blue-600 hover:bg-blue-700 text-white border-0">추가하기</Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <a
               href="/guest-status"
               className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md"
