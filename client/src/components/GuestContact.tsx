@@ -314,7 +314,18 @@ export default function GuestContact() {
     }
   };
 
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [heightClickCount, setHeightClickCount] = useState(0);
+  const [showFeeNotice, setShowFeeNotice] = useState(false);
+
+  const handleHeightLabelClick = () => {
+    const newCount = heightClickCount + 1;
+    if (newCount >= 10) {
+      setShowFeeNotice(true);
+      setHeightClickCount(0);
+    } else {
+      setHeightClickCount(newCount);
+    }
+  };
 
   // 전화번호 마스킹 함수: 010-12xx-xxxx 형태로 변환
   const maskPhoneNumber = (phone: string): string => {
@@ -504,6 +515,14 @@ export default function GuestContact() {
                 </p>
               </div>
 
+              {showFeeNotice && (
+                <div className="mt-3 bg-yellow-50 border border-yellow-200 rounded-lg p-4 text-center animate-in zoom-in duration-300">
+                  <p className="text-lg font-bold text-yellow-900">
+                    게스트비 8,000원
+                  </p>
+                </div>
+              )}
+
               {showRecruitmentInfo && (
                 <div className="mt-3 bg-blue-50 border border-blue-200 rounded-lg p-4 text-center animate-in slide-in-from-top duration-300">
                   <p className="text-sm md:text-base font-medium text-blue-800 leading-relaxed">
@@ -571,7 +590,12 @@ export default function GuestContact() {
                 </div>
 
                 <div>
-                  <Label className="text-white">키</Label>
+                  <Label 
+                  className="text-white cursor-pointer select-none"
+                  onClick={handleHeightLabelClick}
+                >
+                  키
+                </Label>
                 <select 
                   className="w-full bg-black border border-gray-700 rounded-lg px-4 py-3 text-white focus:border-accent focus:outline-none mt-2"
                   value={formData.height}
