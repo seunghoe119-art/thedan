@@ -723,6 +723,7 @@ export default function GuestApplicationBoard() {
                 >
                   그룹
                 </TableHead>
+                <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">연번</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">이름</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">나이</TableHead>
                 <TableHead className="font-bold text-gray-900 text-center px-0 py-3 whitespace-nowrap">키</TableHead>
