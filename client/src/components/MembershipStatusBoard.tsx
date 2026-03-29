@@ -143,6 +143,7 @@ export default function MembershipStatusBoard() {
 
   const [isHistoryDialogOpen, setIsHistoryDialogOpen] = useState(false);
   const [historyMember, setHistoryMember] = useState<DisplayApplication | null>(null);
+  const [memberGameHistory, setMemberGameHistory] = useState<string[]>([]);
 
   const [isNextRegDialogOpen, setIsNextRegDialogOpen] = useState(false);
   const [nextRegMember, setNextRegMember] = useState<DisplayApplication | null>(null);
@@ -528,6 +529,55 @@ export default function MembershipStatusBoard() {
   };
 
   useEffect(() => {
+    async function fetchGameHistory() {
+      if (!historyMember || !supabase) {
+        setMemberGameHistory([]);
+        return;
+      }
+
+      try {
+        const { data, error } = await supabase
+          .from('game_attendance')
+          .select('game_date')
+          .eq('member_phone', historyMember.phone)
+          .order('game_date', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching game history:', error);
+          // Fallback: if game_attendance doesn't exist, try getting from membership_applications
+          const { data: appsData, error: appsError } = await supabase
+            .from('membership_applications')
+            .select('last_game_date')
+            .eq('phone', historyMember.phone)
+            .not('last_game_date', 'is', null)
+            .order('created_at', { ascending: false });
+
+          if (!appsError && appsData) {
+            const dates = appsData
+              .map(app => app.last_game_date)
+              .filter((date): date is string => !!date)
+              .filter((value, index, self) => self.indexOf(value) === index); // 중복 제거
+            setMemberGameHistory(dates);
+          } else {
+            setMemberGameHistory([]);
+          }
+          return;
+        }
+
+        const dates = data
+          ?.map(row => row.game_date)
+          .filter((date): date is string => !!date) || [];
+        setMemberGameHistory(dates);
+      } catch (err) {
+        console.error('Error fetching game history:', err);
+        setMemberGameHistory([]);
+      }
+    }
+
+    fetchGameHistory();
+  }, [historyMember, supabase]);
+
+  useEffect(() => {
     async function fetchApplications() {
       if (!selectedMonth) return;
       
@@ -757,10 +807,12 @@ export default function MembershipStatusBoard() {
             <div className="py-4">
               <h4 className="text-sm font-bold mb-3">참석 이력 (게임일 기준)</h4>
               <div className="bg-gray-50 border border-gray-100 rounded-lg p-3 space-y-2 max-h-[300px] overflow-y-auto">
-                {historyMember?.last_game_date ? (
-                  <div className="py-2 px-3 bg-white border border-gray-200 rounded text-gray-700">
-                    {historyMember.last_game_date}
-                  </div>
+                {memberGameHistory && memberGameHistory.length > 0 ? (
+                  memberGameHistory.map((date, idx) => (
+                    <div key={idx} className="py-2 px-3 bg-white border border-gray-200 rounded text-gray-700">
+                      {date}
+                    </div>
+                  ))
                 ) : (
                   <div className="text-gray-400 text-center py-4 text-sm">참석 이력이 없습니다.</div>
                 )}
