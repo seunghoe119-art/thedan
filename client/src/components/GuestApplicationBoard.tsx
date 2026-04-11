@@ -5,7 +5,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@
 import { Skeleton } from '@/components/ui/skeleton';
 import { Button } from '@/components/ui/button';
 import { Checkbox } from '@/components/ui/checkbox';
-import { ChevronLeft, ChevronRight, X, Calculator, UserX } from 'lucide-react';
+import { ChevronLeft, ChevronRight, X, Calculator, UserX, UserPlus } from 'lucide-react';
 import { toZonedTime } from 'date-fns-tz';
 import { addDays, getDay } from 'date-fns';
 import {
@@ -14,7 +14,12 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
+  DialogFooter,
 } from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
 
 // 2초 이내 신청자를 같은 일행으로 그룹화
 function groupByParty(applications: GuestApplication[]): GroupedApplication[] {
@@ -94,10 +99,20 @@ const GROUP_COLORS = [
 ];
 
 export default function GuestApplicationBoard() {
+  const { toast } = useToast();
   const [gameWeeks, setGameWeeks] = useState<GameWeek[]>([]);
   const [selectedWeekOffset, setSelectedWeekOffset] = useState(0); // 0 = 현재 주차, -1 = 지난주, 1 = 다음주
   const [applications, setApplications] = useState<GroupedApplication[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isDirectAddOpen, setIsDirectAddOpen] = useState(false);
+  const [isDirectAdding, setIsDirectAdding] = useState(false);
+  const [directAddForm, setDirectAddForm] = useState({
+    name: '',
+    phone: '',
+    age: '30대',
+    position: 'leading',
+    height: '175~180cm',
+  });
   const [hiddenRows, setHiddenRows] = useState<Set<string>>(new Set());
   const [selectedRows, setSelectedRows] = useState<Set<string>>(new Set());
   const [gameDateString, setGameDateString] = useState<string>("");
@@ -418,6 +433,68 @@ export default function GuestApplicationBoard() {
     }
   };
 
+  const handleDirectAddGuest = async () => {
+    if (!supabase || !directAddForm.name.trim()) return;
+    if (gameWeeks.length === 0) return;
+
+    setIsDirectAdding(true);
+    try {
+      const currentWeekIndex = Math.floor(gameWeeks.length / 2);
+      const actualIndex = currentWeekIndex + selectedWeekOffset;
+      const selectedWeek = gameWeeks[actualIndex];
+
+      // Use current time if current week, otherwise use mid-point of selected week
+      const now = new Date();
+      let appliedAt: string;
+      if (selectedWeekOffset === 0) {
+        appliedAt = now.toISOString();
+      } else {
+        const weekStart = new Date(selectedWeek.startDateUTC);
+        const weekEnd = new Date(selectedWeek.endDateUTC);
+        const mid = new Date((weekStart.getTime() + weekEnd.getTime()) / 2);
+        appliedAt = mid.toISOString();
+      }
+
+      const { error } = await supabase
+        .from('guest_applications')
+        .insert([{
+          name: directAddForm.name.trim(),
+          phone: directAddForm.phone.trim() || '010-0000-0000',
+          age: directAddForm.age,
+          position: directAddForm.position,
+          height: directAddForm.height,
+          applied_at: appliedAt,
+          is_hidden: false,
+        }]);
+
+      if (error) throw error;
+
+      toast({ title: '추가 완료', description: `${directAddForm.name}님이 추가되었습니다.` });
+      setIsDirectAddOpen(false);
+      setDirectAddForm({ name: '', phone: '', age: '30대', position: 'leading', height: '175~180cm' });
+
+      // Refresh list
+      const { data: refreshed } = await supabase
+        .from('guest_applications')
+        .select('id, name, age, height, position, phone, applied_at, applied_at_kst, is_hidden')
+        .gte('applied_at', selectedWeek.startDateUTC)
+        .lte('applied_at', selectedWeek.endDateUTC)
+        .order('applied_at', { ascending: true });
+
+      if (refreshed) {
+        const grouped = groupByParty(refreshed);
+        setApplications(grouped);
+        const hiddenIds = new Set(refreshed.filter(a => a.is_hidden).map(a => a.id));
+        setHiddenRows(hiddenIds);
+      }
+    } catch (err) {
+      console.error('Error adding guest directly:', err);
+      toast({ title: '추가 실패', description: '다시 시도해주세요.', variant: 'destructive' });
+    } finally {
+      setIsDirectAdding(false);
+    }
+  };
+
   const cycleGroupColor = async () => {
     const colorCycle = [
       'text-red-600 font-bold',
@@ -618,6 +695,90 @@ export default function GuestApplicationBoard() {
             금주 신청 현황
           </h1>
           <div className="mt-4 flex flex-wrap justify-center gap-4">
+            <Dialog open={isDirectAddOpen} onOpenChange={setIsDirectAddOpen}>
+              <DialogTrigger asChild>
+                <button className="inline-flex items-center gap-2 px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors font-semibold shadow-md">
+                  <UserPlus className="h-5 w-5" />
+                  멤버직접추가
+                </button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-[400px] bg-white">
+                <DialogHeader>
+                  <DialogTitle>게스트 직접 추가 ({gameDateString})</DialogTitle>
+                </DialogHeader>
+                <div className="grid gap-4 py-4">
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">이름</Label>
+                    <Input
+                      className="col-span-3"
+                      placeholder="이름 입력"
+                      value={directAddForm.name}
+                      onChange={(e) => setDirectAddForm(prev => ({ ...prev, name: e.target.value }))}
+                      onKeyDown={(e) => { if (e.key === 'Enter') handleDirectAddGuest(); }}
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">연락처</Label>
+                    <Input
+                      className="col-span-3"
+                      placeholder="010-0000-0000"
+                      value={directAddForm.phone}
+                      onChange={(e) => setDirectAddForm(prev => ({ ...prev, phone: e.target.value }))}
+                    />
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">나이</Label>
+                    <Select value={directAddForm.age} onValueChange={(v) => setDirectAddForm(prev => ({ ...prev, age: v }))}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="20대">20대</SelectItem>
+                        <SelectItem value="30대">30대</SelectItem>
+                        <SelectItem value="40대">40대</SelectItem>
+                        <SelectItem value="47세이상">47세이상</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">포지션</Label>
+                    <Select value={directAddForm.position} onValueChange={(v) => setDirectAddForm(prev => ({ ...prev, position: v }))}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="leading">리딩 가드 1,2번</SelectItem>
+                        <SelectItem value="small">스몰포워드 2,3번</SelectItem>
+                        <SelectItem value="baseline">밑선라인 4,5번</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                  <div className="grid grid-cols-4 items-center gap-4">
+                    <Label className="text-right">키</Label>
+                    <Select value={directAddForm.height} onValueChange={(v) => setDirectAddForm(prev => ({ ...prev, height: v }))}>
+                      <SelectTrigger className="col-span-3">
+                        <SelectValue />
+                      </SelectTrigger>
+                      <SelectContent className="bg-white">
+                        <SelectItem value="170~175cm">170~175cm</SelectItem>
+                        <SelectItem value="175~180cm">175~180cm</SelectItem>
+                        <SelectItem value="180~185cm">180~185cm</SelectItem>
+                        <SelectItem value="185~190cm">185~190cm</SelectItem>
+                      </SelectContent>
+                    </Select>
+                  </div>
+                </div>
+                <DialogFooter>
+                  <Button
+                    onClick={handleDirectAddGuest}
+                    disabled={isDirectAdding || !directAddForm.name.trim()}
+                    className="bg-blue-600 hover:bg-blue-700 text-white w-full"
+                  >
+                    {isDirectAdding ? '추가중...' : '추가하기'}
+                  </Button>
+                </DialogFooter>
+              </DialogContent>
+            </Dialog>
             <a
               href="/team-status"
               className="inline-flex items-center gap-2 px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors font-semibold shadow-md"
