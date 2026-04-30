@@ -53,16 +53,29 @@ export default function GuestContact() {
   const memoTimerRef = useRef<ReturnType<typeof setTimeout> | null>(null);
 
   useEffect(() => {
-    const saved = localStorage.getItem('guest_page_memo');
-    if (saved !== null) setMemoText(saved);
+    const loadMemo = async () => {
+      if (!supabase) return;
+      const { data } = await supabase
+        .from('memo_notes')
+        .select('content')
+        .eq('id', 'guest_page_memo')
+        .maybeSingle();
+      if (data) setMemoText(data.content ?? '');
+    };
+    loadMemo();
   }, []);
 
   const handleMemoChange = (value: string) => {
     setMemoText(value);
     setMemoSaved(false);
     if (memoTimerRef.current) clearTimeout(memoTimerRef.current);
-    memoTimerRef.current = setTimeout(() => {
-      localStorage.setItem('guest_page_memo', value);
+    memoTimerRef.current = setTimeout(async () => {
+      if (!supabase) return;
+      await supabase.from('memo_notes').upsert({
+        id: 'guest_page_memo',
+        content: value,
+        updated_at: new Date().toISOString(),
+      });
       setMemoSaved(true);
     }, 1000);
   };
@@ -945,36 +958,36 @@ export default function GuestContact() {
                 </div>
               </div>
             </form>
-          </div>
-        </div>
 
-        {/* Memo Notepad */}
-        <div className="max-w-2xl mx-auto mt-6">
-          <div
-            className="rounded-2xl p-6 shadow-lg"
-            style={{
-              background: 'linear-gradient(180deg, #fef9c3 0%, #fef08a 100%)',
-              backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d1d5db 31px, #d1d5db 32px)',
-              boxShadow: '0 4px 6px -1px rgba(0,0,0,0.1), inset 0 1px 0 rgba(255,255,255,0.5)',
-            }}
-          >
-            <div className="flex items-center justify-between mb-3">
-              <div className="flex items-center gap-2">
-                <NotebookPen className="w-5 h-5 text-yellow-700" />
-                <span className="text-yellow-800 font-bold text-sm">메모</span>
+            {/* Memo Notepad */}
+            <div className="mt-8 pt-6 border-t border-gray-700">
+              <div
+                className="rounded-2xl p-5 shadow-lg"
+                style={{
+                  background: 'linear-gradient(180deg, #fef9c3 0%, #fef3a0 100%)',
+                  backgroundImage: 'repeating-linear-gradient(transparent, transparent 31px, #d1d5db 31px, #d1d5db 32px)',
+                  boxShadow: '0 4px 16px -2px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.6)',
+                }}
+              >
+                <div className="flex items-center justify-between mb-2">
+                  <div className="flex items-center gap-2">
+                    <NotebookPen className="w-5 h-5 text-yellow-700" />
+                    <span className="text-yellow-800 font-bold text-sm">메모장</span>
+                  </div>
+                  <span className={`text-xs font-medium transition-colors ${memoSaved ? 'text-green-700' : 'text-orange-600 animate-pulse'}`}>
+                    {memoSaved ? '✓ 저장됨' : '저장중...'}
+                  </span>
+                </div>
+                <textarea
+                  value={memoText}
+                  onChange={(e) => handleMemoChange(e.target.value)}
+                  placeholder="자유롭게 메모하세요..."
+                  className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-yellow-700/40 text-sm font-medium"
+                  style={{ minHeight: '200px', lineHeight: '32px' }}
+                  rows={8}
+                />
               </div>
-              <span className={`text-xs transition-colors ${memoSaved ? 'text-green-700' : 'text-yellow-600 animate-pulse'}`}>
-                {memoSaved ? '✓ 저장됨' : '저장중...'}
-              </span>
             </div>
-            <textarea
-              value={memoText}
-              onChange={(e) => handleMemoChange(e.target.value)}
-              placeholder="자유롭게 메모하세요..."
-              className="w-full bg-transparent border-none outline-none resize-none text-gray-800 placeholder-yellow-600/50 text-sm leading-8 font-medium"
-              style={{ minHeight: '200px', lineHeight: '32px' }}
-              rows={8}
-            />
           </div>
         </div>
       </div>
