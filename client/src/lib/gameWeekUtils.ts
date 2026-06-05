@@ -163,8 +163,8 @@ export function formatPositionForDisplay(position: string): string {
     'leading': '가드',
     '스몰포워드 2,3번': '포워드',
     'small': '포워드',
-    '밑선라인 4,5번': '데이터 센터',
-    'baseline': '데이터 센터',
+    '밑선라인 4,5번': '센터',
+    'baseline': '센터',
   };
   return positionMap[position] || position;
 }
