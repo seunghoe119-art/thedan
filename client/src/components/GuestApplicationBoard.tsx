@@ -125,6 +125,8 @@ export default function GuestApplicationBoard() {
   const [totalSlots, setTotalSlots] = useState<number>(18);
   const [inputSlots, setInputSlots] = useState<string>('18');
   const [currentWeekStartDate, setCurrentWeekStartDate] = useState<string>('');
+  const [unpaidIds, setUnpaidIds] = useState<Set<string>>(new Set());
+  const [nameClickCounts, setNameClickCounts] = useState<Map<string, number>>(new Map());
 
   const KST_TIMEZONE = 'Asia/Seoul';
 
@@ -168,6 +170,43 @@ export default function GuestApplicationBoard() {
   useEffect(() => {
     setGameDateString(getCurrentWeekFridayDate(selectedWeekOffset));
   }, [selectedWeekOffset]);
+
+  // 주차별 미입금 목록 localStorage 로드
+  useEffect(() => {
+    if (!gameDateString) return;
+    const saved = localStorage.getItem(`unpaid_ids_${gameDateString}`);
+    if (saved) {
+      try { setUnpaidIds(new Set(JSON.parse(saved))); } catch {}
+    } else {
+      setUnpaidIds(new Set());
+    }
+    setNameClickCounts(new Map());
+  }, [gameDateString]);
+
+  const toggleUnpaid = (id: string) => {
+    setUnpaidIds(prev => {
+      const next = new Set(prev);
+      if (next.has(id)) next.delete(id);
+      else next.add(id);
+      localStorage.setItem(`unpaid_ids_${gameDateString}`, JSON.stringify([...next]));
+      return next;
+    });
+  };
+
+  const handleNameClick = (id: string) => {
+    if (isTimeEditActive) return;
+    setNameClickCounts(prev => {
+      const next = new Map(prev);
+      const count = (next.get(id) ?? 0) + 1;
+      if (count >= 5) {
+        next.set(id, 0);
+        toggleUnpaid(id);
+      } else {
+        next.set(id, count);
+      }
+      return next;
+    });
+  };
 
   const [lastUnhiddenId, setLastUnhiddenId] = useState<string | null>(null);
   const [absenteeList, setAbsenteeList] = useState<any[]>([]);
@@ -1012,12 +1051,15 @@ export default function GuestApplicationBoard() {
                           </div>
                         </TableCell>
                         <TableCell 
-                          className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : ''} ${isICNF && !isHidden ? 'bg-red-600 text-white font-bold' : colorClass}`}
+                          className={`text-center font-medium px-0 py-3 whitespace-nowrap ${isTimeEditActive ? 'cursor-pointer hover:bg-gray-100 rounded' : 'cursor-pointer'} ${isICNF && !isHidden ? 'bg-red-600 text-white font-bold' : colorClass}`}
                           onClick={() => {
-                            if (!isTimeEditActive) return;
-                            setEditingId(app.id);
-                            setEditType('name');
-                            setEditValue(app.name);
+                            if (isTimeEditActive) {
+                              setEditingId(app.id);
+                              setEditType('name');
+                              setEditValue(app.name);
+                            } else {
+                              handleNameClick(app.id);
+                            }
                           }}
                         >
                           {editingId === app.id && editType === 'name' ? (
@@ -1044,7 +1086,12 @@ export default function GuestApplicationBoard() {
                               className="w-full px-1 py-0.5 border rounded text-xs text-gray-900 focus:outline-none focus:ring-2 focus:ring-blue-500"
                             />
                           ) : (
-                            app.name
+                            <span>
+                              {app.name}
+                              {unpaidIds.has(app.id) && (
+                                <span className="ml-1 text-red-500 font-bold text-xs">(미입금)</span>
+                              )}
+                            </span>
                           )}
                         </TableCell>
                       <TableCell 
@@ -1112,7 +1159,10 @@ export default function GuestApplicationBoard() {
             </div>
             <div className="flex items-center justify-center gap-4">
               <div className="text-center text-sm text-gray-500">
-                총 {applications.filter(app => !hiddenRows.has(app.id)).length}명 신청
+                총 {applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id)).length}명 신청
+                {unpaidIds.size > 0 && (
+                  <span className="ml-2 text-red-500 font-semibold">(미입금 {unpaidIds.size}명 제외)</span>
+                )}
               </div>
               <div className="flex items-center gap-2">
                 <span className="text-sm text-gray-500">/</span>
@@ -1133,7 +1183,7 @@ export default function GuestApplicationBoard() {
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
               <p className="text-lg font-semibold text-blue-900">
-                {Math.max(0, totalSlots - applications.filter(app => !hiddenRows.has(app.id)).length)}명 게스트 모집중.
+                {Math.max(0, totalSlots - applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id)).length)}명 게스트 모집중.
               </p>
             </div>
 
