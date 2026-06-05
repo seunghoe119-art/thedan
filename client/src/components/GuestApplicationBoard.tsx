@@ -183,6 +183,22 @@ export default function GuestApplicationBoard() {
     setNameClickCounts(new Map());
   }, [gameDateString]);
 
+  // 이름 중복 계산
+  const [duplicateIds, setDuplicateIds] = useState<Set<string>>(new Set());
+  useEffect(() => {
+    const seen = new Map<string, string>(); // name -> first id
+    const dups = new Set<string>();
+    for (const app of applications) {
+      const baseName = app.name.replace(/\(ICNF\)|\(정규\)|\(지인\)|\(불참자\)/g, '').trim();
+      if (seen.has(baseName)) {
+        dups.add(app.id);
+      } else {
+        seen.set(baseName, app.id);
+      }
+    }
+    setDuplicateIds(dups);
+  }, [applications]);
+
   const toggleUnpaid = (id: string) => {
     setUnpaidIds(prev => {
       const next = new Set(prev);
@@ -268,7 +284,7 @@ export default function GuestApplicationBoard() {
   });
 
   useEffect(() => {
-    const activeApps = applications.filter(app => !hiddenRows.has(app.id));
+    const activeApps = applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id) && !duplicateIds.has(app.id));
     setCalcValues(prev => ({
       ...prev,
       icnfCount: activeApps.filter(app => app.name.includes('(ICNF)')).length,
@@ -276,7 +292,7 @@ export default function GuestApplicationBoard() {
       guestCount: activeApps.filter(app => !app.name.includes('(ICNF)') && !app.name.includes('(정규)') && !app.name.includes('(지인)')).length,
       friendCount: activeApps.filter(app => app.name.includes('(지인)')).length
     }));
-  }, [applications, hiddenRows]);
+  }, [applications, hiddenRows, unpaidIds, duplicateIds]);
 
   const handleCalcChange = (field: keyof typeof calcValues, value: string) => {
     const numValue = parseInt(value) || 0;
@@ -1091,6 +1107,9 @@ export default function GuestApplicationBoard() {
                               {unpaidIds.has(app.id) && (
                                 <span className="ml-1 text-red-500 font-bold text-xs">(미입금)</span>
                               )}
+                              {duplicateIds.has(app.id) && (
+                                <span className="ml-1 text-orange-500 font-bold text-xs">(중복)</span>
+                              )}
                             </span>
                           )}
                         </TableCell>
@@ -1159,9 +1178,12 @@ export default function GuestApplicationBoard() {
             </div>
             <div className="flex items-center justify-center gap-4">
               <div className="text-center text-sm text-gray-500">
-                총 {applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id)).length}명 신청
+                총 {applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id) && !duplicateIds.has(app.id)).length}명 신청
                 {unpaidIds.size > 0 && (
                   <span className="ml-2 text-red-500 font-semibold">(미입금 {unpaidIds.size}명 제외)</span>
+                )}
+                {duplicateIds.size > 0 && (
+                  <span className="ml-2 text-orange-500 font-semibold">(중복 {duplicateIds.size}명 제외)</span>
                 )}
               </div>
               <div className="flex items-center gap-2">
@@ -1183,7 +1205,7 @@ export default function GuestApplicationBoard() {
             </div>
             <div className="bg-blue-50 border border-blue-200 rounded-lg p-4 text-center">
               <p className="text-lg font-semibold text-blue-900">
-                {Math.max(0, totalSlots - applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id)).length)}명 게스트 모집중.
+                {Math.max(0, totalSlots - applications.filter(app => !hiddenRows.has(app.id) && !unpaidIds.has(app.id) && !duplicateIds.has(app.id)).length)}명 게스트 모집중.
               </p>
             </div>
 
