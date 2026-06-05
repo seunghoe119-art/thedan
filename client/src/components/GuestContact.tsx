@@ -873,17 +873,45 @@ export default function GuestContact() {
               ))}
 
               {/* Add Guest Button */}
-              <div className="flex justify-center">
+              <div className="flex justify-center items-center gap-3">
                 <button
                   type="button"
                   onClick={addGuestField}
                   className="group relative bg-gradient-to-r from-accent to-red-600 text-white rounded-full p-3 hover:scale-110 transition-all duration-300 shadow-lg hover:shadow-accent/50"
                 >
                   <Plus className="w-6 h-6" />
-                  <span className="absolute -bottom-8 left-1/2 -translate-x-1/2 text-xs text-gray-400 whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity">
-                    게스트 추가
-                  </span>
                 </button>
+                <button
+                  type="button"
+                  onClick={addGuestField}
+                  className="flex items-center gap-2 bg-gradient-to-r from-accent to-red-600 text-white rounded-full px-5 py-2.5 font-bold text-sm hover:scale-105 transition-all duration-300 shadow-lg hover:shadow-accent/50"
+                >
+                  <Plus className="w-4 h-4" />
+                  게스트 추가
+                </button>
+                <div className="flex items-center gap-2">
+                  <Input
+                    type="text"
+                    placeholder="이름 입력 후 엔터"
+                    className="bg-black border-gray-700 text-white w-40 rounded-full px-4 py-2 text-sm"
+                    onKeyDown={(e) => {
+                      if (e.key === 'Enter') {
+                        const value = (e.target as HTMLInputElement).value.trim();
+                        if (value) {
+                          const newGuest: AdditionalGuest = {
+                            id: Math.random().toString(36).substring(2, 9),
+                            name: value,
+                            age: '',
+                            position: '',
+                            height: '',
+                          };
+                          setAdditionalGuests([...additionalGuests, newGuest]);
+                          (e.target as HTMLInputElement).value = '';
+                        }
+                      }
+                    }}
+                  />
+                </div>
               </div>
 
               <div className="bg-black border border-gray-700 rounded-lg p-4">
